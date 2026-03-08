@@ -1,0 +1,6 @@
+copyright
+gamePk
+link
+metaData
+gameData
+liveData

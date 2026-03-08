@@ -1,0 +1,11 @@
+result
+about
+count
+matchup
+pitchIndex
+actionIndex
+runnerIndex
+runners
+playEvents
+playEndTime
+atBatIndex

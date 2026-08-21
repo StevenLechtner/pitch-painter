@@ -40,8 +40,8 @@ def main():
     client = createClient()
 
     # Post a tweet
-    response = sendTweet(client, "This is a test automatic tweet using Python woot woot")
-    print(response)
+    # response = sendTweet(client, "This is a test automatic tweet using Python woot woot")
+    # print(response)
 
     with open("meadows.json", "r") as f:
         game = json.load(f)

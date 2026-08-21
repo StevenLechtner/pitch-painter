@@ -1,0 +1,282 @@
+Pitch by pitch
+
+Get Desired game pk from specific date:
+https://statsapi.mlb.com/api/v1/schedule?sportId=1&date=2025-09-11
+
+Get details about game pk
+https://statsapi.mlb.com/api/v1/game/776368/content
+
+Pretty print json (works on windows vscode): Ctrl + A, Ctrl + K + F
+
+745369
+
+https://statsapi.mlb.com/api/v1.1/game/745369/feed/live
+
+
+
+For twitter:
+API Key: 1zgs4BdzcdQ4GdASh1MN1YLrX
+API Key Secret: WDrigEIEedvKmY56YVRRI5lwRQ8fgdE8xbaCyQHrlq6vTYGCyV
+Bearer Token: AAAAAAAAAAAAAAAAAAAAAHxr4QEAAAAAa3f4Poyxl6tiAahYfczWUvIb2BM%3D1qjsfcexjueJJECUyoiM0caE5MoIpewkWqbeRKMagIV9AxELM0
+
+OAuth 1.0:
+Access Token: 1970860626563239936-oee1HdnDKx45FVPT9pDfbuRaGsLSA8
+Access Token Secret: aTre5O09neKGGQuhdXt1PKnf6JsRwULS0dmzpJfSjNmNM
+
+OAuth 2.0:
+Client ID: NzdCRG44ZTlOTHNlNU55MVpzRW46MTpjaQ
+Client Secret: jpNYdzcIvpkjGQo2wz20ujesGPIgrnFtPbNEON3Ji_q1xnYNsa
+
+
+
+Given:
+|—————————————|
+| DET 0               ◆         ▲            |
+| SD   3            ◆   ◆      9             |
+|                        ● ● O    3-2          |
+|—————————————|
+| Robert Suarez              P: 25     |
+|—————————————|
+
+Mine:
++─────────────────────────+
+|DET 0         ◆     ▲    |
+|SD  3        ◆ ◆    9    |
+|            ● ● ○  3-2   |
+|─────────────────────────|
+|Robert Suarez      P:25  |
++─────────────────────────+
+
+
+First row: remove 12 lines, change + to |
+Second row: add space before DET, add 6 spaces between DET and second base, add 5 spaces between second and inning, add 7 spaces between inning and end. 
+Third row: Add a space before SD, add a space after SD, add 4 spaces between SD and third base, add 2 spaces between third and first, add 3 spaces between first and inning, add 8 spaces between inning and end. 
+Fourth row: Add 12 spaces between start and first out, add 2 space between third out and count, add 7 spaces between count and end
+Fifth row: remove 12 lines
+Sixth row: add a space between start and pitcher name, add 7 spaces between name and P, add 1 space between : and count, add 4 spaces between count and end
+Seventh row: Same as first - remove 12 lines, change + to |
+
+New:
+First row: remove 12 lines, change + to |
+Second row: add space before DET, add 6 spaces between DET and second base, add 6 spaces between second and inning, add 8 spaces between inning and end. 
+Third row: Add a space before SD, add a space after SD, add 4 spaces between SD and third base, add 2 spaces between third and first, add 3 spaces between first and inning, add 8 spaces between inning and end. 
+Fourth row: Add 12 spaces between start and first out, add 2 space between third out and count, add 7 spaces between count and end
+Fifth row: remove 12 lines
+Sixth row: add a space between start and pitcher name, add 7 spaces between name and P, add 1 space between : and count, add 4 spaces between count and end
+Seventh row: Same as first - remove 12 lines, change + to |
+
+New out:
++────────────+
+| DET 0               ◆         ▲            |
+| SD   3            ◆   ◆      9             |
+|                        ● ● ○   3-2           |
+|─────────────|
+| Robert Suarez              P: 25     |
++────────────+
+
+
+
++────────────+
+| DET 0               ◆         ▲            |
+| SD   3            ◆   ◆      9             |
+|                        ● ● ○   3-2           |
+|─────────────|
+| Robert Suarez              P: 25     |
++────────────+
+
+ACTUAL BEST FOR TWITTER:
+|─────────────|
+| DET 0               ◆          ▲           |
+| SD   3            ◆   ◆       9            |
+|                        ● ● ○    3-2          |
+|─────────────|
+| Robert Suarez             P: 25      |
+|─────────────|
+
+
+
+
+Now I’m trying things:
+|─────────────|
+| DET 0               ◆          ▲           |
+| SD   3            ◆   ◆       9            |
+|                        ● ● ○    3-2          |
+|─────────────|
+| Robert Suarez             P: 25      |
+|─────────────|
+
+|─────────────|
+| DET 1               ◇          1           |
+| ATL 0            ◇   ◇       ▼            |
+|                        ● ○ ○    0-1          |
+|─────────────|
+| Tarik Skubal             P: 4      |
+|─────────────|
+
+|─────────────|
+| ARI 1               ◇          8           |
+| NYY 0            ◇   ◇       ▼            |
+|                        ○ ○ ○    2-2          |
+|─────────────|
+| Eduardo Rodriguez             P: 108      |
+|─────────────|
+
+
+
+
+
+
+
+
+
+
+import statsapi
+import tweepy
+
+import json
+import pitchbypitch
+import sys
+import time
+
+# Twitter bot developer credentials
+api_key = "1zgs4BdzcdQ4GdASh1MN1YLrX"
+api_secret = "WDrigEIEedvKmY56YVRRI5lwRQ8fgdE8xbaCyQHrlq6vTYGCyV"
+bearer_token="AAAAAAAAAAAAAAAAAAAAAHxr4QEAAAAAa3f4Poyxl6tiAahYfczWUvIb2BM%3D1qjsfcexjueJJECUyoiM0caE5MoIpewkWqbeRKMagIV9AxELM0"
+consumer_key="NzdCRG44ZTlOTHNlNU55MVpzRW46MTpjaQ"
+consumer_secret="jpNYdzcIvpkjGQo2wz20ujesGPIgrnFtPbNEON3Ji_q1xnYNsa"
+access_token = "1970860626563239936-oee1HdnDKx45FVPT9pDfbuRaGsLSA8"
+access_secret = "aTre5O09neKGGQuhdXt1PKnf6JsRwULS0dmzpJfSjNmNM"
+
+# Determines if tweet gets sent out or not
+isTweeting = False
+
+def createClient():
+    # v2 authentication
+    client = tweepy.Client(bearer_token=bearer_token,
+                           consumer_key=api_key,
+                           consumer_secret=api_secret,
+                           access_token=access_token,
+                           access_token_secret=access_secret)
+    return client
+
+def sendTweet(client: tweepy.Client, text: str, isTweeting=False):
+    if not isTweeting:
+        return "We are not tweeting right now. Set isTweeting to True to tweet."
+    response = client.create_tweet(text=text)
+    return response
+
+# def to_fullwidth(s):
+#     return ''.join(
+#         chr(0xFF00 + ord(c) - 0x20) if '!' <= c <= '~' else c
+#         for c in s
+#     )
+
+def format_scoreboard(team1, score1, spaces1a, icons1a, spaces1b, icons1b, misc1,
+                      team2, score2, spaces2a, icons2ai, spaces2ai, icons2aii, spaces2b, icons2b, misc2,
+                      pitcher, pitch_count):
+    line1 = f"| {team1.ljust(4)}{score1:<3}{spaces1a:<18}{icons1a:<2}{spaces1b:<9}{icons1b:<2}{misc1:<8}|"
+    line2 = f"| {team2.ljust(4)}{score2:<2}{spaces2a:<13}{icons2ai:<2}{spaces2ai:<2}{icons2aii:<2}{spaces2b:<6}{icons2b:<2}{misc2:<8}|"
+    line3 = f"|                          ● ● ○    3-2       |"
+    line4 = f"|─────────────|"
+    line5 = f"| {pitcher.ljust(24)}P: {str(pitch_count).ljust(10)}|"
+    line6 = f"|─────────────|"
+
+    return "\n".join(["|─────────────|", line1, line2, line3, line4, line5, line6])
+
+
+def main():
+    client = createClient()
+
+    # Post a tweet
+    response = sendTweet(client, "This is a test automatic tweet using Python woot woot")
+    print(response)
+
+    with open("meadows.json", "r") as f:
+        game = json.load(f)
+    text = pitchbypitch.printAllPitchesFromGame(game)
+    print("\n\n\n")
+    # text = "```\n" + text
+    # text = text + "\n```"
+    # text = text.replace(" ", "\u2003")
+    # text = text.replace("─", "\u2014")
+    print(text)
+    # rows = text.split('\n')
+    # print('\n')
+    # newText = ""
+    # for i in range(len(rows)):
+    #     print(rows[i])
+    #     if i == 0:
+    #         newRow = rows[i][:]
+    """
+                +─────────────────────────+
+                |DET 0         ◆     ▲    |
+                |SD  3        ◆ ◆    9    |
+                |            ● ● ○  3-2   |
+                |─────────────────────────|
+                |Robert Suarez      P:25  |
+                +─────────────────────────+
+    """
+    testText =  ("|─────────────|\n"
+                "| DET 0               ◆          ▲           |\n"
+                "| SD   3            ◆   ◆       9            |\n"
+                "|                        ● ● ○    3-2          |\n"
+                "|─────────────|\n"
+                "| Robert Suarez             P: 25      |\n"
+                "|─────────────|\n")
+
+    print(testText)
+    
+    # tweet_text = format_scoreboard(
+    #     team1="KC", score1="0", spaces1a="", icons1a="◆", spaces1b="", icons1b="▲", misc1="",
+    #     team2="NYY", score2="3", spaces2a="", icons2ai="◆", spaces2ai="", icons2aii="◆", spaces2b="", icons2b="9", misc2="",
+    #     pitcher="Joe List", pitch_count=108
+    # )
+    response = sendTweet(client, testText, isTweeting)
+    print(response)
+
+    # tweet = to_fullwidth(tweet_text)
+    # print(tweet)
+    # print("\n")
+    # print(repr(tweet))
+
+    # from PIL import ImageFont, ImageDraw, Image
+
+    # # Example string
+    # text = "| Robert Suarez             P: 25      |"
+
+    # # Load a font (monospace or any TTF)
+    # font_path = "/System/Library/Fonts/SFNSMono.ttf"  # adjust path
+    # font_size = 24
+    # font = ImageFont.truetype(font_path, font_size)
+
+    # # Dummy image for measurement
+    # img = Image.new("RGB", (1,1))
+    # draw = ImageDraw.Draw(img)
+
+    # # Get bounding box
+    # bbox = draw.textbbox((0,0), text, font)  # (x0, y0, x1, y1)
+    # width_px = bbox[2] - bbox[0]
+    # height_px = bbox[3] - bbox[1]
+
+    # print(f"Width: {width_px}px, Height: {height_px}px")
+    # tweet_text = format_scoreboard(
+    #     team1="KC", score1="0", icons1="◆          ▲", misc1="",
+    #     team2="NYY", score2="3", icons2="◆   ◆       9", misc2="",
+    #     pitcher="Joe List", pitch_count=108
+    # )
+
+    # print(tweet_text)
+
+    # print(ord('─'))
+    # from monospace import monospace
+    # monoText = monospace(text)
+    # print(monoText)
+    # from rich.console import Console
+    # console = Console()
+    # console.print(text)
+    # escaped = text.encode('unicode_escape').decode('utf-8')
+    # print(escaped)
+
+if __name__ == "__main__":
+    main()
+

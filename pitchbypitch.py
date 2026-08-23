@@ -271,12 +271,16 @@ def printAllPitchesFromGame(game):
                 i += 1
 
             # Check if the result of this at bat finished the game
-            if situation.outs >= 3 and situation.inning >= 9:
-                if situation.top:
-                    if situation.homeScore > situation.awayScore:
-                        situation.gameOver = True
+            if situation.inning >= 9:
+                if situation.outs >= 3:
+                    if situation.top:
+                        if situation.homeScore > situation.awayScore:
+                            situation.gameOver = True
+                    else:
+                        if situation.homeScore != situation.awayScore:
+                            situation.gameOver = True
                 else:
-                    if situation.homeScore != situation.awayScore:
+                    if not situation.top and situation.homeScore > situation.awayScore:
                         situation.gameOver = True
         playIdx += 1
 
@@ -354,12 +358,16 @@ def listAllPitchesFromGame(game):
                 i += 1
 
             # Check if the result of this at bat finished the game
-            if situation.outs >= 3 and situation.inning >= 9:
-                if situation.top:
-                    if situation.homeScore > situation.awayScore:
-                        situation.gameOver = True
+            if situation.inning >= 9:
+                if situation.outs >= 3:
+                    if situation.top:
+                        if situation.homeScore > situation.awayScore:
+                            situation.gameOver = True
+                    else:
+                        if situation.homeScore != situation.awayScore:
+                            situation.gameOver = True
                 else:
-                    if situation.homeScore != situation.awayScore:
+                    if not situation.top and situation.homeScore > situation.awayScore:
                         situation.gameOver = True
         playIdx += 1
 

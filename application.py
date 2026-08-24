@@ -1,14 +1,6 @@
-import threading
-
-import statsapi
-import time
-import json
-import pitchbypitch
 import application_util
 import sys
-import random
 from PySide6 import QtCore, QtWidgets, QtGui
-from live_game import printAllPitchesFromLiveGame
 
 class MyWidget(QtWidgets.QWidget):
     def __init__(self):
@@ -88,7 +80,7 @@ class MyWidget(QtWidgets.QWidget):
         if self.thread is not None and self.thread.isRunning():
             self.stopLiveGameThread()
         self.thread = QtCore.QThread()
-        self.worker = LiveGameWorker(gamePk)
+        self.worker = application_util.LiveGameWorker(gamePk)
         self.worker.moveToThread(self.thread)
         self.thread.started.connect(self.worker.run)
         self.worker.output.connect(self.updateOutput)
@@ -160,24 +152,8 @@ class MyWidget(QtWidgets.QWidget):
 
         event.accept()
 
-class LiveGameWorker(QtCore.QObject):
-    output = QtCore.Signal(str)
-    finished = QtCore.Signal()
-
-    def __init__(self, gamePk):
-        super().__init__()
-        self.gamePk = gamePk
-        self.stop_event = threading.Event()
-
-    @QtCore.Slot()
-    def run(self):
-        printAllPitchesFromLiveGame(self.gamePk, self.output, self.stop_event)
-        self.finished.emit()
-
-    def stop(self):
-        self.stop_event.set()
-
-def main():
+def main(args):
+    application_util.getOptions(args)
     app = QtWidgets.QApplication(sys.argv)
     app.setApplicationName("Pitcher Painter")
 
@@ -190,4 +166,4 @@ def main():
     sys.exit(app.exec())
 
 if __name__ == '__main__':
-    main()
+    main(sys.argv[1:])

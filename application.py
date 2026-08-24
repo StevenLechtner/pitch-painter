@@ -1,10 +1,14 @@
+import threading
+
 import statsapi
+import time
 import json
 import pitchbypitch
 import application_util
 import sys
 import random
 from PySide6 import QtCore, QtWidgets, QtGui
+from live_game import printAllPitchesFromLiveGame
 
 class MyWidget(QtWidgets.QWidget):
     def __init__(self):
@@ -21,6 +25,9 @@ class MyWidget(QtWidgets.QWidget):
         self.text_widget.setLineWrapMode(QtWidgets.QTextEdit.NoWrap)
         self.text_widget.hide()
 
+        self.thread = None
+        self.worker = None
+
         self.initGameSelected()
         self.initCalander()
 
@@ -36,6 +43,8 @@ class MyWidget(QtWidgets.QWidget):
     def toggleGame(self):
         if self.showingGame:
             self.hideGame()
+            if self.thread is not None and self.thread.isRunning():
+                self.showGameBtn.setEnabled(False)
         else:
             self.showGame()
 
@@ -43,25 +52,64 @@ class MyWidget(QtWidgets.QWidget):
         self.showingGame = True
         self.calendar.hide()
         self.gamesWidget.hide()
+        self.text_widget.setPlainText("")
         self.text_widget.show()
         index = self.gamesWidget.row(self.gamesWidget.currentItem())
         gamePk = application_util.getGamePk(index)
-        self.text_widget.setPlainText("\n".join(self.getPitches(gamePk)))
+        self.getPitches(gamePk)
         self.showGameBtn.setText("Return")
 
     def hideGame(self):
+        self.stopLiveGameThread()
         self.showingGame = False
         self.calendar.show()
         self.text_widget.hide()
         self.text_widget.setPlainText(self.calendar.selectedDate().toString("MMMM d, yyyy"))
         self.gamesWidget.show()
-        self.showGameBtn.setText("Select desired game...")
+        game = self.gamesWidget.currentItem()
+        if game is not None and game.flags() & QtCore.Qt.ItemFlag.ItemIsSelectable:
+            self.showGameBtn.setText("View " + game.text() + " on " + self.calendar.selectedDate().toString("MMMM d, yyyy"))
+        else:
+            self.showGameBtn.setText("Select desired game...")
 
     def getPitches(self, gamePk):
+        ##### Preset JSON file #####
         # with open("meadows.json", "r") as f:
         #     game = json.load(f)
-        game = statsapi.get('game', {'gamePk': gamePk})
-        return pitchbypitch.listAllPitchesFromGame(game)
+
+        ##### Assumes game is completed (no threading needed) #####
+        # game = statsapi.get('game', {'gamePk': gamePk})
+        # return pitchbypitch.listAllPitchesFromGame(game)
+
+        ##### Print pitches for live game (threading required) #####
+        self.startLiveGameThread(gamePk)
+
+    def startLiveGameThread(self, gamePk):
+        if self.thread is not None and self.thread.isRunning():
+            self.stopLiveGameThread()
+        self.thread = QtCore.QThread()
+        self.worker = LiveGameWorker(gamePk)
+        self.worker.moveToThread(self.thread)
+        self.thread.started.connect(self.worker.run)
+        self.worker.output.connect(self.updateOutput)
+        self.worker.finished.connect(self.thread.quit)
+        self.worker.finished.connect(self.worker.deleteLater)
+        self.thread.finished.connect(self.thread.deleteLater)
+        self.thread.finished.connect(self.threadFinished)
+        self.thread.start()
+
+    def updateOutput(self, text):
+        self.text_widget.append(text)
+
+    def stopLiveGameThread(self):
+        if self.worker is not None:
+            self.worker.stop()
+
+    def threadFinished(self):
+        print("Thread is finished")
+        self.thread = None
+        self.worker = None
+        self.showGameBtn.setEnabled(True)
     
     def initCalander(self):
         self.calendar = QtWidgets.QCalendarWidget()
@@ -104,6 +152,30 @@ class MyWidget(QtWidgets.QWidget):
         if game is not None and game.flags() & QtCore.Qt.ItemFlag.ItemIsSelectable:
             self.showGameBtn.setText("View " + game.text() + " on " + self.calendar.selectedDate().toString("MMMM d, yyyy"))
             #print(game.text())
+
+    def closeEvent(self, event):
+        print("Winding is closeing")
+        if self.thread is not None and self.thread.isRunning():
+            self.stopLiveGameThread()
+
+        event.accept()
+
+class LiveGameWorker(QtCore.QObject):
+    output = QtCore.Signal(str)
+    finished = QtCore.Signal()
+
+    def __init__(self, gamePk):
+        super().__init__()
+        self.gamePk = gamePk
+        self.stop_event = threading.Event()
+
+    @QtCore.Slot()
+    def run(self):
+        printAllPitchesFromLiveGame(self.gamePk, self.output, self.stop_event)
+        self.finished.emit()
+
+    def stop(self):
+        self.stop_event.set()
 
 def main():
     app = QtWidgets.QApplication(sys.argv)

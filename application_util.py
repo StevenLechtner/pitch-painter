@@ -12,14 +12,14 @@ def getScheduleStr(date: QtCore.QDate):
         scheduleStr = ""
         for i in gameList:
             gamesList.append(statsapi.get('game', {'gamePk': i["gamePk"]}))
-        print(f"Games for {schedule["dates"][0]["date"]}:")
+        #print(f"Games for {schedule["dates"][0]["date"]}:")
         scheduleStr += f"Games for {date.toString("MMMM d, yyyy")}:\n"
         for i in gamesList:
-            print(f"{i["gameData"]["teams"]["away"]["name"]} @ {i["gameData"]["teams"]["home"]["name"]}")
+            #print(f"{i["gameData"]["teams"]["away"]["name"]} @ {i["gameData"]["teams"]["home"]["name"]}")
             scheduleStr += f"{i["gameData"]["teams"]["away"]["name"]} @ {i["gameData"]["teams"]["home"]["name"]}\n"
             gamePk.append(i["gamePk"])
-            print(i["gamePk"])
-        print()
+            #print(i["gamePk"])
+        #print()
         scheduleStr = scheduleStr.rstrip()
         return scheduleStr
     except:

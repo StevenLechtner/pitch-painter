@@ -103,15 +103,15 @@ class MyWidget(QtWidgets.QWidget):
         game = self.gamesWidget.currentItem()
         if game is not None and game.flags() & QtCore.Qt.ItemFlag.ItemIsSelectable:
             self.showGameBtn.setText("View " + game.text() + " on " + self.calendar.selectedDate().toString("MMMM d, yyyy"))
-            print(game.text())
+            #print(game.text())
 
 def main():
     app = QtWidgets.QApplication(sys.argv)
     app.setApplicationName("Pitcher Painter")
 
     widget = MyWidget()
-    #widget.resize(800, 600)
-    widget.resize(1000, 1000)
+    widget.resize(800, 600)
+    #widget.resize(1000, 1000)
     widget.setWindowTitle("Pitcher Painter")
     widget.show()
 

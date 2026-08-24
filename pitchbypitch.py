@@ -58,6 +58,9 @@ class Situation():
     def setBaserunners(self, baserunners: dict):
         self.baserunners = baserunners
 
+    def __str__(self):
+        return f"Home Team: {self.homeTeam}\nAway Team: {self.awayTeam}\nHome Score: {self.homeScore}\nAway Score: {self.awayScore}\nInning: {self.inning}\nTop: {self.top}\nBalls: {self.balls}\nStrikes: {self.strikes}\nOuts: {self.outs}\nPitcher: {self.pitcher}\nPitch Count: {self.pitchCount}\nBaserunners: {self.baserunners}\nGame Over: {self.gameOver}"
+
 class Game():
     def __init__(self, _game):
         self.game = _game

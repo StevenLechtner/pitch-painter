@@ -91,7 +91,12 @@ class MyWidget(QtWidgets.QWidget):
         self.thread.start()
 
     def updateOutput(self, text):
+        # update text_widget with text
         self.text_widget.append(text)
+        
+        # verbose print text to console
+        vprint = print if application_util.verbose else lambda *a, **k: None
+        vprint(text)
 
     def stopLiveGameThread(self):
         if self.worker is not None:
@@ -146,11 +151,12 @@ class MyWidget(QtWidgets.QWidget):
             #print(game.text())
 
     def closeEvent(self, event):
-        print("Winding is closeing")
+        print("Application shutdown...")
         if self.thread is not None and self.thread.isRunning():
             self.stopLiveGameThread()
 
         event.accept()
+        print("Done!")
 
 def main(args):
     application_util.getOptions(args)

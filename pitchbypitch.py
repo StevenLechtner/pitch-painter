@@ -5,7 +5,22 @@ import time
 import json
 
 class Situation():
-    def __init__(self, home: str, away: str, pitcher: str = None):
+    def __init__(self):
+        self.homeTeam = ""
+        self.awayTeam = ""
+        self.homeScore = -1
+        self.awayScore = -1
+        self.inning = -1
+        self.top = False
+        self.balls = -1
+        self.strikes = -1
+        self.outs = -1
+        self.pitcher = ""
+        self.pitchCount = {}
+        self.baserunners = {1: False, 2: False, 3: False}
+        self.gameOver = False
+
+    def startNewGame(self, home: str, away: str, pitcher: str = None):
         self.homeTeam = home
         self.awayTeam = away
         self.homeScore = 0

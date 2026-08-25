@@ -1,10 +1,7 @@
 import application_util
-import getopt
-import threading
+import json
 import statsapi
 import sys
-import time
-from PySide6 import QtCore
 from pitchbypitch import Situation, drawPitch
 
 desiredTeam = 'Detroit Tigers'
@@ -43,133 +40,52 @@ def getTeamName(teamId):
             teamName = teamInfo['name']
     return teamName
 
-# def printAllPitchesFromGame(game):
-#     testOut = ""
-#     awayAbbr = game["gameData"]["teams"]["away"]["abbreviation"] # LAA
-#     homeAbbr = game["gameData"]["teams"]["home"]["abbreviation"] # HOU
-#     currentPitcher = game["liveData"]["plays"]["currentPlay"]["matchup"]["pitcher"]["fullName"] # José Quijada
-#     situation = Situation(homeAbbr, awayAbbr, currentPitcher)
-#     lastDescription = ""
-#     currentPlay = game["liveData"]["plays"]["currentPlay"]
-#     plays = game["liveData"]["plays"]["allPlays"]
-#     playIdx = 0
-#     i = 0
-#     while not situation.gameOver:
-#         currentPlay = game["liveData"]["plays"]["currentPlay"]
-#         currentPlay = plays[playIdx]
-#         liveDescription = currentPlay["result"]["description"]
-#         if (lastDescription != liveDescription):
-#             lastDescription = liveDescription
-#             situation.setInning(currentPlay["about"]["inning"])
-#             situation.setTop(currentPlay["about"]["isTopInning"])
-#             # situation.setOuts(currentPlay["count"]["outs"])
-#             situation.setPitcher(currentPlay["matchup"]["pitcher"]["fullName"]) # José Quijada
-
-#             # Loop through all play events of current play - print when a pitch is thrown
-#             for index, playEvent in enumerate(currentPlay["playEvents"]):
-#                 # Ignore if the event is not a pitch
-#                 if not playEvent["isPitch"]:
-#                     continue
-
-#                 # If this is the last pitch of the at bat, then set score, baserunners, and outs, and set balls and strikes to 0
-#                 if index == len(currentPlay["playEvents"]) - 1:
-#                     situation.setAwayScore(currentPlay["result"]["awayScore"])
-#                     situation.setHomeScore(currentPlay["result"]["homeScore"])
-#                     situation.setOuts(currentPlay["count"]["outs"])
-#                     situation.setBalls(0)
-#                     situation.setStrikes(0)
-#                     basesOccupied = {1: False, 2: False, 3: False}
-#                     if situation.outs < 3:
-#                         if currentPlay["matchup"].get("postOnFirst"):
-#                             basesOccupied[1] = True
-#                         if currentPlay["matchup"].get("postOnSecond"):
-#                             basesOccupied[2] = True
-#                         if currentPlay["matchup"].get("postOnThird"):
-#                             basesOccupied[3] = True
-#                     situation.setBaserunners(basesOccupied)
-
-#                 else:
-#                     situation.setBalls(playEvent["count"]["balls"])
-#                     situation.setStrikes(playEvent["count"]["strikes"])
-#                     situation.setOuts(playEvent["count"]["outs"])
-
-#                 # Incrememnt pitch count for current pitcher
-#                 pitchCount = situation.pitchCount.get(situation.pitcher, 0)
-#                 pitchCount += 1
-#                 situation.pitchCount[situation.pitcher] = pitchCount
-
-#                 print(f"{drawPitch(situation)}\n")
-#                 if (situation.balls == 3 and situation.strikes == 2 and situation.outs == 2 and situation.awayScore == 0 and situation.homeScore == 3 and situation.inning == 9):
-#                     testOut = drawPitch(situation)
-#                 i += 1
-
-#             # Check if the result of this at bat finished the game
-#             if situation.inning >= 9:
-#                 if situation.outs >= 3:
-#                     if situation.top:
-#                         if situation.homeScore > situation.awayScore:
-#                             situation.gameOver = True
-#                     else:
-#                         if situation.homeScore != situation.awayScore:
-#                             situation.gameOver = True
-#                 else:
-#                     if not situation.top and situation.homeScore > situation.awayScore:
-#                         situation.gameOver = True
-#         playIdx += 1
-
-#     border = ""
-#     recap = ""
-#     if situation.awayScore > situation.homeScore:
-#         recap = f"|  Final score: {situation.awayScore}-{situation.homeScore}, {situation.awayTeam} over {situation.homeTeam}  |"
-#     else:
-#         recap = f"|  Final score: {situation.homeScore}-{situation.awayScore}, {situation.homeTeam} over {situation.awayTeam}  |"
-#     while len(border) < len(recap):
-#         border += "─"
-#     border = "+" + border[1:-1] + "+"
-#     print()
-#     print(border)
-#     print(recap)
-#     print(border)
-#     return testOut
+def pingUntilNextPitch():
+    return False
 
 def printAllPitchesFromLiveGame(gamePk, output, stop_event):
     while not stop_event.is_set():
         vprint = print if application_util.verbose else lambda *a, **k: None
         game = statsapi.get('game', {'gamePk': gamePk})
+        # with open("example_game.json", "r") as f:
+        #     game = json.load(f)
         if game is None:
-            vprint("Game is None")
+            # vprint("Game is None")
             output.emit("Game is None")
             return
         awayAbbr = game.get("gameData", {}).get("teams", {}).get("away", {}).get("abbreviation", "N/A")
         homeAbbr = game.get("gameData", {}).get("teams", {}).get("home", {}).get("abbreviation", "N/A")
         currentPitcher = game.get("liveData", {}).get("plays", {}).get("currentPlay", {}).get("matchup", {}).get("pitcher", {}).get("fullName", "N/A")
-        situation = Situation(homeAbbr, awayAbbr, currentPitcher)
-        lastDescription = ""
+        situation = Situation()
+        lastAtBatIndex = -1
         currentPlay = game.get("liveData", {}).get("plays", {}).get("currentPlay", "N/A")
         plays = game.get("liveData", {}).get("plays", {}).get("allPlays", "N/A")
         if (len(plays) == 0):
-            vprint("Game has not started yet!")
+            # vprint("Game has not started yet!")
             output.emit("Game has not started yet!")
             return
         playIdx = 0
         i = 0
         lastPlayJson = currentPlay
         newPlay = False
-        processOldPlay = False
+        processCachedPlay = False
         # Print the situation before the game's first pitch
-        situation.setPitcher(plays[0].get("matchup", {}).get("pitcher", {}).get("fullName", "N/A"))
+        situation.startNewGame(homeAbbr, awayAbbr, plays[0].get("matchup", {}).get("pitcher", {}).get("fullName", "N/A"))
         output.emit(drawPitch(situation))
-        vprint(currentPlay.get("atBatIndex", -1))
         while not situation.gameOver:
-            while ((playIdx >= len(plays) or newPlay) and lastPlayJson == currentPlay):
+            # two situations:
+            # the at bat is done and processed and the next at bat has not started yet (lastAtBatIndex == currentAtBatIndex or currentPlay[about][isComplete] is True)
+            # the at bat is ongoing but not done yet, and we have already processed the last pitch (currentPlay[about][isComplete] is False and currentPlay[playEvents][-1][index] == last processed index)
+            while ((playIdx >= len(plays) or newPlay) and
+                    lastPlayJson == currentPlay):
                 if stop_event.wait(2):
                     break
                 game = statsapi.get('game', {'gamePk': gamePk})
                 awayAbbr = game.get("gameData", {}).get("teams", {}).get("away", {}).get("abbreviation", "N/A")
                 homeAbbr = game.get("gameData", {}).get("teams", {}).get("home", {}).get("abbreviation", "N/A")
                 currentPitcher = game.get("liveData", {}).get("plays", {}).get("currentPlay", {}).get("matchup", {}).get("pitcher", {}).get("fullName", "N/A")
-                situation = Situation(homeAbbr, awayAbbr, currentPitcher)
-                lastDescription = ""
+                #situation = Situation(homeAbbr, awayAbbr, currentPitcher)
+                lastAtBatIndex = -1
                 currentPlay = game.get("liveData", {}).get("plays", {}).get("currentPlay", "N/A")
                 plays = game.get("liveData", {}).get("plays", {}).get("allPlays", "N/A")
                 if lastPlayJson != currentPlay:
@@ -179,12 +95,12 @@ def printAllPitchesFromLiveGame(gamePk, output, stop_event):
             #currentPlay = plays[playIdx]
             if not newPlay:
                 currentPlay = plays[playIdx]
-                liveDescription = currentPlay.get("result", {}).get("description", "N/A")
-                processOldPlay = (lastDescription != liveDescription)
+                currentAtBatIndex = currentPlay.get("about", {}).get("atBatIndex", -1)
+                processCachedPlay = (lastAtBatIndex != currentAtBatIndex)
             lastPlayJson = currentPlay
-            if processOldPlay or newPlay:
-                vprint(currentPlay.get("atBatIndex", -1))
-                lastDescription = liveDescription
+            if processCachedPlay or newPlay:
+                vprint("New at bat. Index: ", currentPlay.get("atBatIndex", -1)) # verbose log. FIXME: remove
+                lastAtBatIndex = currentAtBatIndex
                 situation.setInning(currentPlay.get("about", {}).get("inning", -1))
                 situation.setTop(currentPlay.get("about", {}).get("isTopInning", False))
                 # situation.setOuts(currentPlay["count"]["outs"])
@@ -224,7 +140,8 @@ def printAllPitchesFromLiveGame(gamePk, output, stop_event):
                     pitchCount += 1
                     situation.pitchCount[situation.pitcher] = pitchCount
 
-                    vprint(f"{drawPitch(situation)}")
+                    # vprint(f"{drawPitch(situation)}")
+                    # output.emit(currentPlay["result"]["description"])
                     output.emit(drawPitch(situation))
                     i += 1
 
@@ -251,10 +168,10 @@ def printAllPitchesFromLiveGame(gamePk, output, stop_event):
         while len(border) < len(recap):
             border += "─"
         border = "+" + border[1:-1] + "+"
-        vprint()
-        vprint(border)
-        vprint(recap)
-        vprint(border)
+        # vprint()
+        # vprint(border)
+        # vprint(recap)
+        # vprint(border)
         output.emit("")
         output.emit(border)
         output.emit(recap)
@@ -268,8 +185,8 @@ def printAllPitchesFromLiveGame(gamePk, output, stop_event):
         return
 
 def outputTesting(text):
-    return
-    print(text)
+    vprint = print if application_util.verbose else lambda *a, **k: None
+    vprint(text)
 
 def main(args):
     '''

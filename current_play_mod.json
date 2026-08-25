@@ -1,0 +1,63 @@
+{
+    "currentPlay": {
+        "result": {
+            "awayScore": 4,
+            "homeScore": 3
+        },
+        "about": {
+            "atBatIndex": 70,
+            "isTopInning": false,
+            "inning": 9,
+            "isComplete": true
+        },
+        "count": {
+            "balls": 0,
+            "strikes": 1,
+            "outs": 3
+        },
+        "matchup": {
+            "pitcher": {
+                "fullName": "Tyler Holton"
+            }
+        },
+        "playEvents": [
+            {
+                "details": {
+                    "isInPlay": false,
+                    "isStrike": true,
+                    "isBall": false,
+                    "isOut": false,
+                    "hasReview": false
+                },
+                "count": {
+                    "balls": 0,
+                    "strikes": 1,
+                    "outs": 2
+                },
+                "index": 0,
+                "playId": "69d4b54e-0cab-4c9d-a882-4181638b7ae5",
+                "pitchNumber": 1,
+                "isPitch": true
+            },
+            {
+                "details": {
+                    "isInPlay": true,
+                    "isStrike": false,
+                    "isBall": false,
+                    "isOut": true,
+                    "hasReview": false
+                },
+                "count": {
+                    "balls": 0,
+                    "strikes": 1,
+                    "outs": 2
+                },
+                "index": 1,
+                "playId": "4fa8aaf5-1482-443f-ab1e-9cdc493a3f95",
+                "pitchNumber": 2,
+                "isPitch": true
+            }
+        ],
+        "atBatIndex": 70
+    }
+}

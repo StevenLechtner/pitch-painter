@@ -1,0 +1,266 @@
+{
+    "currentPlay": {
+        "result": {
+            "type": "atBat",
+            "event": "Flyout",
+            "eventType": "field_out",
+            "description": "Jackson Merrill flies out to center fielder Parker Meadows.",
+            "rbi": 0,
+            "awayScore": 4,
+            "homeScore": 3,
+            "isOut": true
+        },
+        "about": {
+            "atBatIndex": 70,
+            "halfInning": "bottom",
+            "isTopInning": false,
+            "inning": 9,
+            "startTime": "2024-09-06T03:05:33.051Z",
+            "endTime": "2024-09-06T03:06:15.436Z",
+            "isComplete": true,
+            "isScoringPlay": false,
+            "hasReview": false,
+            "hasOut": true,
+            "captivatingIndex": 0
+        },
+        "count": {
+            "balls": 0,
+            "strikes": 1,
+            "outs": 3
+        },
+        "matchup": {
+            "batter": {
+                "id": 701538,
+                "fullName": "Jackson Merrill",
+                "link": "/api/v1/people/701538"
+            },
+            "batSide": {
+                "code": "L",
+                "description": "Left"
+            },
+            "pitcher": {
+                "id": 663947,
+                "fullName": "Tyler Holton",
+                "link": "/api/v1/people/663947"
+            },
+            "pitchHand": {
+                "code": "L",
+                "description": "Left"
+            },
+            "batterHotColdZones": [],
+            "pitcherHotColdZones": [],
+            "splits": {
+                "batter": "vs_LHP",
+                "pitcher": "vs_LHB",
+                "menOnBase": "Empty"
+            }
+        },
+        "pitchIndex": [
+            0,
+            1
+        ],
+        "actionIndex": [],
+        "runnerIndex": [
+            0
+        ],
+        "runners": [
+            {
+                "movement": {
+                    "originBase": null,
+                    "start": null,
+                    "end": null,
+                    "outBase": "1B",
+                    "isOut": true,
+                    "outNumber": 3
+                },
+                "details": {
+                    "event": "Flyout",
+                    "eventType": "field_out",
+                    "movementReason": null,
+                    "runner": {
+                        "id": 701538,
+                        "fullName": "Jackson Merrill",
+                        "link": "/api/v1/people/701538"
+                    },
+                    "responsiblePitcher": null,
+                    "isScoringEvent": false,
+                    "rbi": false,
+                    "earned": false,
+                    "teamUnearned": false,
+                    "playIndex": 1
+                },
+                "credits": [
+                    {
+                        "player": {
+                            "id": 678009,
+                            "link": "/api/v1/people/678009"
+                        },
+                        "position": {
+                            "code": "8",
+                            "name": "Outfielder",
+                            "type": "Outfielder",
+                            "abbreviation": "CF"
+                        },
+                        "credit": "f_putout"
+                    }
+                ]
+            }
+        ],
+        "playEvents": [
+            {
+                "details": {
+                    "call": {
+                        "code": "S",
+                        "description": "Swinging Strike"
+                    },
+                    "description": "Swinging Strike",
+                    "code": "S",
+                    "ballColor": "rgba(170, 21, 11, 1.0)",
+                    "trailColor": "rgba(50, 50, 50, 1.0)",
+                    "isInPlay": false,
+                    "isStrike": true,
+                    "isBall": false,
+                    "type": {
+                        "code": "ST",
+                        "description": "Sweeper"
+                    },
+                    "isOut": false,
+                    "hasReview": false
+                },
+                "count": {
+                    "balls": 0,
+                    "strikes": 1,
+                    "outs": 2
+                },
+                "pitchData": {
+                    "startSpeed": 80.3,
+                    "endSpeed": 73.0,
+                    "strikeZoneTop": 3.53,
+                    "strikeZoneBottom": 1.64,
+                    "coordinates": {
+                        "aY": 25.62489250533415,
+                        "aZ": -32.92305180508338,
+                        "pfxX": -11.350880309029579,
+                        "pfxZ": -0.5530214059813865,
+                        "pX": -0.31137821983293423,
+                        "pZ": 2.4718227977013867,
+                        "vX0": -1.171399127170012,
+                        "vY0": -116.93522977017022,
+                        "vZ0": -0.7585517031000848,
+                        "x": 128.87,
+                        "y": 172.04,
+                        "x0": 1.6700016221697678,
+                        "y0": 50.002042848695616,
+                        "z0": 5.937054948580667,
+                        "aX": -15.443765960673684
+                    },
+                    "breaks": {
+                        "breakAngle": 25.2,
+                        "breakLength": 10.8,
+                        "breakY": 24.0,
+                        "breakVertical": -43.8,
+                        "breakVerticalInduced": -0.8,
+                        "breakHorizontal": 20.8,
+                        "spinRate": 2718,
+                        "spinDirection": 282
+                    },
+                    "zone": 4,
+                    "typeConfidence": 0.92,
+                    "plateTime": 0.4715627468169181,
+                    "extension": 6.436095618283863
+                },
+                "index": 0,
+                "playId": "69d4b54e-0cab-4c9d-a882-4181638b7ae5",
+                "pitchNumber": 1,
+                "startTime": "2024-09-06T03:05:47.691Z",
+                "endTime": "2024-09-06T03:05:51.930Z",
+                "isPitch": true,
+                "type": "pitch"
+            },
+            {
+                "details": {
+                    "call": {
+                        "code": "X",
+                        "description": "In play, out(s)"
+                    },
+                    "description": "In play, out(s)",
+                    "code": "X",
+                    "ballColor": "rgba(26, 86, 190, 1.0)",
+                    "trailColor": "rgba(50, 50, 50, 1.0)",
+                    "isInPlay": true,
+                    "isStrike": false,
+                    "isBall": false,
+                    "type": {
+                        "code": "ST",
+                        "description": "Sweeper"
+                    },
+                    "isOut": true,
+                    "hasReview": false
+                },
+                "count": {
+                    "balls": 0,
+                    "strikes": 1,
+                    "outs": 2
+                },
+                "pitchData": {
+                    "startSpeed": 79.4,
+                    "endSpeed": 72.0,
+                    "strikeZoneTop": 3.53,
+                    "strikeZoneBottom": 1.64,
+                    "coordinates": {
+                        "aY": 26.294472434947462,
+                        "aZ": -35.73830090104172,
+                        "pfxX": -11.697844301272044,
+                        "pfxZ": -2.6980457057052725,
+                        "pX": -0.35804052932541763,
+                        "pZ": 1.764004125974909,
+                        "vX0": -1.3635250639100533,
+                        "vY0": -115.49339748884971,
+                        "vZ0": -1.2819156760278687,
+                        "x": 130.65,
+                        "y": 191.15,
+                        "x0": 1.7599140631971637,
+                        "y0": 50.005220355571105,
+                        "z0": 5.838782739194597,
+                        "aX": -15.427720977900004
+                    },
+                    "breaks": {
+                        "breakAngle": 24.0,
+                        "breakLength": 12.0,
+                        "breakY": 24.0,
+                        "breakVertical": -49.1,
+                        "breakVerticalInduced": -4.9,
+                        "breakHorizontal": 21.5,
+                        "spinRate": 2848,
+                        "spinDirection": 298
+                    },
+                    "zone": 7,
+                    "typeConfidence": 0.89,
+                    "plateTime": 0.4786469038443615,
+                    "extension": 6.4038276556136795
+                },
+                "hitData": {
+                    "launchSpeed": 87.3,
+                    "launchAngle": 47.0,
+                    "totalDistance": 264.0,
+                    "trajectory": "fly_ball",
+                    "hardness": "medium",
+                    "location": "8",
+                    "coordinates": {
+                        "coordX": 129.37,
+                        "coordY": 94.27
+                    }
+                },
+                "index": 1,
+                "playId": "4fa8aaf5-1482-443f-ab1e-9cdc493a3f95",
+                "pitchNumber": 2,
+                "startTime": "2024-09-06T03:06:05.567Z",
+                "endTime": "2024-09-06T03:06:15.436Z",
+                "isPitch": true,
+                "type": "pitch"
+            }
+        ],
+        "playEndTime": "2024-09-06T03:06:15.436Z",
+        "atBatIndex": 70
+    }
+}

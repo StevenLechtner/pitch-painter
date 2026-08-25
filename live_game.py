@@ -1,4 +1,4 @@
-import application_util
+from application_util import *
 import json
 import statsapi
 import sys
@@ -43,9 +43,66 @@ def getTeamName(teamId):
 def pingUntilNextPitch():
     return False
 
+def processAtBat(situation, currentPlay, output):
+    vprint("New at bat. Index: ", currentPlay.get("atBatIndex", -1)) # verbose log. FIXME: remove
+    situation.setInning(currentPlay.get("about", {}).get("inning", -1))
+    situation.setTop(currentPlay.get("about", {}).get("isTopInning", False))
+    # situation.setOuts(currentPlay["count"]["outs"])
+    situation.setPitcher(currentPlay.get("matchup", {}).get("pitcher", {}).get("fullName", "N/A"))
+
+    # Loop through all play events of current play - print when a pitch is thrown
+    for index, playEvent in enumerate(currentPlay.get("playEvents", {})):
+        # Ignore if the event is not a pitch
+        if not playEvent.get("isPitch", False):
+            continue
+
+        # If this is the last pitch of the at bat, then set score, baserunners, and outs, and set balls and strikes to 0
+        curIndex = len(currentPlay.get("playEvents", {})) - 1
+        if index == curIndex or curIndex == -1:
+            situation.setAwayScore(currentPlay.get("result", {}).get("awayScore", -1))
+            situation.setHomeScore(currentPlay.get("result", {}).get("homeScore", -1))
+            situation.setOuts(currentPlay.get("count", {}).get("outs", -1))
+            situation.setBalls(0)
+            situation.setStrikes(0)
+            basesOccupied = {1: False, 2: False, 3: False}
+            if situation.outs < 3:
+                if currentPlay.get("matchup", {}).get("postOnFirst", False):
+                    basesOccupied[1] = True
+                if currentPlay.get("matchup", {}).get("postOnSecond", False):
+                    basesOccupied[2] = True
+                if currentPlay.get("matchup", {}).get("postOnThird", False):
+                    basesOccupied[3] = True
+            situation.setBaserunners(basesOccupied)
+
+        else:
+            situation.setBalls(playEvent.get("count", {}).get("balls", -1))
+            situation.setStrikes(playEvent.get("count", {}).get("strikes", -1))
+            situation.setOuts(playEvent.get("count", {}).get("outs", -1))
+
+        # Incrememnt pitch count for current pitcher
+        pitchCount = situation.pitchCount.get(situation.pitcher, 0)
+        pitchCount += 1
+        situation.pitchCount[situation.pitcher] = pitchCount
+
+        # vprint(f"{drawPitch(situation)}")
+        # output.emit(currentPlay["result"]["description"])
+        output.emit(drawPitch(situation))
+
+    # Check if the result of this at bat finished the game
+    if situation.inning >= 9:
+        if situation.outs >= 3:
+            if situation.top:
+                if situation.homeScore > situation.awayScore:
+                    situation.gameOver = True
+            else:
+                if situation.homeScore != situation.awayScore:
+                    situation.gameOver = True
+        else:
+            if not situation.top and situation.homeScore > situation.awayScore:
+                situation.gameOver = True
+
 def printAllPitchesFromLiveGame(gamePk, output, stop_event):
     while not stop_event.is_set():
-        vprint = print if application_util.verbose else lambda *a, **k: None
         game = statsapi.get('game', {'gamePk': gamePk})
         # with open("example_game.json", "r") as f:
         #     game = json.load(f)
@@ -99,64 +156,9 @@ def printAllPitchesFromLiveGame(gamePk, output, stop_event):
                 processCachedPlay = (lastAtBatIndex != currentAtBatIndex)
             lastPlayJson = currentPlay
             if processCachedPlay or newPlay:
-                vprint("New at bat. Index: ", currentPlay.get("atBatIndex", -1)) # verbose log. FIXME: remove
                 lastAtBatIndex = currentAtBatIndex
-                situation.setInning(currentPlay.get("about", {}).get("inning", -1))
-                situation.setTop(currentPlay.get("about", {}).get("isTopInning", False))
-                # situation.setOuts(currentPlay["count"]["outs"])
-                situation.setPitcher(currentPlay.get("matchup", {}).get("pitcher", {}).get("fullName", "N/A"))
-
-                # Loop through all play events of current play - print when a pitch is thrown
-                for index, playEvent in enumerate(currentPlay.get("playEvents", {})):
-                    # Ignore if the event is not a pitch
-                    if not playEvent.get("isPitch", False):
-                        continue
-
-                    # If this is the last pitch of the at bat, then set score, baserunners, and outs, and set balls and strikes to 0
-                    curIndex = len(currentPlay.get("playEvents", {})) - 1
-                    if index == curIndex or curIndex == -1:
-                        situation.setAwayScore(currentPlay.get("result", {}).get("awayScore", -1))
-                        situation.setHomeScore(currentPlay.get("result", {}).get("homeScore", -1))
-                        situation.setOuts(currentPlay.get("count", {}).get("outs", -1))
-                        situation.setBalls(0)
-                        situation.setStrikes(0)
-                        basesOccupied = {1: False, 2: False, 3: False}
-                        if situation.outs < 3:
-                            if currentPlay.get("matchup", {}).get("postOnFirst", False):
-                                basesOccupied[1] = True
-                            if currentPlay.get("matchup", {}).get("postOnSecond", False):
-                                basesOccupied[2] = True
-                            if currentPlay.get("matchup", {}).get("postOnThird", False):
-                                basesOccupied[3] = True
-                        situation.setBaserunners(basesOccupied)
-
-                    else:
-                        situation.setBalls(playEvent.get("count", {}).get("balls", -1))
-                        situation.setStrikes(playEvent.get("count", {}).get("strikes", -1))
-                        situation.setOuts(playEvent.get("count", {}).get("outs", -1))
-
-                    # Incrememnt pitch count for current pitcher
-                    pitchCount = situation.pitchCount.get(situation.pitcher, 0)
-                    pitchCount += 1
-                    situation.pitchCount[situation.pitcher] = pitchCount
-
-                    # vprint(f"{drawPitch(situation)}")
-                    # output.emit(currentPlay["result"]["description"])
-                    output.emit(drawPitch(situation))
-                    i += 1
-
-                # Check if the result of this at bat finished the game
-                if situation.inning >= 9:
-                    if situation.outs >= 3:
-                        if situation.top:
-                            if situation.homeScore > situation.awayScore:
-                                situation.gameOver = True
-                        else:
-                            if situation.homeScore != situation.awayScore:
-                                situation.gameOver = True
-                    else:
-                        if not situation.top and situation.homeScore > situation.awayScore:
-                            situation.gameOver = True
+                processAtBat(situation, currentPlay, output)
+                i += 1
             playIdx += 1
 
         border = ""
@@ -185,7 +187,6 @@ def printAllPitchesFromLiveGame(gamePk, output, stop_event):
         return
 
 def outputTesting(text):
-    vprint = print if application_util.verbose else lambda *a, **k: None
     vprint(text)
 
 def main(args):
@@ -194,7 +195,7 @@ def main(args):
     |   Live Play Output   |
     +======================+
     '''
-    application_util.getOptions(args)
+    getOptions(args)
 
     # game = statsapi.get('game', {'gamePk': 776189})
     # # with open("meadows.json", "r") as f:
@@ -211,7 +212,7 @@ def main(args):
 
     # game = statsapi.get('game', {'gamePk': gamePk})
     gamePk = 823745
-    testThread = application_util.LiveGameWorker(gamePk)
+    testThread = LiveGameWorker(gamePk)
     testThread.output.connect(outputTesting)
     printAllPitchesFromLiveGame(gamePk, testThread.output, testThread.stop_event)
     return 0

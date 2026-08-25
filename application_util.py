@@ -54,6 +54,10 @@ def getGamePk(index):
         index = len(gamePk)
     return gamePk[index-1]
 
+def vprint(*args, **kwargs):
+    if verbose:
+        print(*args, **kwargs)
+
 def usage():
     print(f"Usage: python {sys.argv[0]} [options] arguments")
     print("Options:")

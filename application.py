@@ -1,4 +1,5 @@
-from application_util import *
+import application_util
+from print_util import vprint
 import sys
 from PySide6 import QtCore, QtWidgets, QtGui
 
@@ -47,7 +48,7 @@ class MyWidget(QtWidgets.QWidget):
         self.text_widget.setPlainText("")
         self.text_widget.show()
         index = self.gamesWidget.row(self.gamesWidget.currentItem())
-        gamePk = getGamePk(index)
+        gamePk = application_util.getGamePk(index)
         self.getPitches(gamePk)
         self.showGameBtn.setText("Return")
 
@@ -80,7 +81,7 @@ class MyWidget(QtWidgets.QWidget):
         if self.thread is not None and self.thread.isRunning():
             self.stopLiveGameThread()
         self.thread = QtCore.QThread()
-        self.worker = LiveGameWorker(gamePk)
+        self.worker = application_util.LiveGameWorker(gamePk)
         self.worker.moveToThread(self.thread)
         self.thread.started.connect(self.worker.run)
         self.worker.output.connect(self.updateOutput)
@@ -120,7 +121,7 @@ class MyWidget(QtWidgets.QWidget):
         month = date.month()
         day = date.day()
         #self.text_widget.setPlainText(date.toString("MMMM d, yyyy"))
-        scheduleStr = getScheduleStr(date)
+        scheduleStr = application_util.getScheduleStr(date)
         scheduleList = scheduleStr.split("\n")
         self.text_widget.setPlainText(scheduleStr)
         self.gamesWidget.clear()
@@ -158,7 +159,7 @@ class MyWidget(QtWidgets.QWidget):
         print("Done!")
 
 def main(args):
-    getOptions(args)
+    application_util.getOptions(args)
     app = QtWidgets.QApplication(sys.argv)
     app.setApplicationName("Pitcher Painter")
 

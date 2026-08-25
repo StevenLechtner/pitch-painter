@@ -1,4 +1,5 @@
 import getopt
+import print_util
 import statsapi
 import sys
 import threading
@@ -6,7 +7,6 @@ from live_game import printAllPitchesFromLiveGame
 from PySide6 import QtCore, QtWidgets, QtGui
 
 gamePk = []
-verbose = False
 
 class LiveGameWorker(QtCore.QObject):
     output = QtCore.Signal(str)
@@ -54,10 +54,6 @@ def getGamePk(index):
         index = len(gamePk)
     return gamePk[index-1]
 
-def vprint(*args, **kwargs):
-    if verbose:
-        print(*args, **kwargs)
-
 def usage():
     print(f"Usage: python {sys.argv[0]} [options] arguments")
     print("Options:")
@@ -77,8 +73,7 @@ def getOptions(args):
                 sys.exit(2)
             elif currentArg in ("-v", "--verbose"):
                 print("Verbose flag")
-                global verbose
-                verbose = True
+                print_util.setVerbose(True)
             elif currentArg in ("-o", "--output"):
                 print("Output mode:", currentVal)
     except getopt.error as err:

@@ -1,5 +1,6 @@
-from application_util import *
+import application_util
 import json
+from print_util import vprint
 import statsapi
 import sys
 from pitchbypitch import Situation, drawPitch
@@ -189,7 +190,7 @@ def main(args):
     |   Live Play Output   |
     +======================+
     '''
-    getOptions(args)
+    application_util.getOptions(args)
 
     # game = statsapi.get('game', {'gamePk': 776189})
     # # with open("meadows.json", "r") as f:
@@ -206,7 +207,7 @@ def main(args):
 
     # game = statsapi.get('game', {'gamePk': gamePk})
     gamePk = 823745
-    testThread = LiveGameWorker(gamePk)
+    testThread = application_util.LiveGameWorker(gamePk)
     testThread.output.connect(outputVerbosePrinting)
     printAllPitchesFromLiveGame(gamePk, testThread.output, testThread.stop_event)
     return 0

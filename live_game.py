@@ -45,6 +45,7 @@ def pingUntilNextPitch():
 
 def processAtBat(situation, currentPlay, output):
     vprint("New at bat. Index: ", currentPlay.get("atBatIndex", -1)) # verbose log. FIXME: remove
+    output.emit(currentPlay.get("result", {}).get("description", "")) # print at bat description
     situation.setInning(currentPlay.get("about", {}).get("inning", -1))
     situation.setTop(currentPlay.get("about", {}).get("isTopInning", False))
     # situation.setOuts(currentPlay["count"]["outs"])
@@ -54,7 +55,18 @@ def processAtBat(situation, currentPlay, output):
     for index, playEvent in enumerate(currentPlay.get("playEvents", {})):
         # Ignore if the event is not a pitch
         if not playEvent.get("isPitch", False):
+            # update if a run scored mid at bat - wild pitch, stolen home, error on pick off, etc
+            awayScore = playEvent.get("details", {}).get("awayScore", -1)
+            if awayScore > -1:
+                situation.setAwayScore(awayScore)
+            homeScore = playEvent.get("details", {}).get("homeScore", -1)
+            if homeScore > -1:
+                situation.setHomeScore(homeScore)
             continue
+
+        # TODO: Write logic for run being scored within an at bat (passed ball/wild pitch, for example) - written above. Test
+        # Set score, baserunners, and outs (accounts for stolen bases, pick offs, etc)
+        # We can see start base and end base in [runners][movement], and [runners][details][playIndex] shows when the change happens
 
         # If this is the last pitch of the at bat, then set score, baserunners, and outs, and set balls and strikes to 0
         curIndex = len(currentPlay.get("playEvents", {})) - 1
@@ -64,28 +76,19 @@ def processAtBat(situation, currentPlay, output):
             situation.setOuts(currentPlay.get("count", {}).get("outs", -1))
             situation.setBalls(0)
             situation.setStrikes(0)
-            basesOccupied = {1: False, 2: False, 3: False}
-            if situation.outs < 3:
-                if currentPlay.get("matchup", {}).get("postOnFirst", False):
-                    basesOccupied[1] = True
-                if currentPlay.get("matchup", {}).get("postOnSecond", False):
-                    basesOccupied[2] = True
-                if currentPlay.get("matchup", {}).get("postOnThird", False):
-                    basesOccupied[3] = True
-            situation.setBaserunners(basesOccupied)
+            situation.setBaserunnersFromPlay(currentPlay, True)
 
         else:
             situation.setBalls(playEvent.get("count", {}).get("balls", -1))
             situation.setStrikes(playEvent.get("count", {}).get("strikes", -1))
             situation.setOuts(playEvent.get("count", {}).get("outs", -1))
+            situation.setBaserunnersFromPlay(currentPlay, False)
 
         # Incrememnt pitch count for current pitcher
         pitchCount = situation.pitchCount.get(situation.pitcher, 0)
         pitchCount += 1
         situation.pitchCount[situation.pitcher] = pitchCount
 
-        # vprint(f"{drawPitch(situation)}")
-        # output.emit(currentPlay["result"]["description"])
         output.emit(drawPitch(situation))
 
     # Check if the result of this at bat finished the game
@@ -104,62 +107,57 @@ def processAtBat(situation, currentPlay, output):
 def printAllPitchesFromLiveGame(gamePk, output, stop_event):
     while not stop_event.is_set():
         game = statsapi.get('game', {'gamePk': gamePk})
-        # with open("example_game.json", "r") as f:
+        # with open("extra_innings_away_wins.json", "r") as f:
         #     game = json.load(f)
         if game is None:
-            # vprint("Game is None")
             output.emit("Game is None")
             return
         awayAbbr = game.get("gameData", {}).get("teams", {}).get("away", {}).get("abbreviation", "N/A")
         homeAbbr = game.get("gameData", {}).get("teams", {}).get("home", {}).get("abbreviation", "N/A")
-        currentPitcher = game.get("liveData", {}).get("plays", {}).get("currentPlay", {}).get("matchup", {}).get("pitcher", {}).get("fullName", "N/A")
         situation = Situation()
-        lastAtBatIndex = -1
-        currentPlay = game.get("liveData", {}).get("plays", {}).get("currentPlay", "N/A")
-        plays = game.get("liveData", {}).get("plays", {}).get("allPlays", "N/A")
-        if (len(plays) == 0):
-            # vprint("Game has not started yet!")
+        lastProcessedAtBatIndex = -1
+        currentAtBat = game.get("liveData", {}).get("plays", {}).get("currentPlay", "N/A")
+        atBats = game.get("liveData", {}).get("plays", {}).get("allPlays", "N/A") # a play is an at bat from this game
+        if (len(atBats) == 0):
             output.emit("Game has not started yet!")
             return
-        playIdx = 0
-        i = 0
-        lastPlayJson = currentPlay
-        newPlay = False
-        processCachedPlay = False
-        # Print the situation before the game's first pitch
-        situation.startNewGame(homeAbbr, awayAbbr, plays[0].get("matchup", {}).get("pitcher", {}).get("fullName", "N/A"))
-        output.emit(drawPitch(situation))
+        atBatIndexToProcess = 0
+        atBatToProcess = atBats[0]
+        newAtBat = False
+        processCachedAtBat = False
+        situation.startNewGame(homeAbbr, awayAbbr, atBats[0].get("matchup", {}).get("pitcher", {}).get("fullName", "N/A"))
         while not situation.gameOver:
             # two situations:
-            # the at bat is done and processed and the next at bat has not started yet (lastAtBatIndex == currentAtBatIndex or currentPlay[about][isComplete] is True)
+            # the at bat is done and processed and the next at bat has not started yet (lastProcessedAtBatIndex == currentAtBatIndex or currentPlay[about][isComplete] is True)
             # the at bat is ongoing but not done yet, and we have already processed the last pitch (currentPlay[about][isComplete] is False and currentPlay[playEvents][-1][index] == last processed index)
-            while ((playIdx >= len(plays) or newPlay) and
-                    lastPlayJson == currentPlay):
+            # TODO: Implement this correctly. This part should just wait for a new at bat.
+            # TODO: Within an at bat, we wait for isComplete to be True, and if it isn't then we continue to ping from within.
+            while ((atBatIndexToProcess >= len(atBats) or newAtBat) and
+                    lastProcessedAtBatIndex == currentAtBatIndex):
                 if stop_event.wait(2):
                     break
                 game = statsapi.get('game', {'gamePk': gamePk})
-                awayAbbr = game.get("gameData", {}).get("teams", {}).get("away", {}).get("abbreviation", "N/A")
-                homeAbbr = game.get("gameData", {}).get("teams", {}).get("home", {}).get("abbreviation", "N/A")
-                currentPitcher = game.get("liveData", {}).get("plays", {}).get("currentPlay", {}).get("matchup", {}).get("pitcher", {}).get("fullName", "N/A")
-                #situation = Situation(homeAbbr, awayAbbr, currentPitcher)
-                lastAtBatIndex = -1
-                currentPlay = game.get("liveData", {}).get("plays", {}).get("currentPlay", "N/A")
-                plays = game.get("liveData", {}).get("plays", {}).get("allPlays", "N/A")
-                if lastPlayJson != currentPlay:
-                    newPlay = True
+                currentAtBat = game.get("liveData", {}).get("plays", {}).get("currentPlay", "N/A")
+                currentAtBatIndex = currentAtBat.get("about", {}).get("atBatIndex", -1)
+                atBats = game.get("liveData", {}).get("plays", {}).get("allPlays", "N/A")
+                # This is a new at bat - process it
+                if lastProcessedAtBatIndex != currentAtBatIndex:
+                    atBatToProcess = currentAtBat
+                    newAtBat = True
 
             #currentPlay = game.get("liveData", {}).get("plays", {}).get("currentPlay", "N/A")
             #currentPlay = plays[playIdx]
-            if not newPlay:
-                currentPlay = plays[playIdx]
-                currentAtBatIndex = currentPlay.get("about", {}).get("atBatIndex", -1)
-                processCachedPlay = (lastAtBatIndex != currentAtBatIndex)
-            lastPlayJson = currentPlay
-            if processCachedPlay or newPlay:
-                lastAtBatIndex = currentAtBatIndex
-                processAtBat(situation, currentPlay, output)
-                i += 1
-            playIdx += 1
+            # We are processing previously cached at bats until live IRL
+            if not newAtBat:
+                currentAtBat = atBats[atBatIndexToProcess]
+                currentAtBatIndex = currentAtBat.get("about", {}).get("atBatIndex", -1)
+                if lastProcessedAtBatIndex != currentAtBatIndex:
+                    processCachedAtBat = True
+                    atBatToProcess = currentAtBat
+            if processCachedAtBat or newAtBat:
+                processAtBat(situation, atBatToProcess, output)
+                lastProcessedAtBatIndex = currentAtBatIndex
+                atBatIndexToProcess += 1
 
         border = ""
         recap = ""
@@ -170,23 +168,19 @@ def printAllPitchesFromLiveGame(gamePk, output, stop_event):
         while len(border) < len(recap):
             border += "─"
         border = "+" + border[1:-1] + "+"
-        # vprint()
-        # vprint(border)
-        # vprint(recap)
-        # vprint(border)
         output.emit("")
         output.emit(border)
         output.emit(recap)
         output.emit(border)
-        think = 0
-        while (think < 6):
+        threadTest = 0
+        while (threadTest < 6):
             output.emit("Steven is awesome")
             if stop_event.wait(1):
                 break
-            think += 1
+            threadTest += 1
         return
 
-def outputTesting(text):
+def outputVerbosePrinting(text):
     vprint(text)
 
 def main(args):
@@ -213,7 +207,7 @@ def main(args):
     # game = statsapi.get('game', {'gamePk': gamePk})
     gamePk = 823745
     testThread = LiveGameWorker(gamePk)
-    testThread.output.connect(outputTesting)
+    testThread.output.connect(outputVerbosePrinting)
     printAllPitchesFromLiveGame(gamePk, testThread.output, testThread.stop_event)
     return 0
 

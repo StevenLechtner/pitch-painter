@@ -3,10 +3,10 @@
     "gameData": {
         "teams": {
             "away": {
-                "abbreviation": "DET"
+                "abbreviation": "CLE"
             },
             "home": {
-                "abbreviation": "SD"
+                "abbreviation": "DET"
             }
         }
     },
@@ -21,7 +21,7 @@
                     "about": {
                         "atBatIndex": 0,
                         "isTopInning": true,
-                        "inning": 1,
+                        "inning": 9,
                         "isComplete": true
                     },
                     "count": {
@@ -64,7 +64,7 @@
                     "about": {
                         "atBatIndex": 1,
                         "isTopInning": true,
-                        "inning": 1,
+                        "inning": 9,
                         "isComplete": true
                     },
                     "count": {
@@ -125,7 +125,7 @@
                     "about": {
                         "atBatIndex": 2,
                         "isTopInning": true,
-                        "inning": 1,
+                        "inning": 9,
                         "isComplete": true
                     },
                     "count": {
@@ -187,7 +187,7 @@
                 "about": {
                     "atBatIndex": 2,
                     "isTopInning": true,
-                    "inning": 1,
+                    "inning": 9,
                     "isComplete": true
                 },
                 "count": {

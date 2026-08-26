@@ -1,0 +1,245 @@
+{
+    "gamePk": 745369,
+    "gameData": {
+        "teams": {
+            "away": {
+                "abbreviation": "CLE"
+            },
+            "home": {
+                "abbreviation": "DET"
+            }
+        }
+    },
+    "liveData": {
+        "plays": {
+            "allPlays": [
+                {
+                    "result": {
+                        "awayScore": 0,
+                        "homeScore": 0
+                    },
+                    "about": {
+                        "atBatIndex": 0,
+                        "isTopInning": false,
+                        "inning": 9,
+                        "isComplete": true
+                    },
+                    "count": {
+                        "balls": 0,
+                        "strikes": 0,
+                        "outs": 1
+                    },
+                    "matchup": {
+                        "pitcher": {
+                            "fullName": "Stupid Dummy"
+                        }
+                    },
+                    "playEvents": [
+                        {
+                            "details": {
+                                "isInPlay": true,
+                                "isStrike": false,
+                                "isBall": false,
+                                "isOut": true,
+                                "hasReview": false
+                            },
+                            "count": {
+                                "balls": 0,
+                                "strikes": 0,
+                                "outs": 0
+                            },
+                            "index": 0,
+                            "playId": "69d4b54e-0cab-4c9d-a882-4181638b7ae5",
+                            "pitchNumber": 1,
+                            "isPitch": true
+                        }
+                    ],
+                    "atBatIndex": 0
+                },
+                {
+                    "result": {
+                        "awayScore": 0,
+                        "homeScore": 0
+                    },
+                    "about": {
+                        "atBatIndex": 1,
+                        "isTopInning": false,
+                        "inning": 9,
+                        "isComplete": true
+                    },
+                    "count": {
+                        "balls": 0,
+                        "strikes": 0,
+                        "outs": 2
+                    },
+                    "matchup": {
+                        "pitcher": {
+                            "fullName": "Stupid Dummy"
+                        }
+                    },
+                    "playEvents": [
+                        {
+                            "details": {
+                                "isInPlay": false,
+                                "isStrike": false,
+                                "isBall": false,
+                                "isOut": false,
+                                "hasReview": false
+                            },
+                            "count": {
+                                "balls": 0,
+                                "strikes": 0,
+                                "outs": 1
+                            },
+                            "index": 0,
+                            "playId": "69d4b54e-0cab-4c9d-a882-4181638b7ae5",
+                            "pitchNumber": 0,
+                            "isPitch": false
+                        },
+                        {
+                            "details": {
+                                "isInPlay": true,
+                                "isStrike": false,
+                                "isBall": false,
+                                "isOut": true,
+                                "hasReview": false
+                            },
+                            "count": {
+                                "balls": 0,
+                                "strikes": 0,
+                                "outs": 1
+                            },
+                            "index": 1,
+                            "playId": "69d4b54e-0cab-4c9d-a882-4181638b7ae5",
+                            "pitchNumber": 1,
+                            "isPitch": true
+                        }
+                    ],
+                    "atBatIndex": 1
+                },
+                {
+                    "result": {
+                        "awayScore": 0,
+                        "homeScore": 1
+                    },
+                    "about": {
+                        "atBatIndex": 2,
+                        "isTopInning": false,
+                        "inning": 9,
+                        "isComplete": true
+                    },
+                    "count": {
+                        "balls": 0,
+                        "strikes": 1,
+                        "outs": 2
+                    },
+                    "matchup": {
+                        "pitcher": {
+                            "fullName": "Stupid Dummy"
+                        }
+                    },
+                    "playEvents": [
+                        {
+                            "details": {
+                                "isInPlay": false,
+                                "isStrike": true,
+                                "isBall": false,
+                                "isOut": false,
+                                "hasReview": false
+                            },
+                            "count": {
+                                "balls": 0,
+                                "strikes": 1,
+                                "outs": 2
+                            },
+                            "index": 0,
+                            "playId": "69d4b54e-0cab-4c9d-a882-4181638b7ae5",
+                            "pitchNumber": 1,
+                            "isPitch": true
+                        },
+                        {
+                            "details": {
+                                "isInPlay": true,
+                                "isStrike": false,
+                                "isBall": false,
+                                "isOut": false,
+                                "hasReview": false
+                            },
+                            "count": {
+                                "balls": 0,
+                                "strikes": 1,
+                                "outs": 2
+                            },
+                            "index": 1,
+                            "playId": "69d4b54e-0cab-4c9d-a882-4181638b7ae5",
+                            "pitchNumber": 2,
+                            "isPitch": true
+                        }
+                    ],
+                    "atBatIndex": 2
+                }
+            ],
+            "currentPlay": {
+                "result": {
+                    "awayScore": 0,
+                    "homeScore": 1
+                },
+                "about": {
+                    "atBatIndex": 2,
+                    "isTopInning": false,
+                    "inning": 9,
+                    "isComplete": true
+                },
+                "count": {
+                    "balls": 0,
+                    "strikes": 1,
+                    "outs": 2
+                },
+                "matchup": {
+                    "pitcher": {
+                        "fullName": "Stupid Dummy"
+                    }
+                },
+                "playEvents": [
+                    {
+                        "details": {
+                            "isInPlay": false,
+                            "isStrike": true,
+                            "isBall": false,
+                            "isOut": false,
+                            "hasReview": false
+                        },
+                        "count": {
+                            "balls": 0,
+                            "strikes": 1,
+                            "outs": 2
+                        },
+                        "index": 0,
+                        "playId": "69d4b54e-0cab-4c9d-a882-4181638b7ae5",
+                        "pitchNumber": 1,
+                        "isPitch": true
+                    },
+                    {
+                        "details": {
+                            "isInPlay": true,
+                            "isStrike": false,
+                            "isBall": false,
+                            "isOut": false,
+                            "hasReview": false
+                        },
+                        "count": {
+                            "balls": 0,
+                            "strikes": 1,
+                            "outs": 2
+                        },
+                        "index": 1,
+                        "playId": "69d4b54e-0cab-4c9d-a882-4181638b7ae5",
+                        "pitchNumber": 2,
+                        "isPitch": true
+                    }
+                ],
+                "atBatIndex": 2
+            }
+        }
+    }
+}

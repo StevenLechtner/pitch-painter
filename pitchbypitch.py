@@ -50,6 +50,13 @@ class Situation():
         self.awayScore = score
 
     def setInning(self, inning: int):
+        # FIXME: Ghost runner logic. Does not work for postseason baseball or pre-ghost runner baseball
+        if inning != self.inning:
+            self.baserunners = {1: False, 2: False, 3: False}
+            # if inning < 10:
+            #     self.baserunners = {1: False, 2: False, 3: False}
+            # else:
+            #     self.baserunners = {1: False, 2: True, 3: False}
         self.inning = inning
 
     def setTop(self, top: bool):

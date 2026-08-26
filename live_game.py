@@ -42,16 +42,13 @@ def getTeamName(teamId):
     return teamName
 
 def processPlayEvent(playEvent, situation, atBatToProcess, output):
-    # Ignore if the event is not a pitch
-    if not playEvent.get("isPitch", False):
-        # update if a run scored mid at bat - wild pitch, stolen home, error on pick off, etc
-        awayScore = playEvent.get("details", {}).get("awayScore", -1)
-        if awayScore > -1:
-            situation.setAwayScore(awayScore)
-        homeScore = playEvent.get("details", {}).get("homeScore", -1)
-        if homeScore > -1:
-            situation.setHomeScore(homeScore)
-        return
+    # update if a run scored mid at bat - wild pitch, stolen home, error on pick off, etc
+    awayScore = playEvent.get("details", {}).get("awayScore", -1)
+    if awayScore > -1:
+        situation.setAwayScore(awayScore)
+    homeScore = playEvent.get("details", {}).get("homeScore", -1)
+    if homeScore > -1:
+        situation.setHomeScore(homeScore)
 
     print("Is current play complete? ", atBatToProcess.get("about", {}).get("isComplete", False))
     print("Current playEvents[-1] index", atBatToProcess.get("playEvents", {})[-1].get("index", -1))
@@ -73,11 +70,11 @@ def processPlayEvent(playEvent, situation, atBatToProcess, output):
         situation.setBaserunnersFromPlay(atBatToProcess, False)
 
     # Incrememnt pitch count for current pitcher
-    pitchCount = situation.pitchCount.get(situation.pitcher, 0)
-    pitchCount += 1
-    situation.pitchCount[situation.pitcher] = pitchCount
-
-    output.emit(drawPitch(situation))
+    if playEvent.get("isPitch", False):
+        pitchCount = situation.pitchCount.get(situation.pitcher, 0)
+        pitchCount += 1
+        situation.pitchCount[situation.pitcher] = pitchCount
+        output.emit(drawPitch(situation))
 
 def processAtBat(situation, atBatToProcess, atBatIndexToProcess, output, gamePk, stop_event):
     vprint("New at bat. Index: ", atBatToProcess.get("atBatIndex", -1)) # verbose log. FIXME: remove
@@ -121,6 +118,13 @@ def processAtBat(situation, atBatToProcess, atBatIndexToProcess, output, gamePk,
                 atBatToProcess = atBats[atBatIndexToProcess]
                 playEvents = atBatToProcess.get("playEvents", [])
                 latestPlayEventIndex = playEvents[-1].get("index", -1) if playEvents else -1
+
+    situation.setAwayScore(atBatToProcess.get("result", {}).get("awayScore", -1))
+    situation.setHomeScore(atBatToProcess.get("result", {}).get("homeScore", -1))
+    situation.setOuts(atBatToProcess.get("count", {}).get("outs", -1))
+    situation.setBalls(0)
+    situation.setStrikes(0)
+    situation.setBaserunnersFromPlay(atBatToProcess, True)
 
     # Check if the result of this at bat finished the game
     if situation.inning >= 9:

@@ -147,7 +147,7 @@ def processAtBat(situation, atBatToProcess, atBatIndexToProcess, output, gamePk,
 def printAllPitchesFromLiveGame(gamePk, output, stop_event):
     while not stop_event.is_set():
         game = statsapi.get('game', {'gamePk': gamePk})
-        # with open("ghost_runner_worked_somehow.json", "r") as f:
+        # with open("tests/ghost_runner_worked_somehow.json", "r") as f:
         #     game = json.load(f)
         if game is None:
             output.emit("Game is None")
@@ -234,8 +234,8 @@ def main(args):
     application_util.getOptions(args)
 
     # game = statsapi.get('game', {'gamePk': 776189})
-    # # with open("meadows.json", "r") as f:
-    # # # with open("example_out.json", "r") as f:
+    # # with open("tests/meadows.json", "r") as f:
+    # # # with open("tests/example_out.json", "r") as f:
     # #     game = json.load(f)
     # pitchbypitch.printLiveGame(game)
     #printTeamName(116)

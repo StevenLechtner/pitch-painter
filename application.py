@@ -67,7 +67,7 @@ class MyWidget(QtWidgets.QWidget):
 
     def getPitches(self, gamePk):
         ##### Preset JSON file #####
-        # with open("meadows.json", "r") as f:
+        # with open("tests/meadows.json", "r") as f:
         #     game = json.load(f)
 
         ##### Assumes game is completed (no threading needed) #####

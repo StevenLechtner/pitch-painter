@@ -75,6 +75,10 @@ def processPlayEvent(playEvent, situation, atBatToProcess, output):
         pitchCount += 1
         situation.pitchCount[situation.pitcher] = pitchCount
         output.emit(drawPitch(situation))
+    # ANOTHER WAY - issue with this is that the pitch count only works if this pitch to process is the latest pitch (live):
+    # ["liveData"]["plays"]["currentPlay"]["matchup"]["pitcher"]["id"]
+    # ["liveData"]["boxscore"]["teams"]["away"]["players"]["ID676282"]["person"]["id"]
+    # ["liveData"]["boxscore"]["teams"]["away"]["players"]["ID676282"]["stats"]["numberOfPitches"]
 
 def processAtBat(situation, atBatToProcess, atBatIndexToProcess, output, gamePk, stop_event):
     vprint("New at bat. Index: ", atBatToProcess.get("atBatIndex", -1)) # verbose log. FIXME: remove
@@ -102,8 +106,9 @@ def processAtBat(situation, atBatToProcess, atBatIndexToProcess, output, gamePk,
                 processPlayEvent(playEvents[currentPlayEventToProcess], situation, atBatToProcess, output)
                 currentPlayEventToProcess += 1
             # Ping until a new pitch is thrown
+            print("Waiting for the next pitch of the at bat...")
             if stop_event.wait(2):
-                break
+                return
             game = statsapi.get('game', {'gamePk': gamePk})
             atBats = game.get("liveData", {}).get("plays", {}).get("allPlays", [])
             if atBats:
@@ -160,7 +165,7 @@ def printAllPitchesFromLiveGame(gamePk, output, stop_event):
         # return
         
         situation.startNewGame(homeAbbr, awayAbbr, atBats[0].get("matchup", {}).get("pitcher", {}).get("fullName", "N/A"))
-        while not situation.gameOver:
+        while not situation.gameOver and not stop_event.is_set():
             if atBats:
                 latestAtBatIndex = atBats[-1].get("atBatIndex", -1)
             else:
@@ -169,7 +174,7 @@ def printAllPitchesFromLiveGame(gamePk, output, stop_event):
             while atBatIndexToProcess > latestAtBatIndex:
                 print("Waiting for next at bat to start...")
                 if stop_event.wait(2):
-                    break
+                    return # stop_event was sent, return
                 game = statsapi.get('game', {'gamePk': gamePk})
                 #currentAtBat = game.get("liveData", {}).get("plays", {}).get("currentPlay", {})
                 #currentAtBatIndex = currentAtBat.get("atBatIndex", -1)
@@ -191,6 +196,10 @@ def printAllPitchesFromLiveGame(gamePk, output, stop_event):
             print("latestAtBatIndex", latestAtBatIndex)
             processAtBat(situation, atBats[atBatIndexToProcess], atBatIndexToProcess, output, gamePk, stop_event)
             atBatIndexToProcess += 1
+
+        # additional check - stop_event got set within processAtBat()
+        if stop_event.is_set():
+            return
 
         border = ""
         recap = ""

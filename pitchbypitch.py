@@ -1,6 +1,7 @@
 import statsapi
 
 import random
+import requests
 import time
 import json
 
@@ -143,12 +144,55 @@ class Situation():
 
         self.baserunners = basesOccupied
 
+    def processAtBatFinished(self, atBatToProcess):
+        self.setAwayScore(atBatToProcess.get("result", {}).get("awayScore", -1))
+        self.setHomeScore(atBatToProcess.get("result", {}).get("homeScore", -1))
+        self.setOuts(atBatToProcess.get("count", {}).get("outs", -1))
+        self.setBalls(0)
+        self.setStrikes(0)
+        self.setBaserunnersFromPlay(atBatToProcess, True)
+        # Check if the result of this at bat finished the game
+        if self.inning >= 9:
+            if self.outs >= 3:
+                if self.top:
+                    if self.homeScore > self.awayScore:
+                        self.gameOver = True
+                else:
+                    if self.homeScore != self.awayScore:
+                        self.gameOver = True
+            else:
+                if not self.top and self.homeScore > self.awayScore:
+                    self.gameOver = True
+        # Half inning is over but game is not done yet - set outs to 0
+        if not self.gameOver and self.outs == 3:
+            self.setOuts(0)
+
     def __str__(self):
         return f"Home Team: {self.homeTeam}\nAway Team: {self.awayTeam}\nHome Score: {self.homeScore}\nAway Score: {self.awayScore}\nInning: {self.inning}\nTop: {self.top}\nBalls: {self.balls}\nStrikes: {self.strikes}\nOuts: {self.outs}\nPitcher: {self.pitcher}\nPitch Count: {self.pitchCount}\nBaserunners: {self.baserunners}\nGame Over: {self.gameOver}"
 
 class Game():
-    def __init__(self, _game):
-        self.game = _game
+    def __init__(self):
+        self.game = None
+        self.gamePk = -1
+        self.situatuion = Situation()
+
+    def getGameByGamePk(self, _gamePk):
+        # Try HTTP GET request up to three times before failing
+        for attempt in range(3):
+            try:
+                self.game = statsapi.get('game', {'gamePk': _gamePk})
+                self.gamePk = _gamePk
+                return self.game
+            except requests.exceptions.RequestException as e:
+                print(f"https://statsapi.mlb.com/api/v1.1/game/{_gamePk}/feed/live request failed (attempt {attempt + 1}/3): {e}")
+                if attempt < 2:
+                    time.sleep(1)
+
+        print("Failed to retrieve game GET request after 3 attempts.")
+        self.game = None
+        self.gamePk = -1
+        self.situatuion = Situation()
+        return None
 
 def drawPitchForTweeting(situation: Situation):
 

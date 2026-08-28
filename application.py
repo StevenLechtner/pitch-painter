@@ -1,9 +1,11 @@
-import application_util
-from print_util import vprint
+import cli
+import schedule
 import sys
+from live_game import LiveGameWorker
+from print_util import vprint
 from PySide6 import QtCore, QtWidgets, QtGui
 
-class MyWidget(QtWidgets.QWidget):
+class ApplicationWidget(QtWidgets.QWidget):
     def __init__(self):
         super().__init__()
 
@@ -48,7 +50,7 @@ class MyWidget(QtWidgets.QWidget):
         self.text_widget.setPlainText("")
         self.text_widget.show()
         index = self.gamesWidget.row(self.gamesWidget.currentItem())
-        gamePk = application_util.getGamePk(index)
+        gamePk = schedule.getGamePk(index)
         self.getPitches(gamePk)
         self.showGameBtn.setText("Return")
 
@@ -81,7 +83,7 @@ class MyWidget(QtWidgets.QWidget):
         if self.thread is not None and self.thread.isRunning():
             self.stopLiveGameThread()
         self.thread = QtCore.QThread()
-        self.worker = application_util.LiveGameWorker(gamePk)
+        self.worker = LiveGameWorker(gamePk)
         self.worker.moveToThread(self.thread)
         self.thread.started.connect(self.worker.run)
         self.worker.output.connect(self.updateOutput)
@@ -121,7 +123,7 @@ class MyWidget(QtWidgets.QWidget):
         month = date.month()
         day = date.day()
         #self.text_widget.setPlainText(date.toString("MMMM d, yyyy"))
-        scheduleStr = application_util.getScheduleStr(date)
+        scheduleStr = schedule.getScheduleStr(date)
         scheduleList = scheduleStr.split("\n")
         self.text_widget.setPlainText(scheduleStr)
         self.gamesWidget.clear()
@@ -159,11 +161,11 @@ class MyWidget(QtWidgets.QWidget):
         print("Done!")
 
 def main(args):
-    application_util.getOptions(args)
+    cli.getOptions(args)
     app = QtWidgets.QApplication(sys.argv)
     app.setApplicationName("Pitcher Painter")
 
-    widget = MyWidget()
+    widget = ApplicationWidget()
     widget.resize(800, 600)
     #widget.resize(1000, 1000)
     widget.setWindowTitle("Pitcher Painter")

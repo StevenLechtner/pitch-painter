@@ -1,11 +1,31 @@
-import application_util
+import cli
 import json
-from print_util import vprint, dprint
 import statsapi
 import sys
-from pitchbypitch import Situation, drawPitch
+import threading
+from game import Game
+from pitchbypitch import drawPitch
+from print_util import vprint, dprint
+from PySide6 import QtCore
 
 desiredTeam = 'Detroit Tigers'
+
+class LiveGameWorker(QtCore.QObject):
+    output = QtCore.Signal(str)
+    finished = QtCore.Signal()
+
+    def __init__(self, gamePk):
+        super().__init__()
+        self.gamePk = gamePk
+        self.stop_event = threading.Event()
+
+    @QtCore.Slot()
+    def run(self):
+        printAllPitchesFromLiveGame(self.gamePk, self.output, self.stop_event)
+        self.finished.emit()
+
+    def stop(self):
+        self.stop_event.set()
 
 def getGamePk():
     schedule = statsapi.get('schedule', {'sportId': 1})
@@ -109,8 +129,9 @@ def processAtBat(situation, atBatToProcess, atBatIndexToProcess, output, gamePk,
             dprint("Waiting for the next pitch of the at bat...")
             if stop_event.wait(2):
                 return
-            game = statsapi.get('game', {'gamePk': gamePk})
-            atBats = game.get("liveData", {}).get("plays", {}).get("allPlays", [])
+            game = Game()
+            game.getGameByGamePk(gamePk)
+            atBats = game.game.get("liveData", {}).get("plays", {}).get("allPlays", [])
             if atBats:
                 latestAtBatIndex = atBats[-1].get("atBatIndex", -1)
             else:
@@ -128,23 +149,19 @@ def processAtBat(situation, atBatToProcess, atBatIndexToProcess, output, gamePk,
 
 def printAllPitchesFromLiveGame(gamePk, output, stop_event):
     while not stop_event.is_set():
-        game = statsapi.get('game', {'gamePk': gamePk})
-        # with open("tests/meadows.json", "r") as f:
-        #     game = json.load(f)
-        if game is None:
+        game = Game()
+        game.getGameByGamePk(gamePk)
+        # game.getGameByFilePath("tests/meadows.json") # test from json file
+        if game.game is None:
             output.emit("Game is None")
             return
-        awayAbbr = game.get("gameData", {}).get("teams", {}).get("away", {}).get("abbreviation", "N/A")
-        homeAbbr = game.get("gameData", {}).get("teams", {}).get("home", {}).get("abbreviation", "N/A")
-        situation = Situation()
-        atBats = game.get("liveData", {}).get("plays", {}).get("allPlays", []) # a play is an at bat from this game
+        atBats = game.game.get("liveData", {}).get("plays", {}).get("allPlays", []) # a play is an at bat from this game
         if (len(atBats) == 0):
             output.emit("Game has not started yet!")
             return
         atBatIndexToProcess = 0
         
-        situation.startNewGame(homeAbbr, awayAbbr, atBats[0].get("matchup", {}).get("pitcher", {}).get("fullName", "N/A"))
-        while not situation.gameOver and not stop_event.is_set():
+        while not game.situation.gameOver and not stop_event.is_set():
             if atBats:
                 latestAtBatIndex = atBats[-1].get("atBatIndex", -1)
             else:
@@ -154,8 +171,9 @@ def printAllPitchesFromLiveGame(gamePk, output, stop_event):
                 dprint("Waiting for next at bat to start...")
                 if stop_event.wait(2):
                     return # stop_event was sent, return
-                game = statsapi.get('game', {'gamePk': gamePk})
-                atBats = game.get("liveData", {}).get("plays", {}).get("allPlays", [])
+                game = Game()
+                game.getGameByGamePk(gamePk)
+                atBats = game.game.get("liveData", {}).get("plays", {}).get("allPlays", [])
                 if atBats:
                     latestAtBatIndex = atBats[-1].get("atBatIndex", -1)
                 else:
@@ -167,7 +185,7 @@ def printAllPitchesFromLiveGame(gamePk, output, stop_event):
             # We process the next at bat at atBatIndexToProcess
             dprint("atBatIndexToProcess", atBatIndexToProcess)
             dprint("latestAtBatIndex", latestAtBatIndex)
-            processAtBat(situation, atBats[atBatIndexToProcess], atBatIndexToProcess, output, gamePk, stop_event)
+            processAtBat(game.situation, atBats[atBatIndexToProcess], atBatIndexToProcess, output, gamePk, stop_event)
             vprint(atBats[atBatIndexToProcess].get("result", {}).get("description", "")) # print at bat description
             atBatIndexToProcess += 1
 
@@ -176,11 +194,7 @@ def printAllPitchesFromLiveGame(gamePk, output, stop_event):
             return
 
         border = ""
-        recap = ""
-        if situation.awayScore > situation.homeScore:
-            recap = f"|  Final score: {situation.awayScore}-{situation.homeScore}, {situation.awayTeam} over {situation.homeTeam}  |"
-        else:
-            recap = f"|  Final score: {situation.homeScore}-{situation.awayScore}, {situation.homeTeam} over {situation.awayTeam}  |"
+        recap = game.getRecap()
         while len(border) < len(recap):
             border += "─"
         border = "+" + border[1:-1] + "+"
@@ -205,7 +219,7 @@ def main(args):
     |   Live Play Output   |
     +======================+
     '''
-    application_util.getOptions(args)
+    cli.getOptions(args)
 
     # game = statsapi.get('game', {'gamePk': 776189})
     # # with open("tests/meadows.json", "r") as f:
@@ -222,7 +236,7 @@ def main(args):
 
     # game = statsapi.get('game', {'gamePk': gamePk})
     gamePk = 823989
-    testThread = application_util.LiveGameWorker(gamePk)
+    testThread = LiveGameWorker(gamePk)
     testThread.output.connect(outputVerbosePrinting)
     printAllPitchesFromLiveGame(gamePk, testThread.output, testThread.stop_event)
     return 0

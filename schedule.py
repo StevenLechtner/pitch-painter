@@ -3,23 +3,19 @@ from PySide6 import QtCore
 
 gamePks = []
 
+# statsapi.schedule(date=None, start_date=None, end_date=None, team="", opponent="", sportId=1, game_id=None, season=None, include_series_status=True)
 def getScheduleStr(date: QtCore.QDate):
-    gamesList = []
     gamePks.clear()
-    schedule = statsapi.get('schedule', {'sportId': 1, 'date': date.toString("yyyy-M-d")})
     try:
-        gameList = schedule["dates"][0]["games"]
-        scheduleStr = ""
-        for i in gameList:
-            gamesList.append(statsapi.get('game', {'gamePk': i["gamePk"]}))
-        #print(f"Games for {schedule["dates"][0]["date"]}:")
-        scheduleStr += f"Games for {date.toString("MMMM d, yyyy")}:\n"
-        for i in gamesList:
-            #print(f"{i["gameData"]["teams"]["away"]["name"]} @ {i["gameData"]["teams"]["home"]["name"]}")
-            scheduleStr += f"{i["gameData"]["teams"]["away"]["name"]} @ {i["gameData"]["teams"]["home"]["name"]}\n"
-            gamePks.append(i["gamePk"])
-            #print(i["gamePk"])
-        #print()
+        schedule = statsapi.schedule(date=date.toString("yyyy-M-d"))
+        scheduleStr = f"Games for {date.toString("MMMM d, yyyy")}:\n"
+        for game in schedule:
+            gamePks.append(game.get("game_id", -1))
+            #scheduleStr += f"{game.get("away_name", "[away_name]")} @ {game.get("home_name", "[home_name]")}\n"
+            summary = game.get("summary", "")
+            # FIXME: This is a bad way to remove the date from the summary string
+            dateRemoved = summary.split("-")[3].lstrip()
+            scheduleStr += f"{dateRemoved}\n"
         scheduleStr = scheduleStr.rstrip()
         return scheduleStr
     except:

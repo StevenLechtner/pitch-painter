@@ -9,22 +9,48 @@ class Game():
         self.game = None
         self.gamePk = -1
         self.situation = Situation()
+        self.gameInfo = ""
+        self.atBats = None
+    """
+        if game.game is None:
+            output.emit("Game is None")
+            return
+        atBats = game.game.get("liveData", {}).get("plays", {}).get("allPlays", []) # a play is an at bat from this game
+        if (len(atBats) == 0):
+            output.emit("Game has not started yet!")
+            return
+    """
+
+    def isValid(self):
+        if self.game is None:
+            self.gameInfo = "Game is None"
+            return False
+        self.atBats = self.game.get("liveData", {}).get("plays", {}).get("allPlays", []) # a play is an at bat from this game
+        if (len(self.atBats) == 0):
+            self.gameInfo = "Game has not started yet!"
+            return False
+        return True
 
     def startNewGame(self):
+        if not self.isValid():
+            return
         awayAbbr = self.game.get("gameData", {}).get("teams", {}).get("away", {}).get("abbreviation", "N/A")
         homeAbbr = self.game.get("gameData", {}).get("teams", {}).get("home", {}).get("abbreviation", "N/A")
-        atBats = self.game.get("liveData", {}).get("plays", {}).get("allPlays", []) # a play is an at bat from this game
+        self.atBats = self.game.get("liveData", {}).get("plays", {}).get("allPlays", []) # a play is an at bat from this game
         self.situation = Situation()
-        self.situation.startNewGame(homeAbbr, awayAbbr, atBats[0].get("matchup", {}).get("pitcher", {}).get("fullName", "N/A"))
+        self.situation.startNewGame(homeAbbr, awayAbbr, self.atBats[0].get("matchup", {}).get("pitcher", {}).get("fullName", "N/A"))
 
-    # TODO: Instead of start new game every time, just set the away team name, home team name, and whatever else?
+    # TODO: Test network connection failure
     def getGameByGamePk(self, _gamePk):
         # Try HTTP GET request up to three times before failing
         for attempt in range(3):
             try:
                 self.game = statsapi.get('game', {'gamePk': _gamePk})
-                self.gamePk = _gamePk
-                self.startNewGame()
+                if not self.isValid():
+                    continue # game we got was not valid, try again...
+                if self.gamePk != _gamePk:
+                    self.startNewGame()
+                    self.gamePk = _gamePk
                 return self.game
             except requests.exceptions.RequestException as e:
                 print(f"https://statsapi.mlb.com/api/v1.1/game/{_gamePk}/feed/live request failed (attempt {attempt + 1}/3): {e}")
@@ -40,7 +66,9 @@ class Game():
     def getGameByFilePath(self, _filePath):
         with open(_filePath, "r") as f:
             self.game = json.load(f)
-        self.startNewGame()
+        if self.gamePk != self.game.get("gamePk", -1):
+            self.startNewGame()
+            self.gamePk = self.game.get("gamePk", -1)
 
     def getRecap(self):
         if self.situation.awayScore > self.situation.homeScore:

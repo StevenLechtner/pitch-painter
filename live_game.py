@@ -101,7 +101,9 @@ def processPlayEvent(playEvent, situation, atBatToProcess, output):
     # ["liveData"]["boxscore"]["teams"]["away"]["players"]["ID676282"]["person"]["id"]
     # ["liveData"]["boxscore"]["teams"]["away"]["players"]["ID676282"]["stats"]["numberOfPitches"]
 
-def processAtBat(situation, atBatToProcess, atBatIndexToProcess, output, gamePk, stop_event):
+def processAtBat(game, atBatIndexToProcess, output, gamePk, stop_event):
+    situation = game.situation
+    atBatToProcess = game.atBats[atBatIndexToProcess]
     dprint("New at bat. Index: ", atBatToProcess.get("atBatIndex", -1))
     dprint(f"Now batting: {atBatToProcess.get("matchup", {}).get("batter", {}).get("fullName", "")}")
     situation.setInning(atBatToProcess.get("about", {}).get("inning", -1))
@@ -129,7 +131,6 @@ def processAtBat(situation, atBatToProcess, atBatIndexToProcess, output, gamePk,
             dprint("Waiting for the next pitch of the at bat...")
             if stop_event.wait(2):
                 return
-            game = Game()
             game.getGameByGamePk(gamePk)
             atBats = game.game.get("liveData", {}).get("plays", {}).get("allPlays", [])
             if atBats:
@@ -151,19 +152,15 @@ def printAllPitchesFromLiveGame(gamePk, output, stop_event):
     while not stop_event.is_set():
         game = Game()
         game.getGameByGamePk(gamePk)
-        # game.getGameByFilePath("tests/meadows.json") # test from json file
-        if game.game is None:
-            output.emit("Game is None")
+        # game.getGameByFilePath("tests/example_game.json") # Uncomment to test from a json file instead of the server
+        if not game.isValid():
+            output.emit(game.gameInfo)
             return
-        atBats = game.game.get("liveData", {}).get("plays", {}).get("allPlays", []) # a play is an at bat from this game
-        if (len(atBats) == 0):
-            output.emit("Game has not started yet!")
-            return
-        atBatIndexToProcess = 0
-        
+
+        atBatIndexToProcess = 0        
         while not game.situation.gameOver and not stop_event.is_set():
-            if atBats:
-                latestAtBatIndex = atBats[-1].get("atBatIndex", -1)
+            if game.atBats:
+                latestAtBatIndex = game.atBats[-1].get("atBatIndex", -1)
             else:
                 latestAtBatIndex = -1
             while atBatIndexToProcess > latestAtBatIndex:
@@ -171,11 +168,9 @@ def printAllPitchesFromLiveGame(gamePk, output, stop_event):
                 dprint("Waiting for next at bat to start...")
                 if stop_event.wait(2):
                     return # stop_event was sent, return
-                game = Game()
                 game.getGameByGamePk(gamePk)
-                atBats = game.game.get("liveData", {}).get("plays", {}).get("allPlays", [])
-                if atBats:
-                    latestAtBatIndex = atBats[-1].get("atBatIndex", -1)
+                if game.atBats:
+                    latestAtBatIndex = game.atBats[-1].get("atBatIndex", -1)
                 else:
                     dprint("atBats len is 0. TODO: Check why...")
                     latestAtBatIndex = -1
@@ -185,8 +180,8 @@ def printAllPitchesFromLiveGame(gamePk, output, stop_event):
             # We process the next at bat at atBatIndexToProcess
             dprint("atBatIndexToProcess", atBatIndexToProcess)
             dprint("latestAtBatIndex", latestAtBatIndex)
-            processAtBat(game.situation, atBats[atBatIndexToProcess], atBatIndexToProcess, output, gamePk, stop_event)
-            vprint(atBats[atBatIndexToProcess].get("result", {}).get("description", "")) # print at bat description
+            processAtBat(game, atBatIndexToProcess, output, gamePk, stop_event)
+            vprint(game.atBats[atBatIndexToProcess].get("result", {}).get("description", "")) # print at bat description
             atBatIndexToProcess += 1
 
         # additional check - stop_event got set within processAtBat()

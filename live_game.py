@@ -61,7 +61,7 @@ def getTeamName(teamId):
             teamName = teamInfo['name']
     return teamName
 
-def processPlayEvent(playEvent, situation, atBatToProcess, output):
+def processPlayEvent(playEvent, situation, atBatToProcess, game, output):
     if playEvent.get("isPitch", False):
         output.emit(drawPitch(situation))
     # update if a run scored mid at bat - wild pitch, stolen home, error on pick off, etc
@@ -71,6 +71,8 @@ def processPlayEvent(playEvent, situation, atBatToProcess, output):
     homeScore = playEvent.get("details", {}).get("homeScore", -1)
     if homeScore > -1:
         situation.setHomeScore(homeScore)
+    # set pitcher for every play event and update pitcher if play event type is a pitching_substitution
+    game.setPitcher(playEvent)
 
     dprint("Is current play complete? ", atBatToProcess.get("about", {}).get("isComplete", False))
     dprint("Current playEvents[-1] index", atBatToProcess.get("playEvents", {})[-1].get("index", -1))
@@ -109,8 +111,7 @@ def processAtBat(game, atBatIndexToProcess, output, gamePk, stop_event):
     dprint(f"Now batting: {atBatToProcess.get("matchup", {}).get("batter", {}).get("fullName", "")}")
     situation.setInning(atBatToProcess.get("about", {}).get("inning", -1))
     situation.setTop(atBatToProcess.get("about", {}).get("isTopInning", False))
-    # situation.setOuts(currentPlay["count"]["outs"])
-    situation.setPitcher(atBatToProcess.get("matchup", {}).get("pitcher", {}).get("fullName", "N/A"))
+    game.setPitcher() # set pitcher when new at bat starts to account for inning change
 
     # Loop through all play events of current play - print when a pitch is thrown
     latestPlayEventIndex = -1
@@ -119,14 +120,14 @@ def processAtBat(game, atBatIndexToProcess, output, gamePk, stop_event):
 
     # First process all pitches from currentPlay
     for playEvent in playEvents:
-        processPlayEvent(playEvent, situation, atBatToProcess, output)
+        processPlayEvent(playEvent, situation, atBatToProcess, game, output)
         currentPlayEventToProcess += 1
     # Then check if the at bat is complete
     if not atBatToProcess.get("about", {}).get("isComplete", False):
         # If it's not, then wait for it to be complete
         while not atBatToProcess.get("about", {}).get("isComplete", False) or currentPlayEventToProcess <= latestPlayEventIndex:
             while currentPlayEventToProcess <= latestPlayEventIndex:
-                processPlayEvent(playEvents[currentPlayEventToProcess], situation, atBatToProcess, output)
+                processPlayEvent(playEvents[currentPlayEventToProcess], situation, atBatToProcess, game, output)
                 currentPlayEventToProcess += 1
             # Ping until a new pitch is thrown
             dprint("Waiting for the next pitch of the at bat...")
@@ -153,7 +154,7 @@ def printAllPitchesFromLiveGame(gamePk, output, stop_event):
     while not stop_event.is_set():
         game = Game()
         game.getGameByGamePk(gamePk)
-        # game.getGameByFilePath("tests/example_game.json") # Uncomment to test from a json file instead of the server
+        # game.getGameByFilePath("tests/live_pitching_change_mid_inning.json") # Uncomment to test from a json file instead of the server
         if not game.isValid():
             output.emit(game.gameInfo)
             return

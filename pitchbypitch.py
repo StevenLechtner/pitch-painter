@@ -75,6 +75,7 @@ def drawPitchForTweeting(situation: Situation):
     #print("│") # TODO: maybe use in the future?
     return output
 
+# FIXME: extra innings look off centered
 def drawPitch(situation: Situation):
 
     # Away team row logic

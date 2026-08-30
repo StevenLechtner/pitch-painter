@@ -2,10 +2,12 @@ import cli
 import schedule
 import sys
 from live_game import LiveGameWorker
-from print_util import vprint
+from print_util import vprint, dprint
 from PySide6 import QtCore, QtWidgets, QtGui
 
 class ApplicationWidget(QtWidgets.QWidget):
+    #scheduleDateChanged = QtCore.Signal(QtCore.QDate)
+
     def __init__(self):
         super().__init__()
 
@@ -20,8 +22,11 @@ class ApplicationWidget(QtWidgets.QWidget):
         self.text_widget.setLineWrapMode(QtWidgets.QTextEdit.NoWrap)
         self.text_widget.hide()
 
-        self.thread = None
-        self.worker = None
+        self.liveGameThread = None
+        self.liveGameWorker = None
+        self.scheduleThread = None
+        self.scheduleWorker = None
+        self.startScheduleThread()
 
         self.initGameSelected()
         self.initCalander()
@@ -38,7 +43,7 @@ class ApplicationWidget(QtWidgets.QWidget):
     def toggleGame(self):
         if self.showingGame:
             self.hideGame()
-            if self.thread is not None and self.thread.isRunning():
+            if self.liveGameThread is not None and self.liveGameThread.isRunning():
                 self.showGameBtn.setEnabled(False)
         else:
             self.showGame()
@@ -50,7 +55,7 @@ class ApplicationWidget(QtWidgets.QWidget):
         self.text_widget.setPlainText("")
         self.text_widget.show()
         index = self.gamesWidget.row(self.gamesWidget.currentItem())
-        gamePk = schedule.getGamePk(index)
+        gamePk = self.scheduleWorker.getGamePk(index)
         self.getPitches(gamePk)
         self.showGameBtn.setText("Return")
 
@@ -80,54 +85,46 @@ class ApplicationWidget(QtWidgets.QWidget):
         self.startLiveGameThread(gamePk)
 
     def startLiveGameThread(self, gamePk):
-        if self.thread is not None and self.thread.isRunning():
+        if self.liveGameThread is not None and self.liveGameThread.isRunning():
             self.stopLiveGameThread()
-        self.thread = QtCore.QThread()
-        self.worker = LiveGameWorker(gamePk)
-        self.worker.moveToThread(self.thread)
-        self.thread.started.connect(self.worker.run)
-        self.worker.output.connect(self.updateOutput)
-        self.worker.finished.connect(self.thread.quit)
-        self.worker.finished.connect(self.worker.deleteLater)
-        self.thread.finished.connect(self.thread.deleteLater)
-        self.thread.finished.connect(self.threadFinished)
-        self.thread.start()
+        self.liveGameThread = QtCore.QThread()
+        self.liveGameWorker = LiveGameWorker(gamePk)
+        self.liveGameWorker.moveToThread(self.liveGameThread)
+        self.liveGameThread.started.connect(self.liveGameWorker.run)
+        self.liveGameWorker.output.connect(self.updateGameOutput)
+        self.liveGameWorker.finished.connect(self.liveGameThread.quit)
+        self.liveGameWorker.finished.connect(self.liveGameWorker.deleteLater)
+        self.liveGameThread.finished.connect(self.liveGameThread.deleteLater)
+        self.liveGameThread.finished.connect(self.liveGameThreadFinished)
+        self.liveGameThread.start()
 
-    def updateOutput(self, text):
+    def startScheduleThread(self):
+        if self.scheduleThread is not None and self.scheduleThread.isRunning():
+            self.stopScheduleThread()
+        self.scheduleThread = QtCore.QThread()
+        self.scheduleWorker = schedule.ScheduleWorker()
+        self.scheduleWorker.moveToThread(self.scheduleThread)
+        self.scheduleThread.started.connect(self.scheduleWorker.run)
+        self.scheduleWorker.output.connect(self.updateScheduleOutput)
+        self.scheduleWorker.finished.connect(self.scheduleThread.quit)
+        self.scheduleWorker.finished.connect(self.scheduleWorker.deleteLater)
+        self.scheduleThread.finished.connect(self.scheduleThread.deleteLater)
+        self.scheduleThread.finished.connect(self.scheduleThreadFinished)
+        self.scheduleThread.start()
+
+    def updateGameOutput(self, text):
         # update text_widget with text
         self.text_widget.append(text)
         
         # verbose print text to console
         vprint(text)
 
-    def stopLiveGameThread(self):
-        if self.worker is not None:
-            self.worker.stop()
-
-    def threadFinished(self):
-        print("Thread is finished")
-        self.thread = None
-        self.worker = None
-        self.showGameBtn.setEnabled(True)
-    
-    def initCalander(self):
-        self.calendar = QtWidgets.QCalendarWidget()
-        self.calendar.setGridVisible(True)
-        self.calendar.show()
-        self.calendar.selectionChanged.connect(self.updateDateSelected)
-        self.updateDateSelected()
-    
-    def updateDateSelected(self):
-        date = self.calendar.selectedDate()
-        year = date.year()
-        month = date.month()
-        day = date.day()
-        #self.text_widget.setPlainText(date.toString("MMMM d, yyyy"))
-        scheduleStr = schedule.getScheduleStr(date)
-        scheduleList = scheduleStr.split("\n")
-        self.text_widget.setPlainText(scheduleStr)
+    def updateScheduleOutput(self):
+        if not self.showingGame:
+            self.text_widget.setPlainText(self.scheduleWorker.scheduleStr)
+            self.text_widget.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
         self.gamesWidget.clear()
-        self.gamesWidget.addItems(scheduleList)
+        self.gamesWidget.addItems(self.scheduleWorker.scheduleStr.split("\n"))
 
         header = self.gamesWidget.item(0)
         header.setFlags(QtCore.Qt.ItemFlag.ItemIsEnabled)
@@ -139,7 +136,53 @@ class ApplicationWidget(QtWidgets.QWidget):
         header.setText("")
         self.gamesWidget.setItemWidget(header, label)
 
-        self.text_widget.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
+    def stopAllThreads(self):
+        self.stopLiveGameThread()
+        self.stopScheduleThread()
+        dprint("All threads stopped")
+
+    def stopLiveGameThread(self):
+        if self.liveGameThread is not None and self.liveGameThread.isRunning():
+            dprint("Stopping live game worker")
+            self.liveGameWorker.stop()
+            dprint("Quitting live game thread")
+            self.liveGameThread.quit()
+            dprint("Waiting for live game thread")
+            self.liveGameThread.wait()
+            dprint("Live game thread stopped")
+
+    def stopScheduleThread(self):
+        if self.scheduleThread is not None and self.scheduleThread.isRunning():
+            dprint("Stopping schedule worker")
+            self.scheduleWorker.stop()
+            dprint("Quitting schedule thread")
+            self.scheduleThread.quit()
+            dprint("Waiting for schedule thread")
+            self.scheduleThread.wait()
+            dprint("Schedule thread stopped")
+
+    def liveGameThreadFinished(self):
+        dprint("Live game thread finished")
+        self.liveGameThread = None
+        self.liveGameWorker = None
+        self.showGameBtn.setEnabled(True)
+
+    def scheduleThreadFinished(self):
+        dprint("Schedule thread finished")
+        self.scheduleThread = None
+        self.scheduleWorker = None
+    
+    def initCalander(self):
+        self.calendar = QtWidgets.QCalendarWidget()
+        self.calendar.setGridVisible(True)
+        self.calendar.show()
+        self.calendar.selectionChanged.connect(self.updateDateSelected)
+        self.updateDateSelected()
+    
+    def updateDateSelected(self):
+        date = self.calendar.selectedDate()
+        self.scheduleWorker.date = date
+        self.scheduleWorker.update_event.set()
 
     def initGameSelected(self):
         self.gamesWidget = QtWidgets.QListWidget()
@@ -154,11 +197,9 @@ class ApplicationWidget(QtWidgets.QWidget):
 
     def closeEvent(self, event):
         print("Application shutdown...")
-        if self.thread is not None and self.thread.isRunning():
-            self.stopLiveGameThread()
-
-        event.accept()
+        self.stopAllThreads()
         print("Done!")
+        event.accept()
 
 def main(args):
     cli.getOptions(args)

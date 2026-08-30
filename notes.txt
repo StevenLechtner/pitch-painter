@@ -1,3 +1,20 @@
+Bug fixes:
+Baserunners updating in real time - account for movement during an at bat
+Pitching change during an inning AND during an at bat
+Extra innings centered error in drawing the pitch
+Schedule update in real time
+Do api call either more frequently or way less frequently
+
+Additional features:
+Get the pitch before a run is scored (or big plays) and tweet it
+Get and print all big plays in a game
+Live game that updates pitch by pitch with descriptions of each pitch and at bat
+    along with additional info like mid 5th after the top ends, for example
+    Pitch info - type, speed, break, etc.
+Get game diff instead of whole new game for live game updating
+Make the app look pretty
+Add to github but make it private, idk? - copyright issue...
+
 Pitch by pitch
 
 Get Desired game pk from specific date:

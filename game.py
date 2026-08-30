@@ -23,10 +23,12 @@ class Game():
 
     def isValid(self):
         if self.game is None:
+            print("Game is nothing for some reason")
             self.gameInfo = "Game is None"
             return False
         self.atBats = self.game.get("liveData", {}).get("plays", {}).get("allPlays", []) # a play is an at bat from this game
         if (len(self.atBats) == 0):
+            print("Game has not started yet!")
             self.gameInfo = "Game has not started yet!"
             return False
         return True
@@ -57,10 +59,7 @@ class Game():
                 if attempt < 2:
                     time.sleep(1)
 
-        print("Failed to retrieve game GET request after 3 attempts.")
-        self.game = None
-        self.gamePk = -1
-        self.situation = Situation()
+        print(f"Failed to retrieve game (game_pk={_gamePk}) GET request after 3 attempts.")
         return None
     
     def getGameByFilePath(self, _filePath):

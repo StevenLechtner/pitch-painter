@@ -3,6 +3,7 @@ import requests
 import statsapi
 import time
 from enum import Enum
+from print_util import dprint
 from situation import Situation
 
 class Status(Enum):
@@ -22,6 +23,7 @@ class Game():
         self.curHomePitcher = ""
         self.curPitcher = ""
         self.gameStatus = Status.UNKNOWN
+        self.detailedState = ""
     """
         if game.game is None:
             output.emit("Game is None")
@@ -34,28 +36,33 @@ class Game():
 
     def isValid(self):
         if self.game is None:
-            print("Game is nothing for some reason")
+            dprint("Game is nothing for some reason")
             self.gameInfo = "Game is None"
             return False
         self.atBats = self.game.get("liveData", {}).get("plays", {}).get("allPlays", []) # a play is an at bat from this game
         if (len(self.atBats) == 0):
-            print("Game has not started yet!")
-            self.gameInfo = "Game has not started yet!"
+            dprint("Game has not started yet!")
             return False
         return True
     
     def setStatus(self):
         if self.game is not None:
             status = self.game.get("gameData", {}).get("status", {}).get("codedGameState", "")
+            self.detailedState = self.game.get("gameData", {}).get("status", {}).get("detailedState", "")
+            dprint(status)
             match status:
-                case "P", "S", "U":
+                case "P" | "S" | "U":
                     self.gameStatus = Status.PREVIEW
-                case "I", "M", "E", "C", "D":
+                    self.gameInfo = f"{self.detailedState}\nGame has not started yet!"
+                case "I" | "M" | "E" | "C" | "D":
                     self.gameStatus = Status.LIVE
-                case "F", "O", "W", "A", "D", "T", "R":
+                    self.gameInfo = f"{self.detailedState}\nGame in progress!"
+                case "F" | "O" | "W" | "A" | "D" | "T" | "R":
                     self.gameStatus = Status.FINAL
+                    self.gameInfo = f"{self.detailedState}\nGame has ended!"
                 case _:
                     self.gameStatus = Status.UNKNOWN
+                    self.gameInfo = "Game status unknown!"
 
     def isLive(self):
         self.setStatus()
@@ -89,8 +96,8 @@ class Game():
                 print(f"https://statsapi.mlb.com/api/v1.1/game/{_gamePk}/feed/live request failed (attempt {attempt + 1}/3): {e}")
                 if attempt < 2:
                     time.sleep(1)
-
-        print(f"Failed to retrieve game (game_pk={_gamePk}) GET request after 3 attempts.")
+                else:
+                    print(f"Failed to retrieve game (game_pk={_gamePk}) GET request after 3 attempts.")
         return None
     
     def getGameByFilePath(self, _filePath):

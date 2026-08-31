@@ -1,13 +1,8 @@
+import re
 import statsapi
 import threading
 from print_util import dprint
 from PySide6 import QtCore
-
-# scheduleStr = schedule.getScheduleStr(date)
-# scheduleList = scheduleStr.split("\n")
-# self.gamesWidget
-# self.gamesWidget.clear()
-# self.gamesWidget.addItems(scheduleList)
 
 class ScheduleWorker(QtCore.QObject):
     output = QtCore.Signal(str)
@@ -40,7 +35,6 @@ class ScheduleWorker(QtCore.QObject):
         self.update_event.set()
 
     # statsapi.schedule(date=None, start_date=None, end_date=None, team="", opponent="", sportId=1, game_id=None, season=None, include_series_status=True)
-    # TODO: thread that updates the strings every 30 seconds or so
     def setScheduleStr(self):
         if self.date is None:
             self.gamePks.clear()
@@ -55,10 +49,8 @@ class ScheduleWorker(QtCore.QObject):
             for game in self.schedule:
                 dprint(game)
                 self.gamePks.append(game.get("game_id", -1))
-                #scheduleStr += f"{game.get("away_name", "[away_name]")} @ {game.get("home_name", "[home_name]")}\n"
                 summary = game.get("summary", "")
-                # FIXME: This is a bad way to remove the date from the summary string
-                dateRemoved = summary.split("-")[3].lstrip()
+                dateRemoved = re.sub(r"^\d{4}-\d{2}-\d{2} - ", "", summary)
                 self.scheduleStr += f"{dateRemoved}\n"
             self.scheduleStr = self.scheduleStr.rstrip()
             self.output.emit(self.scheduleStr)

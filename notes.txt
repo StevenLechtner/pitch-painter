@@ -297,3 +297,23 @@ def main():
 if __name__ == "__main__":
     main()
 
+
+ Full Status Code Mapping Reference
+ Abstract Game State    Coded Game State    Status Code     Detailed / Common State Description
+ Preview                S                   S               Scheduled (Normal upcoming game)
+ Preview                P                   P               Pre-Game (Lineups announced, warming up)
+ Preview                U                   U               Warmup
+ Live                   I                   I               In Progress (Game is actively being played)
+ Live                   M                   M               Manager Challenge / Review
+ Live                   E                   E               Inning Transition (Between half-innings)
+ Live                   C                   C               Delayed Start (Weather, transport, etc.)
+ Live                   D                   D               Delayed (In-game delay, e.g., rain delay)
+ Final                  F                   F               Final (Game over, official result)
+ Final                  O                   O               Game Over (Last out made, awaiting official final status verification)
+ Final                  W                   W               Walked Off (Game concluded via a walk-off hit)
+ Final                  C or A              A or C          Cancelled (Game will not be made up)
+ Final                  D                   D               Postponed (Game scheduled for a later date)
+ Final                  T                   T               Suspended (Game paused, to be resumed later)
+ Final                  R                   R               Rained Out
+
+ Preview                P

@@ -3,7 +3,7 @@ import json
 import statsapi
 import sys
 import threading
-from game import Game
+from game import Game, Status
 from pitchbypitch import drawPitch
 from print_util import vprint, dprint
 from PySide6 import QtCore
@@ -154,8 +154,9 @@ def printAllPitchesFromLiveGame(gamePk, output, stop_event):
     while not stop_event.is_set():
         game = Game()
         game.getGameByGamePk(gamePk)
+        game.setStatus()
         # game.getGameByFilePath("tests/live_pitching_change_mid_inning.json") # Uncomment to test from a json file instead of the server
-        if not game.isValid():
+        if not game.isValid() or game.gameStatus == Status.PREVIEW:
             output.emit(game.gameInfo)
             return
 

@@ -2,7 +2,14 @@ import json
 import requests
 import statsapi
 import time
+from enum import Enum
 from situation import Situation
+
+class Status(Enum):
+    PREVIEW = 1
+    LIVE = 2
+    FINAL = 3
+    UNKNOWN = 4
 
 class Game():
     def __init__(self):
@@ -14,6 +21,7 @@ class Game():
         self.curAwayPitcher = ""
         self.curHomePitcher = ""
         self.curPitcher = ""
+        self.gameStatus = Status.UNKNOWN
     """
         if game.game is None:
             output.emit("Game is None")
@@ -35,6 +43,23 @@ class Game():
             self.gameInfo = "Game has not started yet!"
             return False
         return True
+    
+    def setStatus(self):
+        if self.game is not None:
+            status = self.game.get("gameData", {}).get("status", {}).get("codedGameState", "")
+            match status:
+                case "P", "S", "U":
+                    self.gameStatus = Status.PREVIEW
+                case "I", "M", "E", "C", "D":
+                    self.gameStatus = Status.LIVE
+                case "F", "O", "W", "A", "D", "T", "R":
+                    self.gameStatus = Status.FINAL
+                case _:
+                    self.gameStatus = Status.UNKNOWN
+
+    def isLive(self):
+        self.setStatus()
+        return self.isValid() and self.gameStatus == Status.LIVE
 
     def startNewGame(self):
         if not self.isValid():

@@ -1,9 +1,15 @@
 Bug fixes:
 Baserunners updating in real time - account for movement during an at bat
+    extra_innings_away_wins.json: Oneil Cruz reaches on a fielder's choice out, pitcher Adrian Morejon to catcher Luis Campusano to third baseman Manny Machado to second baseman Jake Cronenworth. Jake Mangum out at home. Oneil Cruz to 2nd.
+        The 10th inning also has a wild pitch, a first pitch of the inning double play with the ghost runner, and ibb to validate
+    wild_pitch.json: Mickey Moniak singles on a line drive to left fielder Turner Hill. Adael Amador scores. Jake McCarthy scores. Cole Carrigg to 3rd. Mickey Moniak to 2nd. Mickey Moniak advances to 2nd, on a fielding error by left fielder Turner Hill.
+        The hbp before should have been a bases loaded hbp. This at bat starts with bases loaded, one pitch single, error turns it into second and third, 10-7.
+    steal_second_third_and_home.json: Elly De La Cruz singles on a line drive to left fielder Raimel Tapia. TJ Friedl scores.
 Pitching change during an inning AND during an at bat
 Extra innings centered error in drawing the pitch
 Schedule update in real time
 Do api call either more frequently or way less frequently
+Abs challenge ending the inning and then getting overturned
 
 Additional features:
 Get the pitch before a run is scored (or big plays) and tweet it
@@ -317,3 +323,42 @@ if __name__ == "__main__":
  Final                  R                   R               Rained Out
 
  Preview                P
+
+
+
+
+
+# for runner in currentPlay.get("runners", []):
+#     if runner.get("details", {}).get("runner", {}).get("id", -1) == batterId:
+#         continue
+#     originBase = runner.get("movement", {}).get("originBase", None)
+#     startBase = runner.get("movement", {}).get("start", None)
+#     endBase = runner.get("movement", {}).get("end", None)
+#     if originBase != startBase or originBase is None or startBase is None:
+#         continue
+#     match endBase:
+#         case "1B":
+#             basesOccupied[1] = False
+#         case "2B":
+#             basesOccupied[2] = False
+#         case "3B":
+#             basesOccupied[3] = False
+#         case _:
+#             pass
+# for runner in currentPlay.get("runners", []):
+#     if runner.get("details", {}).get("runner", {}).get("id", -1) == batterId:
+#         continue
+#     originBase = runner.get("movement", {}).get("originBase", None)
+#     startBase = runner.get("movement", {}).get("start", None)
+#     endBase = runner.get("movement", {}).get("end", None)
+#     if originBase != startBase or originBase is None or startBase is None:
+#         continue
+#     match startBase:
+#         case "1B":
+#             basesOccupied[1] = True
+#         case "2B":
+#             basesOccupied[2] = True
+#         case "3B":
+#             basesOccupied[3] = True
+#         case _:
+#             pass

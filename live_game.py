@@ -85,13 +85,13 @@ def processPlayEvent(playEvent, situation, atBatToProcess, game, output):
         situation.setOuts(atBatToProcess.get("count", {}).get("outs", -1))
         situation.setBalls(0)
         situation.setStrikes(0)
-        situation.setBaserunnersFromPlay(atBatToProcess, True)
+        situation.setBaserunnersAtEndOfAtBat(atBatToProcess)
     else:
         # Pitch was thrown - set current count and baserunners
         situation.setBalls(playEvent.get("count", {}).get("balls", -1))
         situation.setStrikes(playEvent.get("count", {}).get("strikes", -1))
         situation.setOuts(playEvent.get("count", {}).get("outs", -1))
-        situation.setBaserunnersFromPlay(atBatToProcess, False)
+        situation.setBaserunnersDuringAtBat(atBatToProcess, playEvent.get("index", -1))
 
     # Incrememnt pitch count for current pitcher
     if playEvent.get("isPitch", False):
@@ -112,6 +112,7 @@ def processAtBat(game, atBatIndexToProcess, output, gamePk, stop_event):
     situation.setInning(atBatToProcess.get("about", {}).get("inning", -1))
     situation.setTop(atBatToProcess.get("about", {}).get("isTopInning", False))
     game.setPitcher() # set pitcher when new at bat starts to account for inning change
+    situation.setBaserunnersAtStartOfAtBat(atBatToProcess)
 
     # Loop through all play events of current play - print when a pitch is thrown
     latestPlayEventIndex = -1
@@ -154,8 +155,8 @@ def printAllPitchesFromLiveGame(gamePk, output, stop_event):
     while not stop_event.is_set():
         game = Game()
         game.getGameByGamePk(gamePk)
+        # game.getGameByFilePath("tests/meadows.json") # Uncomment to test from a json file instead of the server
         game.setStatus()
-        # game.getGameByFilePath("tests/live_pitching_change_mid_inning.json") # Uncomment to test from a json file instead of the server
         if not game.isValid() or game.gameStatus == Status.PREVIEW:
             output.emit(game.gameInfo)
             return

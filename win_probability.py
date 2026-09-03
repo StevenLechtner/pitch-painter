@@ -5,6 +5,13 @@ import sys
 from print_util import dprint
 
 class WinProbability():
+    # score weights
+    NORM_PROBS_ADDED = 25
+    NORM_LEV_IDX = 2.5
+    NORM_DRAMA_IDX = 150
+    PROBS_ADDED_WEIGHT = 0.7
+    LEV_IDX_WEIGHT = 0.15
+    DRAMA_IDX_WEIGHT = 0.15
     def __init__(self, gamePk=None):
         self.gamePk = -1 if gamePk is None else gamePk
         self.winProbabilities: list[WinProbabilityInfo] = self.setWinProbabilities() # List of WinProbabilityInfo
@@ -57,29 +64,37 @@ class WinProbability():
         probsAdded = []
         levIdx = []
         dramaIdx = []
-        scores = []
+        self.scores.clear()
         # loop through all plays and save a tuple of the metric with its at bat index
         for winProb in self.winProbabilities:
             # take abs to get the total top ten probability change plays
-            normProbsAdded = abs(winProb.homeTeamWinProbabilityAdded) / 25
-            normLevIdx = winProb.leverageIndex / 2.5
-            normDramaIdx = winProb.dramaIndex / 150
-            probsAdded.append((normProbsAdded, winProb.atBatIndex))
-            levIdx.append((normLevIdx, winProb.atBatIndex))
-            dramaIdx.append((normDramaIdx, winProb.atBatIndex))
-            score = 0.7 * normProbsAdded + 0.15 * normLevIdx + 0.15 * normDramaIdx
-            scores.append((score, winProb.atBatIndex))
+            probsAddedVal = abs(winProb.homeTeamWinProbabilityAdded)
+            levIdxVal = winProb.leverageIndex
+            dramaIdxVal = winProb.dramaIndex
+            probsAdded.append((probsAddedVal, winProb.atBatIndex))
+            levIdx.append((levIdxVal, winProb.atBatIndex))
+            dramaIdx.append((dramaIdxVal, winProb.atBatIndex))
+            score = (
+                self.PROBS_ADDED_WEIGHT * (probsAddedVal / self.NORM_PROBS_ADDED) 
+                + self.LEV_IDX_WEIGHT * (levIdxVal / self.NORM_LEV_IDX) 
+                + self.DRAMA_IDX_WEIGHT * (dramaIdxVal / self.NORM_DRAMA_IDX)
+            )
+            self.scores.append((score, winProb.atBatIndex))
+
+        # probsAdded = [(x * normProbsAddedVal, y) for x, y in probsAdded]
+        # levIdx = [(x * normLevIdxVal, y) for x, y in levIdx]
+        # dramaIdx = [(x * normDramaIdxVal, y) for x, y in dramaIdx]
 
         # sort in descending order and save the first ten elements
         self.topTenProbsAdded = heapq.nlargest(10, probsAdded, key=lambda x: x[0])
         self.topTenLevIdx = heapq.nlargest(10, levIdx, key=lambda x: x[0])
         self.topTenDramaIdx = heapq.nlargest(10, dramaIdx, key=lambda x: x[0])
-        self.scores = sorted(scores, key=lambda x: x[0], reverse=True)
+        self.scores = sorted(self.scores, key=lambda x: x[0], reverse=True)
         self.topTenScores = self.scores[:10]
-        print(f"scores: {self.scores}")
-        print(f"topTenProbsAdded: {self.topTenProbsAdded}")
-        print(f"topTenLevIdx: {self.topTenLevIdx}")
-        print(f"topTenDramaIdx: {self.topTenDramaIdx}")
+        print(f"scores: {self.scores}\n")
+        print(f"topTenProbsAdded: {self.topTenProbsAdded}\n")
+        print(f"topTenLevIdx: {self.topTenLevIdx}\n")
+        print(f"topTenDramaIdx: {self.topTenDramaIdx}\n")
         print(f"topTenScores: {self.topTenScores}")
 
     def normalizeTopTens(self):

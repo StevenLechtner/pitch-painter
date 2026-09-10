@@ -1,7 +1,9 @@
 import cli
 import heapq
+import requests
 import statsapi
 import sys
+import time
 from print_util import dprint
 
 class WinProbability():
@@ -12,6 +14,7 @@ class WinProbability():
     PROBS_ADDED_WEIGHT = 0.7
     LEV_IDX_WEIGHT = 0.15
     DRAMA_IDX_WEIGHT = 0.15
+    THRESHOLD = 0.375
     def __init__(self, gamePk=None):
         self.gamePk = -1 if gamePk is None else gamePk
         self.winProbabilities: list[WinProbabilityInfo] = self.setWinProbabilities() # List of WinProbabilityInfo
@@ -23,7 +26,19 @@ class WinProbability():
         self.topTenScores = []
 
     def setWinProbabilities(self):
-        winProbabilityList = statsapi.get('game_winProbability', {'gamePk': self.gamePk})
+        winProbabilityList = []
+        # Try HTTP GET request up to three times before failing
+        for attempt in range(3):
+            try:
+                winProbabilityList = statsapi.get('game_winProbability', {'gamePk': self.gamePk})
+            except requests.exceptions.RequestException as e:
+                print(f"https://statsapi.mlb.com/api/v1.1/game/{self.gamePk}/winProbability request failed (attempt {attempt + 1}/3): {e}")
+                if attempt < 2:
+                    time.sleep(1)
+                else:
+                    print(f"Failed to retrieve win probability (game_pk={self.gamePk}) GET request after 3 attempts.")
+                    winProbabilityList.clear()
+
         winProbabilities = []
         for atBat in winProbabilityList:
             homeProb = atBat.get("homeTeamWinProbability", 0.0)
@@ -36,12 +51,14 @@ class WinProbability():
         return winProbabilities
 
     def findAverages(self):
+        atBats = len(self.winProbabilities)
+        if (atBats <= 0):
+            return
         averageHomeProb = 0.0
         averageAwayProb = 0.0
         averageHomeProbAdded = 0.0
         averageLevIdx = 0.0
         averageDramaIdx = 0.0
-        atBats = len(self.winProbabilities)
         for winProbability in self.winProbabilities:
             averageHomeProb += winProbability.homeTeamWinProbability
             averageAwayProb += winProbability.awayTeamWinProbability
@@ -91,16 +108,24 @@ class WinProbability():
         self.topTenDramaIdx = heapq.nlargest(10, dramaIdx, key=lambda x: x[0])
         self.scores = sorted(self.scores, key=lambda x: x[0], reverse=True)
         self.topTenScores = self.scores[:10]
-        print(f"scores: {self.scores}\n")
-        print(f"topTenProbsAdded: {self.topTenProbsAdded}\n")
-        print(f"topTenLevIdx: {self.topTenLevIdx}\n")
-        print(f"topTenDramaIdx: {self.topTenDramaIdx}\n")
-        print(f"topTenScores: {self.topTenScores}")
-
-    def normalizeTopTens(self):
-        for elt in self.topTenProbsAdded:
-            elt[0] /= 100
-        print(f"normTopTenProbsAdded: {self.topTenProbsAdded}")
+        dprint(f"scores: {self.scores}\n")
+        dprint(f"topTenProbsAdded: {self.topTenProbsAdded}\n")
+        dprint(f"topTenLevIdx: {self.topTenLevIdx}\n")
+        dprint(f"topTenDramaIdx: {self.topTenDramaIdx}\n")
+        dprint(f"topTenScores: {self.topTenScores}")
+        averageTopTenScore = 0
+        for score in self.topTenScores:
+            averageTopTenScore += score[0]
+        averageTopTenScore /= 10
+        dprint()
+        print(f"Average top ten score: {averageTopTenScore}")
+        print(f"Highest score: {self.topTenScores[0][0]}")
+        print(f"Tenth score: {self.topTenScores[-1][0]}")
+        inRange = []
+        for score in self.scores:
+            if (score[0] > self.THRESHOLD):
+                inRange.append(score)
+        print(f"Plays above the {self.THRESHOLD} threshold: {len(inRange)}")
         
 class WinProbabilityInfo():
     def __init__(self, homeProb=0.0, awayProb=0.0, homeProbAdded=0.0, levIdx=0.0, dramaIdx=0.0, atBatIdx=-1):
@@ -114,11 +139,21 @@ class WinProbabilityInfo():
 def main(args):
     cli.getOptions(args)
 
-    winProbTest = WinProbability(823660)
-    #winProbTest = WinProbability(745369)
+    #winProbTest = WinProbability(823660)
+    winProbTest = WinProbability(745369)
     winProbTest.findAverages()
     winProbTest.findTopTens()
-    #winProbTest.normalizeTopTens()
+
+    schedule = statsapi.schedule(date="2026-09-06")
+    gamePks = []
+    for game in schedule:
+        dprint(game)
+        gamePks.append(game.get("game_id", -1))
+
+    for gamePk in gamePks:
+        winProbTest = WinProbability(gamePk)
+        winProbTest.findAverages()
+        winProbTest.findTopTens()
     return 0
 
 if __name__ == "__main__":

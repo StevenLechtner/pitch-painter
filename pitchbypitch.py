@@ -155,7 +155,8 @@ def printAllPitchesFromGame(game):
     awayAbbr = game["gameData"]["teams"]["away"]["abbreviation"] # LAA
     homeAbbr = game["gameData"]["teams"]["home"]["abbreviation"] # HOU
     currentPitcher = game["liveData"]["plays"]["currentPlay"]["matchup"]["pitcher"]["fullName"] # José Quijada
-    situation = Situation(homeAbbr, awayAbbr, currentPitcher)
+    situation = Situation()
+    situation.startNewGame(homeAbbr, awayAbbr, currentPitcher)
     lastDescription = ""
     currentPlay = game["liveData"]["plays"]["currentPlay"]
     plays = game["liveData"]["plays"]["allPlays"]
@@ -185,12 +186,14 @@ def printAllPitchesFromGame(game):
                     situation.setOuts(currentPlay["count"]["outs"])
                     situation.setBalls(0)
                     situation.setStrikes(0)
-                    situation.setBaserunnersFromPlay(currentPlay)
+                    # situation.setBaserunnersFromPlay(currentPlay)
+                    situation.setBaserunnersAtEndOfAtBat(currentPlay)
 
                 else:
                     situation.setBalls(playEvent["count"]["balls"])
                     situation.setStrikes(playEvent["count"]["strikes"])
                     situation.setOuts(playEvent["count"]["outs"])
+                    situation.setBaserunnersDuringAtBat(currentPlay, playEvent.get("index", -1))
 
                 # Incrememnt pitch count for current pitcher
                 pitchCount = situation.pitchCount.get(situation.pitcher, 0)

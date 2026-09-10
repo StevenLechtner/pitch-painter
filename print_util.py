@@ -1,5 +1,6 @@
 verbose = False
 debug = False
+tweet = False
 
 def vprint(*args, **kwargs):
     if verbose:
@@ -16,3 +17,7 @@ def dprint(*args, **kwargs):
 def setDebug(_debug):
     global debug
     debug = _debug
+
+def setTweet(_tweet):
+    global tweet
+    tweet = _tweet

@@ -21,6 +21,65 @@ Get game diff instead of whole new game for live game updating
 Make the app look pretty
 Add to github but make it private, idk? - copyright issue...
 
+For Threads:
+curl "https://graph.threads.net/v1.0/me?fields=id,username&access_token=THAANWViZC2T1NBYmJwQi1pTEg5NXE3ZA3ZAHOFhNMm5oekNONTRZAVm9OVEJoSlhDcjN5MmN5b2NodXRsdndCU25GNjBpZADFlLWQ4UC1rTk01ZAlFaQ1JhS2NkaWRNNUVTcmxYbWJuZAkRjY0Q2a3hPWEFzT0tZAMTZAWZA2JybEFSZAUVmSkdRUQZDZD"
+That gets our Thread user Id and user name {"id":"28665889336435626","username":"pitchpainter"}% 
+curl -X POST "https://graph.threads.net/v1.0/28665889336435626/threads" -d "media_type=TEXT" -d "text=Hello, World" -d "access_token=THAANWViZC2T1NBYmJwQi1pTEg5NXE3ZA3ZAHOFhNMm5oekNONTRZAVm9OVEJoSlhDcjN5MmN5b2NodXRsdndCU25GNjBpZADFlLWQ4UC1rTk01ZAlFaQ1JhS2NkaWRNNUVTcmxYbWJuZAkRjY0Q2a3hPWEFzT0tZAMTZAWZA2JybEFSZAUVmSkdRUQZDZD"
+This creates the tweet Hello, World using the access token and user id, and gives us the creation id for the post {"id":"18109056196915017"}
+curl -X POST "https://graph.threads.net/v1.0/28665889336435626/threads_publish" -d "creation_id=18109056196915017" -d "access_token=THAANWViZC2T1NBYmJwQi1pTEg5NXE3ZA3ZAHOFhNMm5oekNONTRZAVm9OVEJoSlhDcjN5MmN5b2NodXRsdndCU25GNjBpZADFlLWQ4UC1rTk01ZAlFaQ1JhS2NkaWRNNUVTcmxYbWJuZAkRjY0Q2a3hPWEFzT0tZAMTZAWZA2JybEFSZAUVmSkdRUQZDZD"
+This sends the actual thread post and gives us another id as a response, not sure... {"id":"18244963885310769"}
+
+Get long term access token (1 hour -> 60 days)
+short term: graph api explorer, get threads.net, pitcher painter, generate access token
+curl -i -X GET "https://graph.threads.com/access_token?grant_type=th_exchange_token&client_secret=685c1596e92d7783929587707bb6ab6e&access_token=THAANWViZC2T1NBYmJTY05FLW1ITXZACMG9xcVgtZADBJVmhTV2ZAnMXVsdFFsY3hMWEViNlZAlaFRhTUNzWVUycUtPLTBHcGZA0eFBXdi1kTC1PV1ktbWRWbmQzSTRtRHMwVmp0Nmg1dnpFdFB2d1FDVHNvVzBYanN4UFBiWnhFa29sZAHY3TG9tRjdFQUliWGQxMVFhVl9TRFhVZAUFTRHpmRm5tUktIek4ZD"
+HTTP/2 200 
+vary: Accept-Encoding
+content-security-policy: frame-ancestors 'none'
+x-frame-options: DENY
+x-content-type-options: nosniff
+content-length: 248
+content-type: application/json; charset=utf-8
+strict-transport-security: max-age=31536000; preload; includeSubDomains
+pragma: no-cache
+cache-control: private, no-cache, no-store, must-revalidate
+expires: Sat, 01 Jan 2000 00:00:00 GMT
+x-fb-request-id: Acpm47RaEqBEC8dvp8ToXx9
+x-fb-trace-id: BuS6JpN4yMT
+x-fb-rev: 1047162702
+x-stack: www
+x-fb-debug: D+yAuomUxBJHVtiiTJbxUBglkyGUQrMFv/PCxaU3sjEBoFFDLHo2EHdhRNqMWvOQPq4g5q5ZfX0Q5gVawfSgNA==
+date: Thu, 10 Sep 2026 04:16:03 GMT
+x-fb-connection-quality: EXCELLENT; q=0.9, rtt=15, rtx=0, c=15, mss=1380, tbw=3665, tp=-1, tpl=-1, uplat=597, ullat=0
+alt-svc: h3=":443"; ma=86400
+{"access_token":"THAANWViZC2T1NBYllTd1F1bExvVDFkS0lDUUNwTHRuZATRiY2tFQXNsOVdneVk4aGkyWXZAoR2JCai1KSGxPNWRKc2pINGU3MnN1ZAGd1MURTQll3Umo2MVQteklXbzAtakpvNzM4MC1uQURtRGx4MmFSRGFjUy1sLXlDdTZAldXdBMmhlZAwZDZD","token_type":"bearer","expires_in":5184000}%                     
+
+Refresh a long-lived token:
+curl -i -X GET "https://graph.threads.com/refresh_access_token?grant_type=th_refresh_token&access_token=THAANWViZC2T1NBYllTd1F1bExvVDFkS0lDUUNwTHRuZATRiY2tFQXNsOVdneVk4aGkyWXZAoR2JCai1KSGxPNWRKc2pINGU3MnN1ZAGd1MURTQll3Umo2MVQteklXbzAtakpvNzM4MC1uQURtRGx4MmFSRGFjUy1sLXlDdTZAldXdBMmhlZAwZDZD"
+HTTP/2 200 
+shadow-id: xi9lma1ofcr41ve1_AXuQHxvUogQolJ2bah1RsyD
+etag: "b7d68215d1205b67b36a8a9035c3e46aba817cbb"
+content-type: application/json; charset=UTF-8
+vary: Accept-Encoding
+vary: Accept-Encoding
+x-app-usage: {"call_count":0,"total_cputime":0}
+threads-api-version: v1.0
+access-control-allow-origin: *
+x-fb-debug: FUsVlQ/bREX+yV7MXPRYhICkl6rqOOImvTO24tWhynE=
+x-fb-server-load: 51
+strict-transport-security: max-age=31536000; preload; includeSubDomains
+pragma: no-cache
+cache-control: private, no-cache, no-store, must-revalidate
+expires: Sat, 01 Jan 2000 00:00:00 GMT
+x-fb-request-id: AGYlRxCVaEkOO4RkzqM5lsM
+x-fb-trace-id: ExV73yY7qSx
+x-fb-rev: 1047162702
+x-stack: www
+x-fb-server-load: 41
+date: Thu, 10 Sep 2026 04:20:37 GMT
+x-fb-connection-quality: EXCELLENT; q=0.9, rtt=17, rtx=0, c=15, mss=1380, tbw=3665, tp=-1, tpl=-1, uplat=1114, ullat=0
+alt-svc: h3=":443"; ma=86400
+{"access_token":"THAANWViZC2T1NBYmJwQi1pTEg5NXE3ZA3ZAHOFhNMm5oekNONTRZAVm9OVEJoSlhDcjN5MmN5b2NodXRsdndCU25GNjBpZADFlLWQ4UC1rTk01ZAlFaQ1JhS2NkaWRNNUVTcmxYbWJuZAkRjY0Q2a3hPWEFzT0tZAMTZAWZA2JybEFSZAUVmSkdRUQZDZD","token_type":"bearer","expires_in":5183726}
+
 Pitch by pitch
 
 Get Desired game pk from specific date:

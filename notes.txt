@@ -1,19 +1,14 @@
 Bug fixes:
-Baserunners updating in real time - account for movement during an at bat
-    extra_innings_away_wins.json: Oneil Cruz reaches on a fielder's choice out, pitcher Adrian Morejon to catcher Luis Campusano to third baseman Manny Machado to second baseman Jake Cronenworth. Jake Mangum out at home. Oneil Cruz to 2nd.
-        The 10th inning also has a wild pitch, a first pitch of the inning double play with the ghost runner, and ibb to validate
-    wild_pitch.json: Mickey Moniak singles on a line drive to left fielder Turner Hill. Adael Amador scores. Jake McCarthy scores. Cole Carrigg to 3rd. Mickey Moniak to 2nd. Mickey Moniak advances to 2nd, on a fielding error by left fielder Turner Hill.
-        The hbp before should have been a bases loaded hbp. This at bat starts with bases loaded, one pitch single, error turns it into second and third, 10-7.
-    steal_second_third_and_home.json: Elly De La Cruz singles on a line drive to left fielder Raimel Tapia. TJ Friedl scores.
-Pitching change during an inning AND during an at bat
+Have the image url be valid every time so /threads and /threads_publish always work as expected
 Extra innings centered error in drawing the pitch
-Schedule update in real time
 Do api call either more frequently or way less frequently
 Abs challenge ending the inning and then getting overturned
 
 Additional features:
+Make live_tweet a thread of its own
+    Separate thread posts from tweets - archive the tweet code but it's not being used any more
+    Once this is done, get live game threads posting working - big plays only? idk.
 Get the pitch before a run is scored (or big plays) and tweet it
-Get and print all big plays in a game
 Live game that updates pitch by pitch with descriptions of each pitch and at bat
     along with additional info like mid 5th after the top ends, for example
     Pitch info - type, speed, break, etc.
@@ -79,6 +74,21 @@ date: Thu, 10 Sep 2026 04:20:37 GMT
 x-fb-connection-quality: EXCELLENT; q=0.9, rtt=17, rtx=0, c=15, mss=1380, tbw=3665, tp=-1, tpl=-1, uplat=1114, ullat=0
 alt-svc: h3=":443"; ma=86400
 {"access_token":"THAANWViZC2T1NBYmJwQi1pTEg5NXE3ZA3ZAHOFhNMm5oekNONTRZAVm9OVEJoSlhDcjN5MmN5b2NodXRsdndCU25GNjBpZADFlLWQ4UC1rTk01ZAlFaQ1JhS2NkaWRNNUVTcmxYbWJuZAkRjY0Q2a3hPWEFzT0tZAMTZAWZA2JybEFSZAUVmSkdRUQZDZD","token_type":"bearer","expires_in":5183726}
+
+See daily quota usage (x/250)
+curl "https://graph.threads.net/v1.0/28665889336435626/threads_publishing_limit?access_token=THAANWViZC2T1NBYllTd1F1bExvVDFkS0lDUUNwTHRuZATRiY2tFQXNsOVdneVk4aGkyWXZAoR2JCai1KSGxPNWRKc2pINGU3MnN1ZAGd1MURTQll3Umo2MVQteklXbzAtakpvNzM4MC1uQURtRGx4MmFSRGFjUy1sLXlDdTZAldXdBMmhlZAwZDZD"
+{"data":[{"quota_usage":122}]}% 
+
+The external API will not be able to access your local images even if you host them using a local webserver. Instead, you can upload the images to storage services like AWS S3 or Azure Blob storage, and then provide those image URLs to the external API. This would be the simplest to do if your images aren't many in number.
+If there are lot of images, then instead of uploading each one of them, you may want to run a local webserver[ e.g nodejs, etc] and then use ngrok tunnels so that you can get a public URL that you can give to external API.
+
+
+Baserunners updating in real time - account for movement during an at bat
+    extra_innings_away_wins.json: Oneil Cruz reaches on a fielder's choice out, pitcher Adrian Morejon to catcher Luis Campusano to third baseman Manny Machado to second baseman Jake Cronenworth. Jake Mangum out at home. Oneil Cruz to 2nd.
+        The 10th inning also has a wild pitch, a first pitch of the inning double play with the ghost runner, and ibb to validate
+    wild_pitch.json: Mickey Moniak singles on a line drive to left fielder Turner Hill. Adael Amador scores. Jake McCarthy scores. Cole Carrigg to 3rd. Mickey Moniak to 2nd. Mickey Moniak advances to 2nd, on a fielding error by left fielder Turner Hill.
+        The hbp before should have been a bases loaded hbp. This at bat starts with bases loaded, one pitch single, error turns it into second and third, 10-7.
+    steal_second_third_and_home.json: Elly De La Cruz singles on a line drive to left fielder Raimel Tapia. TJ Friedl scores.
 
 Pitch by pitch
 

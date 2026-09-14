@@ -1,5 +1,6 @@
 import json
 from situation import Situation
+from live_tweet import sendThreadImageFromText
 
 def drawPitchForTweeting(situation: Situation):
 
@@ -150,6 +151,10 @@ def drawPitch(situation: Situation):
     #print("│") # TODO: maybe use in the future?
     return output
 
+def postPitchToThreads(situation: Situation, filepath):
+    text = drawPitch(situation)
+    sendThreadImageFromText(text, filepath)
+
 def printAllPitchesFromGame(game):
     testOut = ""
     awayAbbr = game["gameData"]["teams"]["away"]["abbreviation"] # LAA
@@ -201,6 +206,10 @@ def printAllPitchesFromGame(game):
                 situation.pitchCount[situation.pitcher] = pitchCount
 
                 print(f"{drawPitch(situation)}\n")
+                gamePk = game.get("gameData", {}).get("game", {}).get("pk", -1)
+                playId = playEvent.get("playId", -1)
+                filepath = f"images/{gamePk}/{playId}.png"
+                postPitchToThreads(situation, filepath)
                 if (situation.balls == 3 and situation.strikes == 2 and situation.outs == 2 and situation.awayScore == 0 and situation.homeScore == 3 and situation.inning == 9):
                     testOut = drawPitch(situation)
                 i += 1

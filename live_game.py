@@ -4,7 +4,7 @@ import statsapi
 import sys
 import threading
 from game import Game, Status
-from pitchbypitch import drawPitch
+from pitchbypitch import drawPitch, postPitchToThreads
 from print_util import vprint, dprint
 from PySide6 import QtCore
 
@@ -64,6 +64,22 @@ def getTeamName(teamId):
 def processPlayEvent(playEvent, situation, atBatToProcess, game, output):
     if playEvent.get("isPitch", False):
         output.emit(drawPitch(situation))
+        playId = playEvent.get("playId", -1)
+        filepath = f"images/{game.gamePk}/{playId}.png"
+        #if (atBatToProcess.get("atBatIndex", -1) >= 65):
+        if cli.threading:
+            # TODO: Test this.
+            if game.isLive():
+                print("game is live")
+                curIdx = game.game.get("liveData", {}).get("plays", {}).get("currentPlay", {}).get("about", {}).get("atBatIndex", -1)
+                thisBatIdx = atBatToProcess.get("about", {}).get("atBatIndex", -1)
+                print(curIdx)
+                print(thisBatIdx)
+                if curIdx == thisBatIdx and curIdx != -1:
+                    postPitchToThreads(situation, filepath)
+            else:
+                postPitchToThreads(situation, filepath)
+
     # update if a run scored mid at bat - wild pitch, stolen home, error on pick off, etc
     awayScore = playEvent.get("details", {}).get("awayScore", -1)
     if awayScore > -1:
@@ -161,7 +177,7 @@ def printAllPitchesFromLiveGame(gamePk, output, stop_event):
             output.emit(game.gameInfo)
             return
 
-        atBatIndexToProcess = 0        
+        atBatIndexToProcess = 0
         while not game.situation.gameOver and not stop_event.is_set():
             if game.atBats:
                 latestAtBatIndex = game.atBats[-1].get("atBatIndex", -1)
@@ -234,7 +250,8 @@ def main(args):
     #     return 0
 
     # game = statsapi.get('game', {'gamePk': gamePk})
-    gamePk = 823989
+    # gamePk = 823989
+    gamePk = 745369
     testThread = LiveGameWorker(gamePk)
     testThread.output.connect(outputVerbosePrinting)
     printAllPitchesFromLiveGame(gamePk, testThread.output, testThread.stop_event)

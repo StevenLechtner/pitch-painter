@@ -14,6 +14,12 @@ from PIL import Image, ImageDraw, ImageFont
 from print_util import dprint, vprint
 import textwrap
 
+import cloudinary
+import cloudinary.uploader
+from cloudinary.utils import cloudinary_url
+
+import dropbox
+
 # Twitter bot developer credentials
 api_key = "1zgs4BdzcdQ4GdASh1MN1YLrX"
 api_secret = "WDrigEIEedvKmY56YVRRI5lwRQ8fgdE8xbaCyQHrlq6vTYGCyV"
@@ -30,8 +36,19 @@ THREADS_ACCESS_TOKEN = "THAANWViZC2T1NBYmJwQi1pTEg5NXE3ZA3ZAHOFhNMm5oekNONTRZAVm
 THREADS_USER_ID = "28665889336435626"
 BASE_URL = f"https://graph.threads.net/v1.0/{THREADS_USER_ID}"
 
-# Image hosting credentials (imgbb)
+# Image hosting credentials
+# imgbb
 IMGBB_API_KEY = "fbcfda7ed153930d976540d21230a2de"
+# cloudinary
+cloudinary.config( 
+    cloud_name = "ww7oqsam", 
+    api_key = "766733828814763", 
+    api_secret = "JlGsY0SDOltGbcVuyQJLryo0OuQ",
+    secure=True
+)
+# dropbox
+DROPBOX_ACCESS_TOKEN = "sl.u.AGsJvt7zMb9K_jQrgg-MoVNRCmUpor6u8CIEfLU2gbFMz0PM04PIUULJKmlFGJGn6zHbS8oLxR9j_mHusQOc7qhalIhfjdtBdZmCCNYT2OXfMIm7EYxXrj2XS4jZXUXPmfgJyTOa_D3fvd3wvukUseZNYwo8-CuBC-tgqh-OM22eeB5-T4QhHFXmzcl5vOsncK0miR8sCSWeQ_AXvIwEwl2KwsBZ_AhcBnASkfml2mTGAchxAScfJjueMVJUdLuXl-kZPJUOUtk9ZK8DTg3HSMJ0wcfH1X4KWwjj9GJRAqdj8Sxgp6ksAe55wk1lj9kyKYY88XP-svDS3UooOeF5VWBZawQj3MRgULu3-95Z7m18We6R-MEH39QCdhwf8_-KpNfa8WW0xvyyV1p7tuI4XJNbqpk5aGTUJh4bbP4e11TaG8wSYEfIDzZkliKwtrHioM2CsHE052BFi2XnnfFO2OGVkXakJp7Bk3MY8mdkKe3gct8Dk5jwR1upuZGYZ9EvKj6QrBewR7wRt-ZHXv4clxleptN7EOrY38-Vwl-JjWVjlMQU3fwYo_UxacXLooh_MT97d2rRmmRZNIYwyQM5jMmh52NSNLVtRCfDVdHVwCHvLex6q0MZcIQnCOjaFqW6n-2GhL9H8z75m29ljE7O7sEF1TeYuRSzpkofFB7jeHDcdv1qV-Knp24kj1eDnsXcgnEDqgwpAcqGuBRm6hYkVNe0TLcmmcQtbs5CbSmZ8IAJopNZ0vv2982gfdJWtquBcYLKiqVA4nnK1IZeJV_WzxSmSwAzoZuXdEVFyuTdl9zcAKYM37Iqc6FeuzRjDt4SSGFPIK6vwEnxpFsFHnBGvpPblbCtF8CrE--2Ls-XvyIalqdk8Qusf8H3al8E7qp-UUHaOBuCPtZs6psP3oYr7cB1CrN_xUdmMZjYHtbMnzPkMlFOj8mVIrAbcT-vGxXNOM_K7ubgCB3B8JwHirkuhevilpGdVHRiVvhvVfAvdtUQ1XxeYg_8jchk8VNKokEIANuuoeIx-waBF4NFMjLuanb_jVXqp6fMTxwmTD9pJM6BaWwnoiR1FoTLQ6zEnC6aC6PqIdYo68JO22q6kP3RKxCfrBHyZFeIiO1NJdlJQrQ6nFBmhIt1XUVO7QBLvPAeHyCk-Ve5zrvzXoqmWKOgKE5IktKbnx12YbzYmIFBtcM1WGjx9EJfr2xbYvZQbEQxAQWCJUKPM4S7dcAZjQ83MF2s5heDWxQOGNWqh_L9ZeExT-Q1RvZTPz10lsWKw2ffwFTZldSAAJ0sOoDowwiHTQL2L9NV1Oi2WMqPZGLhLHKCcw"
+dbx = dropbox.Dropbox(DROPBOX_ACCESS_TOKEN)
 
 # # Determines if tweet gets sent out or not
 # isTweeting = False
@@ -86,12 +103,43 @@ def textToPNG(text, filepath="pitch.png"):
         draw.text((border / 2, y), line, font=font, fill="black") # xy, text, text font, text color
         y += line_height
 
-    # TODO: change filename to be specific: images/gamePk/[playId].png
     dir_name = os.path.dirname(filepath)
     if dir_name and not os.path.exists(dir_name):
         os.makedirs(dir_name)
     image.save(filepath)
     return filepath
+
+# def textToPNG(text, filepath="pitch.png"):
+#   lines = text.split("\n")
+#   try:
+#     font = ImageFont.truetype("/System/Library/Fonts/Menlo.ttc", 32)
+#   except IOError:
+#     font = ImageFont.load_default()
+
+#   # Force a fixed, standard canvas size (Square 1080x1080)
+#   # This guarantees it matches Meta's aspect ratio and minimum size requirements.
+#   canvas_width = 1080
+#   canvas_height = 1080
+
+#   image = Image.new("RGB", (canvas_width, canvas_height), "white")
+#   draw = ImageDraw.Draw(image)
+
+#   # Starting coordinates with generous padding
+#   x = 80
+#   y = 80
+#   line_height = 45
+
+#   for line in lines:
+#     draw.text((x, y), line, font=font, fill="black")
+#     y += line_height
+
+#   # Ensure directory exists and save
+#   dir_name = os.path.dirname(filepath)
+#   if dir_name and not os.path.exists(dir_name):
+#     os.makedirs(dir_name)
+
+#   image.save(filepath, "PNG")
+#   return filepath
 
 def createThreadToPost(contents):
     # Try to create thread to post up to three times before failing
@@ -99,7 +147,9 @@ def createThreadToPost(contents):
         response = requests.get(contents.get("image_url", None))
         print(response.status_code)
         print(response.headers.get("Content-Type"))
+        print(response.url)
         print(len(response.content))
+        print(contents.get("image_url"))
         thread = requests.post(f"{BASE_URL}/threads", json=contents)
         creationId = thread.json().get("id", -1)
         vprint(f"Thread creation: {thread.json()}")
@@ -115,6 +165,48 @@ def createThreadToPost(contents):
             else:
                 vprint(f"Failed to create thread to post after 3 attempts.")
     return -1
+
+# def createThreadToPost(contents):
+#   # Try to create thread up to three times before failing
+#   for attempt in range(3):
+
+#     # # 1. CRITICAL: Give Cloudinary a moment to globally replicate the asset
+#     # if attempt == 0:
+#     #   time.sleep(
+#     #       4
+#     #   )  # Wait 4 seconds on the first try to let global CDN nodes sync
+#     # else:
+#     #   time.sleep(15)  # Wait longer on subsequent retries
+
+#     image_url = contents.get("image_url")
+
+#     # Optional: verify from your end
+#     try:
+#       response = requests.get(image_url, timeout=5)
+#       print(f"URL Check Status: {response.status_code}")
+#     except Exception as e:
+#       print(f"URL check exception: {e}")
+
+#     #time.sleep(5)
+
+#     # 2. Use 'data=' instead of 'json=' for Meta Graph API compatibility
+#     thread = requests.post(
+#         f"{BASE_URL}/threads", data=contents
+#     )  # Ensure USER_ID is included
+
+#     creationId = thread.json().get("id", -1)
+
+#     if creationId != -1:
+#       print(f"Success! Post created: {creationId}")
+#       return creationId
+#     else:
+#       print(
+#           f"Attempt {attempt + 1}/3 failed. Meta Response:"
+#           f" {thread.json()}"
+#       )
+
+#   print("Failed to create thread to post after 3 attempts.")
+#   return -1
 
 def sendThread(contents):
     if not cli.threading:
@@ -150,16 +242,43 @@ def sendThread(contents):
             else:
                 vprint(f"Failed to create thread to post after 3 attempts.")
 
-def sendThreadImageFromText(text, filepath="images/miscPk/temp.png"):
+def sendThreadImageFromText(text, filepath="images/miscPk/temp.jpg"):
     if not cli.threading:
         vprint("We are not posting a thread right now. -t or --thread to tweet. -h or --help for other command line options")
         return
 
     filepath = textToPNG(text, filepath)
-    imageUrl = uploadImageToImgbb(filepath)
+    # imageUrl = uploadImageToImgbb(filepath)
+    #imageUrl = uploadImageToCloudinary(filepath)
+    imageUrl = uploadImageToDropbox(filepath)
+    print(imageUrl)
     contents = {"media_type": "IMAGE", "image_url": imageUrl, "access_token": THREADS_ACCESS_TOKEN} # thread an image
     sendThread(contents)
     os.remove(filepath)
+    dbx.files_delete_v2(f"/{filepath}")
+
+def uploadImageToDropbox(filepath):
+    with open(filepath, "rb") as fp:
+        contents = fp.read()
+
+    dbx.files_upload(contents, f"/{filepath}", dropbox.files.WriteMode.add, mute=True)
+    shared_link_metadata = dbx.sharing_create_shared_link_with_settings(f"/{filepath}")
+    preview_url = shared_link_metadata.url
+    direct_image_url = preview_url.replace("?dl=0", "?raw=1")
+    direct_image_url = direct_image_url.replace("www.dropbox", "dl.dropboxusercontent")
+    return direct_image_url
+
+def uploadImageToCloudinary(filepath):
+    """Uploads a local PNG file to Cloudinary and returns a 100% reliable URL."""
+    print(f"Uploading {filepath} to Cloudinary...")
+    try:
+        response = cloudinary.uploader.upload(filepath, resource_type="image", format="jpg", transformation=[{"fetch_format": "jpg"}, {"color_space": "srgb"}],)
+        secure_url = response.get("secure_url")
+        print(f"Upload successful. Secure URL: {secure_url}")
+        return secure_url
+    except Exception as e:
+        print(f"Cloudinary upload failed: {e}")
+        return None
 
 def uploadImageToImgbb(filepath):
     with open(filepath, "rb") as image:

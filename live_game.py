@@ -251,7 +251,8 @@ def main(args):
 
     # game = statsapi.get('game', {'gamePk': gamePk})
     # gamePk = 823989
-    gamePk = 745369
+    # gamePk = 745369
+    gamePk = 822765
     testThread = LiveGameWorker(gamePk)
     testThread.output.connect(outputVerbosePrinting)
     printAllPitchesFromLiveGame(gamePk, testThread.output, testThread.stop_event)

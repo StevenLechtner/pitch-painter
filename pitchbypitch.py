@@ -1,6 +1,6 @@
 import json
 from situation import Situation
-from live_tweet import sendThreadImageFromText
+from thread_poster import postThreadTextAsImage
 
 def drawPitchForTweeting(situation: Situation):
 
@@ -153,7 +153,7 @@ def drawPitch(situation: Situation):
 
 def postPitchToThreads(situation: Situation, filepath):
     text = drawPitch(situation)
-    sendThreadImageFromText(text, filepath)
+    postThreadTextAsImage(text, filepath)
 
 def printAllPitchesFromGame(game):
     testOut = ""

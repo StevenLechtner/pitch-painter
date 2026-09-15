@@ -1,0 +1,74 @@
+####################################################################################################################################################################
+# ImgBB code:
+# 
+# IMGBB_API_KEY = "fbcfda7ed153930d976540d21230a2de"
+# 
+# def uploadImageToImgbb(filepath):
+#     with open(filepath, "rb") as image:
+#         imageResp = requests.post(f"https://api.imgbb.com/1/upload?key={IMGBB_API_KEY}", files={"image": image})
+#     vprint(f"Image upload: {imageResp.json()}")
+#     return imageResp.json().get("data", {}).get("url", None)
+# 
+# def deleteImageFromImgbb(imageUrl):
+#     imageResp = requests.post(imageUrl)
+#     vprint(f"Delete image: {imageResp.status_code}")
+####################################################################################################################################################################
+# Cloudinary code:
+# 
+# import cloudinary
+# import cloudinary.uploader
+# from cloudinary.utils import cloudinary_url
+# 
+# cloudinary.config( 
+#     cloud_name = "ww7oqsam", 
+#     api_key = "766733828814763", 
+#     api_secret = "JlGsY0SDOltGbcVuyQJLryo0OuQ",
+#     secure=True
+# )
+# 
+# def uploadImageToCloudinary(filepath):
+#     """Uploads a local PNG file to Cloudinary and returns a 100% reliable URL."""
+#     print(f"Uploading {filepath} to Cloudinary...")
+#     try:
+#         response = cloudinary.uploader.upload(filepath, resource_type="image", format="jpg", transformation=[{"fetch_format": "jpg"}, {"color_space": "srgb"}],)
+#         secure_url = response.get("secure_url")
+#         print(f"Upload successful. Secure URL: {secure_url}")
+#         return secure_url
+#    except Exception as e:
+#         print(f"Cloudinary upload failed: {e}")
+#         return None
+####################################################################################################################################################################
+# Another way to convert text to png, 1080x1080 square image:
+# 
+# def textToPNG(text, filepath="pitch.png"):
+#   lines = text.split("\n")
+#   try:
+#     font = ImageFont.truetype("/System/Library/Fonts/Menlo.ttc", 32)
+#   except IOError:
+#     font = ImageFont.load_default()
+# 
+#   # Force a fixed, standard canvas size (Square 1080x1080)
+#   # This guarantees it matches Meta's aspect ratio and minimum size requirements.
+#   canvas_width = 1080
+#   canvas_height = 1080
+# 
+#   image = Image.new("RGB", (canvas_width, canvas_height), "white")
+#   draw = ImageDraw.Draw(image)
+# 
+#   # Starting coordinates with generous padding
+#   x = 80
+#   y = 80
+#   line_height = 45
+# 
+#   for line in lines:
+#     draw.text((x, y), line, font=font, fill="black")
+#     y += line_height
+# 
+#   # Ensure directory exists and save
+#   dir_name = os.path.dirname(filepath)
+#   if dir_name and not os.path.exists(dir_name):
+#     os.makedirs(dir_name)
+# 
+#   image.save(filepath, "PNG")
+#   return filepath
+####################################################################################################################################################################

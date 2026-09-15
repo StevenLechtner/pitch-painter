@@ -49,7 +49,6 @@ class Game():
         if self.game is not None:
             status = self.game.get("gameData", {}).get("status", {}).get("codedGameState", "")
             self.detailedState = self.game.get("gameData", {}).get("status", {}).get("detailedState", "")
-            dprint(status)
             match status:
                 case "P" | "S" | "U":
                     self.gameStatus = Status.PREVIEW
@@ -63,6 +62,7 @@ class Game():
                 case _:
                     self.gameStatus = Status.UNKNOWN
                     self.gameInfo = "Game status unknown!"
+            dprint(f"Game status: {self.gameStatus} ({status})")
 
     def isLive(self):
         self.setStatus()

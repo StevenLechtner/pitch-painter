@@ -79,6 +79,8 @@ def processPlayEvent(playEvent, situation, atBatToProcess, game, output):
                     postPitchToThreads(situation, filepath)
             else:
                 postPitchToThreads(situation, filepath)
+        else:
+            vprint("We are not posting a thread right now. -t or --thread to post a thread. -h or --help for other command line options")
 
     # update if a run scored mid at bat - wild pitch, stolen home, error on pick off, etc
     awayScore = playEvent.get("details", {}).get("awayScore", -1)

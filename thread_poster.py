@@ -20,14 +20,14 @@ DROPBOX_APP_SECRET = "uumup20acpe76wy"
 DROPBOX_REFRESH_TOKEN = "LIZk_Wjvb7MAAAAAAAAAAYO9nqhCcmdldXOmazBt-EEZzVt5biCE64wSj1KDLhM2"
 dbx = dropbox.Dropbox(app_key=DROPBOX_APP_KEY, app_secret=DROPBOX_APP_SECRET, oauth2_refresh_token=DROPBOX_REFRESH_TOKEN)
 
-def postThreadTextAsImage(text, filepath="images/miscPk/temp.png"):
+def postThreadTextAsImage(situationText, descriptionText=None, altText=None, filepath="images/miscPk/temp.png"):
     if not cli.threading:
         vprint("We are not posting a thread right now. -t or --thread to post a thread. -h or --help for other command line options")
         return
 
-    filepath = textToPNG(text, filepath)
+    filepath = textToPNG(situationText, filepath)
     imageUrl = uploadImageToDropbox(filepath)
-    contents = {"media_type": "IMAGE", "image_url": imageUrl, "access_token": THREADS_ACCESS_TOKEN} # thread an image
+    contents = {"media_type": "IMAGE", "image_url": imageUrl, "text": descriptionText, "alt_text": altText if altText else situationText, "access_token": THREADS_ACCESS_TOKEN} # thread an image
     postThread(contents)
     os.remove(filepath)
     dbx.files_delete_v2(f"/{filepath}")
@@ -132,19 +132,33 @@ def main(args):
                 "|            ● ● ○  3-2   |\n"
                 "|─────────────────────────|\n"
                 "|Robert Suarez      P:25  |\n"
-                "+─────────────────────────+\n")
+                "+─────────────────────────+")
+    descriptionTextFotmatted = ("Parker Meadows hits a\n"
+                        "grand slam (6) to left\n"
+                        "field. Justyn-Henry Malloy\n"
+                        "scores. Jace Jung scores.\n"
+                        "Colt Keith scores.")
+    descriptionTextOneLine = ("Parker Meadows hits a grand slam (6) to left field. Justyn-Henry Malloy scores. Jace Jung scores. Colt Keith scores.")
+    combined = testText + "\n" + descriptionTextFotmatted
+    altText =  ("|─────────────|\n"
+                "| DET 0               ◆          ▲            |\n"
+                "| SD   3            ◆   ◆       9            |\n"
+                "|                        ● ● ○    3-2         |\n"
+                "|─────────────|\n"
+                "| Robert Suarez             P: 25     |\n"
+                "|─────────────|\n")
 
     # TODO: Move everything below to unit_tests.py; main() is not needed at all here.
 
     # thread the result
-    # filepath = textToPNG(testText)
+    # filepath = textToPNG(descriptionText)
     # imageUrl = uploadImageToDropbox(filepath)
     # print(f"Image URL: {imageUrl}")
     # # contents = {"media_type": "TEXT", "text": "Hello, World!", "access_token": THREADS_ACCESS_TOKEN} # thread a text box
     # contents = {"media_type": "IMAGE", "image_url": imageUrl, "access_token": THREADS_ACCESS_TOKEN} # thread an image
     # # deleteImageFromImgbb("https://ibb.co/LDnVKRJB/0e1797976c3c19c9c509aa712854d7f3")
     # postThread(contents)
-    postThreadTextAsImage(testText)
+    postThreadTextAsImage(testText, descriptionText=descriptionTextOneLine, altText=altText)
 
     # # debug testing
     # awayAbbr = game["gameData"]["teams"]["away"]["abbreviation"] # LAA

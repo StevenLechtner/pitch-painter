@@ -153,7 +153,8 @@ def drawPitch(situation: Situation):
 
 def postPitchToThreads(situation: Situation, filepath):
     text = drawPitch(situation)
-    postThreadTextAsImage(text, filepath)
+    altText = drawPitchForTweeting(situation)
+    postThreadTextAsImage(text, altText=altText, filepath=filepath)
 
 def printAllPitchesFromGame(game):
     testOut = ""

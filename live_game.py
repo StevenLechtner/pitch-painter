@@ -3,6 +3,7 @@ import json
 import statsapi
 import sys
 import threading
+import win_probability
 from game import Game, Status
 from pitchbypitch import drawPitch, postPitchToThreads
 from print_util import vprint, dprint
@@ -61,6 +62,13 @@ def getTeamName(teamId):
             teamName = teamInfo['name']
     return teamName
 
+def isABigPlay(playEvent, atBatToProcess, game):
+    if atBatToProcess.get("about", {}).get("isComplete", False) and \
+        (atBatToProcess.get("playEvents", {})[-1].get("index", -1) == playEvent.get("index", -1)):
+        winProb = win_probability.WinProbability(game.gamePk)
+        return winProb.isAboveThreshold(atBatToProcess.get("about", {}).get("atBatIndex", -1))
+    return False
+
 def processPlayEvent(playEvent, situation, atBatToProcess, game, output):
     if playEvent.get("isPitch", False):
         output.emit(drawPitch(situation))
@@ -76,9 +84,13 @@ def processPlayEvent(playEvent, situation, atBatToProcess, game, output):
                 print(curIdx)
                 print(thisBatIdx)
                 if curIdx == thisBatIdx and curIdx != -1:
-                    postPitchToThreads(situation, filepath)
+                    if isABigPlay(playEvent, atBatToProcess, game):
+                        description = atBatToProcess.get("result", {}).get("description", "")
+                        postPitchToThreads(situation, filepath, description=description)
             else:
-                postPitchToThreads(situation, filepath)
+                if isABigPlay(playEvent, atBatToProcess, game):
+                    description = atBatToProcess.get("result", {}).get("description", "")
+                    postPitchToThreads(situation, filepath, description=description)
         else:
             vprint("We are not posting a thread right now. -t or --thread to post a thread. -h or --help for other command line options")
 

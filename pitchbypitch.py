@@ -151,10 +151,10 @@ def drawPitch(situation: Situation):
     #print("│") # TODO: maybe use in the future?
     return output
 
-def postPitchToThreads(situation: Situation, filepath):
+def postPitchToThreads(situation: Situation, filepath, description=""):
     text = drawPitch(situation)
     altText = drawPitchForTweeting(situation)
-    postThreadTextAsImage(text, altText=altText, filepath=filepath)
+    postThreadTextAsImage(text, descriptionText=description, altText=altText, filepath=filepath)
 
 def printAllPitchesFromGame(game):
     testOut = ""

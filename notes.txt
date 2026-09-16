@@ -13,6 +13,7 @@ Make live_tweet a thread of its own
     Separate thread posts from tweets - archive the tweet code but it's not being used any more
     Once this is done, get live game threads posting working - big plays only? idk.
         Or get the pitch before a run is scored and thread it
+    For big plays to work as intended, we need to post the second to last pitch of an at bat when the at bat is finished (logic in process at bat, not in process play event)
 Live game that updates pitch by pitch with descriptions of each pitch and at bat
     along with additional info like mid 5th after the top ends, for example
     Pitch info - type, speed, break, etc.

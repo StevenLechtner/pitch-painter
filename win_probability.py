@@ -25,12 +25,14 @@ class WinProbability():
         self.scores = []
         self.topTenScores = []
 
-    def setWinProbabilities(self):
+    def getGameWinProbabilities(self):
         winProbabilityList = []
         # Try HTTP GET request up to three times before failing
         for attempt in range(3):
             try:
                 winProbabilityList = statsapi.get('game_winProbability', {'gamePk': self.gamePk})
+                if winProbabilityList:
+                    return winProbabilityList
             except requests.exceptions.RequestException as e:
                 print(f"https://statsapi.mlb.com/api/v1.1/game/{self.gamePk}/winProbability request failed (attempt {attempt + 1}/3): {e}")
                 if attempt < 2:
@@ -38,16 +40,39 @@ class WinProbability():
                 else:
                     print(f"Failed to retrieve win probability (game_pk={self.gamePk}) GET request after 3 attempts.")
                     winProbabilityList.clear()
+        return []
 
+    def getWinProbabilityInfo(self, atBat):
+        homeProb = atBat.get("homeTeamWinProbability", 0.0)
+        awayProb = atBat.get("awayTeamWinProbability", 0.0)
+        homeProbAdded = atBat.get("homeTeamWinProbabilityAdded", 0.0)
+        levIdx = atBat.get("leverageIndex", 0.0)
+        dramaIdx = atBat.get("dramaIndex", 0.0)
+        atBatIdx = atBat.get("atBatIndex", 0.0)
+        return WinProbabilityInfo(homeProb, awayProb, homeProbAdded, levIdx, dramaIdx, atBatIdx)
+
+    def isAboveThreshold(self, atBatIndex):
+        winProbabilityList = self.getGameWinProbabilities()
+        for atBat in winProbabilityList:
+            if atBat.get("atBatIndex", -1) == atBatIndex:
+                winProb = self.getWinProbabilityInfo(atBat)
+                probsAddedVal = abs(winProb.homeTeamWinProbabilityAdded)
+                levIdxVal = winProb.leverageIndex
+                dramaIdxVal = winProb.dramaIndex
+                score = (
+                    self.PROBS_ADDED_WEIGHT * (probsAddedVal / self.NORM_PROBS_ADDED) 
+                    + self.LEV_IDX_WEIGHT * (levIdxVal / self.NORM_LEV_IDX) 
+                    + self.DRAMA_IDX_WEIGHT * (dramaIdxVal / self.NORM_DRAMA_IDX)
+                )
+                dprint(f"At Bat score {score}/{self.THRESHOLD}")
+                return score > self.THRESHOLD
+        return False
+
+    def setWinProbabilities(self):
+        winProbabilityList = self.getGameWinProbabilities()
         winProbabilities = []
         for atBat in winProbabilityList:
-            homeProb = atBat.get("homeTeamWinProbability", 0.0)
-            awayProb = atBat.get("awayTeamWinProbability", 0.0)
-            homeProbAdded = atBat.get("homeTeamWinProbabilityAdded", 0.0)
-            levIdx = atBat.get("leverageIndex", 0.0)
-            dramaIdx = atBat.get("dramaIndex", 0.0)
-            atBatIdx = atBat.get("atBatIndex", 0.0)
-            winProbabilities.append(WinProbabilityInfo(homeProb, awayProb, homeProbAdded, levIdx, dramaIdx, atBatIdx))
+            winProbabilities.append(self.getWinProbabilityInfo(atBat))
         return winProbabilities
 
     def findAverages(self):
@@ -139,21 +164,24 @@ class WinProbabilityInfo():
 def main(args):
     cli.getOptions(args)
 
-    #winProbTest = WinProbability(823660)
-    winProbTest = WinProbability(745369)
+    # gamePk = 745369
+    # gamePk = 823660
+    gamePk = 822765
+    winProbTest = WinProbability(gamePk)
     winProbTest.findAverages()
     winProbTest.findTopTens()
+    print(winProbTest.isAboveThreshold(50))
 
-    schedule = statsapi.schedule(date="2026-09-06")
-    gamePks = []
-    for game in schedule:
-        dprint(game)
-        gamePks.append(game.get("game_id", -1))
+    # schedule = statsapi.schedule(date="2026-09-06")
+    # gamePks = []
+    # for game in schedule:
+    #     dprint(game)
+    #     gamePks.append(game.get("game_id", -1))
 
-    for gamePk in gamePks:
-        winProbTest = WinProbability(gamePk)
-        winProbTest.findAverages()
-        winProbTest.findTopTens()
+    # for gamePk in gamePks:
+    #     winProbTest = WinProbability(gamePk)
+    #     winProbTest.findAverages()
+    #     winProbTest.findTopTens()
     return 0
 
 if __name__ == "__main__":

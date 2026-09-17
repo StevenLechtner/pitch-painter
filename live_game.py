@@ -99,12 +99,17 @@ def processPlayEvent(playEvent, situation, atBatToProcess, game, output):
         #     vprint("We are not posting a thread right now. -t or --thread to post a thread. -h or --help for other command line options")
 
     # update if a run scored mid at bat - wild pitch, stolen home, error on pick off, etc
+    scoringPlay = playEvent.get("details", {}).get("isScoringPlay", False)
     awayScore = playEvent.get("details", {}).get("awayScore", -1)
     if awayScore > -1:
         situation.setAwayScore(awayScore)
     homeScore = playEvent.get("details", {}).get("homeScore", -1)
     if homeScore > -1:
         situation.setHomeScore(homeScore)
+    if scoringPlay:
+        filepath = f"images/{game.gamePk}/{game.lastPitch.playEventId}.png"
+        description = playEvent.get("details", {}).get("description", "")
+        postPitchToThreads(game.lastPitch, filepath, description=description)
     # set pitcher for every play event and update pitcher if play event type is a pitching_substitution
     game.setPitcher(playEvent)
 
@@ -189,7 +194,7 @@ def printAllPitchesFromLiveGame(gamePk, output, stop_event):
     while not stop_event.is_set():
         game = Game()
         game.getGameByGamePk(gamePk)
-        # game.getGameByFilePath("tests/meadows.json") # Uncomment to test from a json file instead of the server
+        # game.getGameByFilePath("tests/steal_second_third_and_home.json") # Uncomment to test from a json file instead of the server
         game.setStatus()
         if not game.isValid() or game.gameStatus == Status.PREVIEW:
             output.emit(game.gameInfo)

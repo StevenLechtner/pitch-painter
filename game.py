@@ -172,6 +172,10 @@ class Game():
 
         # Post last pitch of at bat to threads if it's a big play
         if cli.threading:
+            # Uncomment to skip posting until at or beyond a specific at bat (debugging purposes)
+            # if (atBatToProcess.get("atBatIndex", -1) < 1000):
+            #     vprint("At bat processed!")
+            #     return
             filepath = f"images/{self.gamePk}/{self.lastPitch.playEventId}.png"
 
             # # Uncomment below to post all big plays of a game, even if the game is live - retroactively post big pitches form earlier in the game

@@ -58,13 +58,13 @@ def drawPitchForTweeting(situation: Situation):
     pitcherRow = f"| {pitcher}        P: {pitchCount}       |"
 
     # Pretty print all rows into a nice grid of 27 chars per row
-    output = ("|─────────────|\n"
+    output = ("+─────────────+\n"
               f"{awayRow}\n"
               f"{homeRow}\n"
               f"{countRow}\n"
               "|─────────────|\n"
               f"{pitcherRow}\n"
-              "|─────────────|"
+              "+─────────────+"
     )
     # print("+─────────────────────────+")
     # print(awayRow)
@@ -76,6 +76,32 @@ def drawPitchForTweeting(situation: Situation):
     # print(f"{output}\n")
     #print("│") # TODO: maybe use in the future?
     return output
+
+def drawPitchWithScoreAltText(_awayScore, _homeScore, situation):
+    awayTeam = situation.awayTeam[:3]
+    while len(awayTeam) < 3:
+        awayTeam += " "
+    awayScore = str(_awayScore)[:9]
+    while len(awayScore) < 12:
+        awayScore += " "
+    homeTeam = situation.homeTeam[:3]
+    while len(homeTeam) < 3:
+        homeTeam += " "
+    homeScore = str(_homeScore)[:8]
+    while len(homeScore) < 12:
+        homeScore += " "
+
+    awayRow = f"| {awayTeam}  {awayScore}|"
+    homeRow = f"| {homeTeam}  {homeScore}|"
+
+    # Pretty print all rows into a nice grid of 14 chars per row
+    output = ("+──────+\n"
+              "|Score update|\n"
+              f"{awayRow}\n"
+              f"{homeRow}\n"
+              "+──────+"
+    )
+    return drawPitchForTweeting(situation) + "\n" + output
 
 # FIXME: extra innings look off centered
 def drawPitch(situation: Situation):
@@ -152,9 +178,39 @@ def drawPitch(situation: Situation):
     #print("│") # TODO: maybe use in the future?
     return output
 
-def postPitchToThreads(situation: Situation, filepath, description=""):
-    text = drawPitch(situation)
-    altText = drawPitchForTweeting(situation)
+def drawPitchWithScoreUpdate(_awayScore, _homeScore, situation):
+    awayTeam = situation.awayTeam[:3]
+    while len(awayTeam) < 3:
+        awayTeam += " "
+    awayScore = str(_awayScore)[:9]
+    while len(awayScore) < 8:
+        awayScore += " "
+    homeTeam = situation.homeTeam[:3]
+    while len(homeTeam) < 3:
+        homeTeam += " "
+    homeScore = str(_homeScore)[:8]
+    while len(homeScore) < 8:
+        homeScore += " "
+
+    awayRow = f"|{awayTeam} {awayScore}|"
+    homeRow = f"|{homeTeam} {homeScore}|"
+
+    # Pretty print all rows into a nice grid of 14 chars per row
+    output = ("+────────────+\n"
+              "|Score update|\n"
+              f"{awayRow}\n"
+              f"{homeRow}\n"
+              "+────────────+"
+    )
+    return drawPitch(situation) + "\n" + output
+
+def postPitchToThreads(situation: Situation, filepath, description="", awayScore=-1, homeScore=-1, scoringPlay=False):
+    if scoringPlay and awayScore > -1 and homeScore > -1:
+        text = drawPitchWithScoreUpdate(awayScore, homeScore, situation)
+        altText = drawPitchWithScoreAltText(awayScore, homeScore, situation)
+    else:
+        text = drawPitch(situation)
+        altText = drawPitchForTweeting(situation)
     postThreadTextAsImage(text, descriptionText=description, altText=altText, filepath=filepath)
 
 def printAllPitchesFromGame(game):

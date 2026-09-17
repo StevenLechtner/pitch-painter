@@ -174,7 +174,7 @@ class Game():
         # Post last pitch of at bat to threads if it's a big play
         if cli.threading:
             # Uncomment to skip posting until at or beyond a specific at bat (debugging purposes)
-            # if (atBatToProcess.get("atBatIndex", -1) < 56):
+            # if (atBatToProcess.get("atBatIndex", -1) < 69):
             #     vprint("At bat processed!")
             #     return
             now = datetime.datetime.now()
@@ -186,7 +186,8 @@ class Game():
             winProb = win_probability.WinProbability(self.gamePk)
             if winProb.isABigPlay(atBatToProcess.get("about", {}).get("atBatIndex", -1)):
                 description = atBatToProcess.get("result", {}).get("description", "")
-                postPitchToThreads(self.lastPitch, filepath, description=description)
+                scoringPlay = atBatToProcess.get("about", {}).get("isScoringPlay", False)
+                postPitchToThreads(self.lastPitch, filepath, description=description, scoringPlay=scoringPlay, awayScore=self.situation.awayScore, homeScore=self.situation.homeScore)
 
             # # Uncomment below to post live game pitches when actually live - don't retroactively post big pitches from earlier in the game
             # # TODO: make this a flag
@@ -199,9 +200,11 @@ class Game():
             #     dprint(f"curIdx: {curIdx}")
             #     dprint(f"thisBatIdx: {thisBatIdx}")
             # if not self.isLive() or (self.isLive() and curIdx == thisBatIdx and curIdx != -1):
-            #     if self.isABigPlay(atBatToProcess.get("about", {}).get("atBatIndex", -1)):
+            #     winProb = win_probability.WinProbability(self.gamePk)
+            #     if winProb.isABigPlay(atBatToProcess.get("about", {}).get("atBatIndex", -1)):
             #         description = atBatToProcess.get("result", {}).get("description", "")
-            #         postPitchToThreads(self.lastPitch, filepath, description=description)
+            #         scoringPlay = atBatToProcess.get("about", {}).get("isScoringPlay", False)
+            #         postPitchToThreads(self.lastPitch, filepath, description=description, scoringPlay=scoringPlay, awayScore=self.situation.awayScore, homeScore=self.situation.homeScore)
         else:
             vprint("We are not posting a thread right now. -t or --thread to post a thread. -h or --help for other command line options")
 

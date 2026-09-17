@@ -116,7 +116,7 @@ def processPlayEvent(playEvent, situation, atBatToProcess, game, output):
         curTime = f"{now.strftime('%Y-%m-%d_%H-%M-%S')}.{now.microsecond // 1000:03d}"
         filepath = f"images/{game.gamePk}/play_id_{game.lastPitch.playEventId}_created_{curTime}.png"
         description = playEvent.get("details", {}).get("description", "")
-        postPitchToThreads(game.lastPitch, filepath, description=description)
+        postPitchToThreads(game.lastPitch, filepath, description=description, scoringPlay=True, awayScore=situation.awayScore, homeScore=situation.homeScore)
     # set pitcher for every play event and update pitcher if play event type is a pitching_substitution
     game.setPitcher(playEvent)
 

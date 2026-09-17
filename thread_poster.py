@@ -142,11 +142,17 @@ def main(args):
                 "|─────────────────────────|\n"
                 "|Robert Suarez      P:25  |\n"
                 "+─────────────────────────+")
+    scoreUpdateText =  ("+────────────+\n"
+                        "|Score update|\n"
+                        "|DET 4       |\n"
+                        "|SD  3       |\n"
+                        "+────────────+")
     descriptionTextFotmatted = ("Parker Meadows hits a\n"
                         "grand slam (6) to left\n"
                         "field. Justyn-Henry Malloy\n"
                         "scores. Jace Jung scores.\n"
                         "Colt Keith scores.")
+    testAndScoreText = testText + "\n" + scoreUpdateText
     descriptionTextOneLine = ("Parker Meadows hits a grand slam (6) to left field. Justyn-Henry Malloy scores. Jace Jung scores. Colt Keith scores.")
     combined = testText + "\n" + descriptionTextFotmatted
     altText =  ("|─────────────|\n"
@@ -167,7 +173,7 @@ def main(args):
     # contents = {"media_type": "IMAGE", "image_url": imageUrl, "access_token": THREADS_ACCESS_TOKEN} # thread an image
     # # deleteImageFromImgbb("https://ibb.co/LDnVKRJB/0e1797976c3c19c9c509aa712854d7f3")
     # postThread(contents)
-    postThreadTextAsImage(testText, descriptionText=descriptionTextOneLine, altText=altText)
+    postThreadTextAsImage(testAndScoreText, descriptionText=descriptionTextOneLine, altText=altText)
 
     # # debug testing
     # awayAbbr = game["gameData"]["teams"]["away"]["abbreviation"] # LAA

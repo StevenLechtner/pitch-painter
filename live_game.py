@@ -1,8 +1,10 @@
 import cli
+import datetime
 import json
 import statsapi
 import sys
 import threading
+import time
 import win_probability
 from game import Game, Status
 from pitchbypitch import drawPitch, postPitchToThreads
@@ -70,7 +72,10 @@ def isABigPlay(playEvent, atBatToProcess, game):
     return False
 
 def processPlayEvent(playEvent, situation, atBatToProcess, game, output):
-    situation.setPlayEventId(playEvent.get("playId", -1))
+    # now = datetime.datetime.now()
+    # curTime = f"{now.strftime('%Y-%m-%d_%H-%M-%S')}.{now.microsecond // 1000:03d}"
+    playEndTime = playEvent.get("endTime", -1).replace(":", "-").replace("T", "_").replace("Z", "")
+    situation.setPlayEventId(playEvent.get("playId", f"play_end_time_{playEndTime}"))
     game.setLastPitch(situation)
 
     if playEvent.get("isPitch", False):
@@ -107,7 +112,9 @@ def processPlayEvent(playEvent, situation, atBatToProcess, game, output):
     if homeScore > -1:
         situation.setHomeScore(homeScore)
     if scoringPlay:
-        filepath = f"images/{game.gamePk}/{game.lastPitch.playEventId}.png"
+        now = datetime.datetime.now()
+        curTime = f"{now.strftime('%Y-%m-%d_%H-%M-%S')}.{now.microsecond // 1000:03d}"
+        filepath = f"images/{game.gamePk}/play_id_{game.lastPitch.playEventId}_created_{curTime}.png"
         description = playEvent.get("details", {}).get("description", "")
         postPitchToThreads(game.lastPitch, filepath, description=description)
     # set pitcher for every play event and update pitcher if play event type is a pitching_substitution

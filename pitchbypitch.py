@@ -1,3 +1,4 @@
+import datetime
 import json
 from situation import Situation
 from thread_poster import postThreadTextAsImage
@@ -209,7 +210,9 @@ def printAllPitchesFromGame(game):
                 print(f"{drawPitch(situation)}\n")
                 gamePk = game.get("gameData", {}).get("game", {}).get("pk", -1)
                 playId = playEvent.get("playId", -1)
-                filepath = f"images/{gamePk}/{playId}.png"
+                now = datetime.datetime.now()
+                curTime = f"{now.strftime('%Y-%m-%d_%H-%M-%S')}.{now.microsecond // 1000:03d}"
+                filepath = f"images/{gamePk}/play_id_{playId}_created_{curTime}.png"
                 postPitchToThreads(situation, filepath)
                 if (situation.balls == 3 and situation.strikes == 2 and situation.outs == 2 and situation.awayScore == 0 and situation.homeScore == 3 and situation.inning == 9):
                     testOut = drawPitch(situation)

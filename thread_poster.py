@@ -4,6 +4,7 @@ import os
 import requests
 import sys
 import time
+from dropbox.exceptions import ApiError
 from PIL import Image, ImageDraw, ImageFont
 from print_util import dprint, vprint
 
@@ -36,9 +37,17 @@ def uploadImageToDropbox(filepath):
     with open(filepath, "rb") as fp:
         contents = fp.read()
 
-    dbx.files_upload(contents, f"/{filepath}", dropbox.files.WriteMode.add, mute=True)
-    sharedLinkMetadata = dbx.sharing_create_shared_link_with_settings(f"/{filepath}")
-    previewUrl = sharedLinkMetadata.url
+    uploadResp = dbx.files_upload(contents, f"/{filepath}", dropbox.files.WriteMode.overwrite, mute=True, autorename=True)
+    try:
+        sharedLinkMetadata = dbx.sharing_create_shared_link_with_settings(uploadResp.path_lower)
+        previewUrl = sharedLinkMetadata.url
+    except ApiError as apiErr:
+        if apiErr.error.is_shared_link_already_exists():
+            dprint(f"ApiError message: {apiErr.error.get_shared_link_already_exists()}")
+            dprint(f"Preview URL: {dbx.sharing_list_shared_links().links[0].url}")
+            previewUrl = dbx.sharing_list_shared_links().links[0].url
+        else:
+            raise apiErr
     directImageUrl = previewUrl.replace("?dl=0", "?raw=1")
     directImageUrl = directImageUrl.replace("www.dropbox", "dl.dropboxusercontent")
     dprint(f"Direct image URL: {directImageUrl}")

@@ -1,5 +1,6 @@
 import cli
 import copy
+import datetime
 import json
 import requests
 import statsapi
@@ -173,10 +174,12 @@ class Game():
         # Post last pitch of at bat to threads if it's a big play
         if cli.threading:
             # Uncomment to skip posting until at or beyond a specific at bat (debugging purposes)
-            # if (atBatToProcess.get("atBatIndex", -1) < 1000):
+            # if (atBatToProcess.get("atBatIndex", -1) < 56):
             #     vprint("At bat processed!")
             #     return
-            filepath = f"images/{self.gamePk}/{self.lastPitch.playEventId}.png"
+            now = datetime.datetime.now()
+            curTime = f"{now.strftime('%Y-%m-%d_%H-%M-%S')}.{now.microsecond // 1000:03d}"
+            filepath = f"images/{self.gamePk}/play_id_{self.lastPitch.playEventId}_created_{curTime}.png"
 
             # # Uncomment below to post all big plays of a game, even if the game is live - retroactively post big pitches form earlier in the game
             # # TODO: make this a flag

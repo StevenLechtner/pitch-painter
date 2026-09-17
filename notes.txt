@@ -1,10 +1,7 @@
 Bug fixes:
-If printing big plays (and all runs scored), check for a run scored during an at bat
-    Right now it only posts a big play at the end of the at bat, and the post is the situation before the final pitch of said at bat
 Have the image url be valid every time so /threads and /threads_publish always work as expected
-    Duplicate names in dropbox - stopping a game before delete occurs and starting it again would provide a second pic with the same name before the first pic was deleted
-        Delete all images in dropbox on application close (make image uploading a thread and delete all images on thread close - a queue of what to add and what's added, remove from added when deleted successfully)
-    Same issue as above but with os (maybe just delete parent images folder on close)
+    Delete all images in dropbox and os on application close (make image uploading a thread and delete all images on thread close - a queue of what to add and what's added, remove from added when deleted successfully)
+        maybe just delete parent images folder on close - could provide a --save flag to save images?
     Threads API long term refresh access token may be needed (look into it)
 Extra innings centered error in drawing the pitch
 Do api call either more frequently or way less frequently
@@ -12,10 +9,6 @@ Abs challenge ending the inning and then getting overturned
 
 Additional features:
 Make thread_poster a thread of its own (this time an actual multithreading thread)
-    Separate thread posts from tweets - archive the tweet code but it's not being used any more
-    Once this is done, get live game threads posting working - big plays only? idk.
-        Or get the pitch before a run is scored and thread it
-    For big plays to work as intended, we need to post the second to last pitch of an at bat when the at bat is finished (logic in process at bat, not in process play event)
 Add updated score text to the threads post
 Live game that updates pitch by pitch with descriptions of each pitch and at bat
     along with additional info like mid 5th after the top ends, for example
@@ -91,10 +84,12 @@ curl -X POST https://api.dropbox.com/oauth2/token -d grant_type=refresh_token -d
 {"access_token": "sl.u.AGuBj32gXs1IAjyJJDEcb-7HfLMxiwwCZbeN8WjOAatGV1FGIksZsXKrklodenGXfRoHZhe1HT3rx3feEARhFPnBqSLReAJXYLjydBi3l2-i0IBxfFjOgKrS26UkT16RmY86qjh71TeKXE7vIMKmKNHVv22NQZz50y88qLKotI1pg00AjWBJuIS2wYYX5inkcdx9_WVDbSG1LpbQzpmQYUbcix-1gP93zkIgEFWriCJxDCVmjjkM-G-fLD-BgeJpkT-qiN9omb2kTtN6RrAhg16JnSRBEA9iOWf7w_1Wf0NLs393EH-6PC38SK9mCjuUMDhDCiwgOKetbWdCTw58afyNbdITo5N6cy0U5cOiUxS7LanOq97KC6MG0uhfhoWob0l914Gz-Afn3AT1qkXy59E-KQBgwyNKKwhjVgzUS54sV9knbbzowv-jSmBVwbLXjkcGez1kQcyvtcfKSBFeQ2YschE_eWQsTF8EuAxoXkiR_7rLZU5byP_R7hYgDOSNYRLfgV-3i3CSdh_3lBZhN09a4ipuuyIWN7E6Qp0gOV9Xiuxy7SG6i2wcu45lDf9Wr_vuLiJqyB5vSYI1BFBZ1XW0RKaNUEJFi1Qcgk_xhanqScJJzZMW2LFi3j1l6rSGtJuffEqPJHF9Vy_gMzKf7z61GUnFRXvbZCW070UwMJ56PohqDDAstKXygdJccVC6qhceS3AJe51ACG3MTDGTcFiLV-hR-Ve1LMdMs8pj93tuNhnDF-_klQpPK3PdwfauSV68zuIUq82tvyJPTYAXs5dZQorHJLs5i55qKkC_NpnQkvBeiWXH8BnnHQpP08H_yHz9aBvHBmsEDyKGOQyKSWGyVwiBFCUZqWx8byge4cqwSbY0FR7Jif8smEjfV6V5N-fh1yG5H6qA8MdGRHJURPEKdw93WTLJGtmpQBKJiB3mIYMmNYie4DxrDcrvDCMUqAhqD_49Wu98m2XjacoIwDUzH9j02VSafobxn3CkVx3a2RFOVgW8xgzPgpucdcP6GJ6Ozd6G7lFjVwfDOkZWGKavnS1HmAGIO5AwEaNpxGScj0ndL85gwNh3j5xuv6cUnpC8Nmr_3bY50a2e8KPJMozbqcFirfFPYS4Uo0USqYqTLLYr6G04-XhsR4wa-o15MbY5lcsHRPd_LAxtxgrwA112GZn2OIbP6abI9GIcgdmzTCAitjRPk3H215ml0BbKViP3wykFUKvO_B6c-0CIEcj3jYWU8E6ZhXfL7-1tORnG8j2lZ_M-7D4OMAWmtaXg7cso84zRhEmHSv25S6L6rKAZQUecj9fJ6n27a26EvFPgUA", "token_type": "bearer", "expires_in": 14400}% 
 
 See daily quota usage (x/250)
+curl -s -X GET "https://graph.threads.com/v1.0/28665889336435626/threads_publishing_limit?fields=quota_usage,config&access_token=THAANWViZC2T1NBYllTd1F1bExvVDFkS0lDUUNwTHRuZATRiY2tFQXNsOVdneVk4aGkyWXZAoR2JCai1KSGxPNWRKc2pINGU3MnN1ZAGd1MURTQll3Umo2MVQteklXbzAtakpvNzM4MC1uQURtRGx4MmFSRGFjUy1sLXlDdTZAldXdBMmhlZAwZDZD"
+{"data":[{"quota_usage":66,"config":{"quota_total":250,"quota_duration":86400}}]}
 curl "https://graph.threads.net/v1.0/28665889336435626/threads_publishing_limit?access_token=THAANWViZC2T1NBYllTd1F1bExvVDFkS0lDUUNwTHRuZATRiY2tFQXNsOVdneVk4aGkyWXZAoR2JCai1KSGxPNWRKc2pINGU3MnN1ZAGd1MURTQll3Umo2MVQteklXbzAtakpvNzM4MC1uQURtRGx4MmFSRGFjUy1sLXlDdTZAldXdBMmhlZAwZDZD"
 {"data":[{"quota_usage":122}]}% 
 curl -s -X GET "https://graph.threads.com/v1.0/28665889336435626/threads_publishing_limit?fields=quota_usage,config,reply_quota_usage,reply_config,delete_quota_usage,delete_config,location_search_quota_usage,location_search_config&access_token=THAANWViZC2T1NBYllTd1F1bExvVDFkS0lDUUNwTHRuZATRiY2tFQXNsOVdneVk4aGkyWXZAoR2JCai1KSGxPNWRKc2pINGU3MnN1ZAGd1MURTQll3Umo2MVQteklXbzAtakpvNzM4MC1uQURtRGx4MmFSRGFjUy1sLXlDdTZAldXdBMmhlZAwZDZD"
-curl -s -X GET "https://graph.threads.com/v1.0/28665889336435626/threads_publishing_limit?fields=quota_usage,config&access_token=THAANWViZC2T1NBYllTd1F1bExvVDFkS0lDUUNwTHRuZATRiY2tFQXNsOVdneVk4aGkyWXZAoR2JCai1KSGxPNWRKc2pINGU3MnN1ZAGd1MURTQll3Umo2MVQteklXbzAtakpvNzM4MC1uQURtRGx4MmFSRGFjUy1sLXlDdTZAldXdBMmhlZAwZDZD"
+{"data":[{"quota_usage":66,"config":{"quota_total":250,"quota_duration":86400},"reply_quota_usage":0,"reply_config":{"quota_total":1000,"quota_duration":86400},"delete_quota_usage":0,"delete_config":{"quota_total":100,"quota_duration":86400},"location_search_quota_usage":0,"location_search_config":{"quota_total":500,"quota_duration":86400}}]}
 
 The external API will not be able to access your local images even if you host them using a local webserver. Instead, you can upload the images to storage services like AWS S3 or Azure Blob storage, and then provide those image URLs to the external API. This would be the simplest to do if your images aren't many in number.
 If there are lot of images, then instead of uploading each one of them, you may want to run a local webserver[ e.g nodejs, etc] and then use ngrok tunnels so that you can get a public URL that you can give to external API.

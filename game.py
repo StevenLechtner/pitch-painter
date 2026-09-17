@@ -1,9 +1,13 @@
+import cli
+import copy
 import json
 import requests
 import statsapi
 import time
+import win_probability
 from enum import Enum
-from print_util import dprint
+from pitchbypitch import postPitchToThreads
+from print_util import dprint, vprint
 from situation import Situation
 
 class Status(Enum):
@@ -17,6 +21,7 @@ class Game():
         self.game = None
         self.gamePk = -1
         self.situation = Situation()
+        self.lastPitch = Situation()
         self.gameInfo = ""
         self.atBats = None
         self.curAwayPitcher = ""
@@ -137,6 +142,63 @@ class Game():
             else:
                 self.curAwayPitcher = pitcher
         self.setPitcher()
+
+    def setLastPitch(self, situation: Situation):
+        self.lastPitch = copy.copy(situation)
+
+    def processAtBatFinished(self, atBatToProcess):
+        vprint("Processing at bat finished...")
+        self.situation.setAwayScore(atBatToProcess.get("result", {}).get("awayScore", -1))
+        self.situation.setHomeScore(atBatToProcess.get("result", {}).get("homeScore", -1))
+        self.situation.setOuts(atBatToProcess.get("count", {}).get("outs", -1))
+        self.situation.setBalls(0)
+        self.situation.setStrikes(0)
+        self.situation.setBaserunnersAtEndOfAtBat(atBatToProcess)
+        # Check if the result of this at bat finished the game
+        if self.situation.inning >= 9:
+            if self.situation.outs >= 3:
+                if self.situation.top:
+                    if self.situation.homeScore > self.situation.awayScore:
+                        self.situation.gameOver = True
+                else:
+                    if self.situation.homeScore != self.situation.awayScore:
+                        self.situation.gameOver = True
+            else:
+                if not self.situation.top and self.situation.homeScore > self.situation.awayScore:
+                    self.situation.gameOver = True
+        # Half inning is over but game is not done yet - set outs to 0
+        if not self.situation.gameOver and self.situation.outs == 3:
+            self.situation.setOuts(0)
+
+        # Post last pitch of at bat to threads if it's a big play
+        if cli.threading:
+            filepath = f"images/{self.gamePk}/{self.lastPitch.playEventId}.png"
+
+            # # Uncomment below to post all big plays of a game, even if the game is live - retroactively post big pitches form earlier in the game
+            # # TODO: make this a flag
+            winProb = win_probability.WinProbability(self.gamePk)
+            if winProb.isABigPlay(atBatToProcess.get("about", {}).get("atBatIndex", -1)):
+                description = atBatToProcess.get("result", {}).get("description", "")
+                postPitchToThreads(self.lastPitch, filepath, description=description)
+
+            # # Uncomment below to post live game pitches when actually live - don't retroactively post big pitches from earlier in the game
+            # # TODO: make this a flag
+            # curIdx = -1
+            # thisBatIdx = -1
+            # if self.isLive():
+            #     dprint("game is live")
+            #     curIdx = self.game.get("liveData", {}).get("plays", {}).get("currentPlay", {}).get("about", {}).get("atBatIndex", -1)
+            #     thisBatIdx = atBatToProcess.get("about", {}).get("atBatIndex", -1)
+            #     dprint(f"curIdx: {curIdx}")
+            #     dprint(f"thisBatIdx: {thisBatIdx}")
+            # if not self.isLive() or (self.isLive() and curIdx == thisBatIdx and curIdx != -1):
+            #     if self.isABigPlay(atBatToProcess.get("about", {}).get("atBatIndex", -1)):
+            #         description = atBatToProcess.get("result", {}).get("description", "")
+            #         postPitchToThreads(self.lastPitch, filepath, description=description)
+        else:
+            vprint("We are not posting a thread right now. -t or --thread to post a thread. -h or --help for other command line options")
+
+        vprint("At bat processed!")
 
     def __str__(self):
         return f"{self.game}\ngamePK: {self.gamePk}\nsituation: {self.situation}"

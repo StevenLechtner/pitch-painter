@@ -1,4 +1,6 @@
 Bug fixes:
+If printing big plays (and all runs scored), check for a run scored during an at bat
+    Right now it only posts a big play at the end of the at bat, and the post is the situation before the final pitch of said at bat
 Have the image url be valid every time so /threads and /threads_publish always work as expected
     Duplicate names in dropbox - stopping a game before delete occurs and starting it again would provide a second pic with the same name before the first pic was deleted
         Delete all images in dropbox on application close (make image uploading a thread and delete all images on thread close - a queue of what to add and what's added, remove from added when deleted successfully)
@@ -9,11 +11,12 @@ Do api call either more frequently or way less frequently
 Abs challenge ending the inning and then getting overturned
 
 Additional features:
-Make live_tweet a thread of its own
+Make thread_poster a thread of its own (this time an actual multithreading thread)
     Separate thread posts from tweets - archive the tweet code but it's not being used any more
     Once this is done, get live game threads posting working - big plays only? idk.
         Or get the pitch before a run is scored and thread it
     For big plays to work as intended, we need to post the second to last pitch of an at bat when the at bat is finished (logic in process at bat, not in process play event)
+Add updated score text to the threads post
 Live game that updates pitch by pitch with descriptions of each pitch and at bat
     along with additional info like mid 5th after the top ends, for example
     Pitch info - type, speed, break, etc.

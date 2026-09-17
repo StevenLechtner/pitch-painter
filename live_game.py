@@ -70,29 +70,33 @@ def isABigPlay(playEvent, atBatToProcess, game):
     return False
 
 def processPlayEvent(playEvent, situation, atBatToProcess, game, output):
+    situation.setPlayEventId(playEvent.get("playId", -1))
+    game.setLastPitch(situation)
+
     if playEvent.get("isPitch", False):
         output.emit(drawPitch(situation))
-        playId = playEvent.get("playId", -1)
-        filepath = f"images/{game.gamePk}/{playId}.png"
-        #if (atBatToProcess.get("atBatIndex", -1) >= 65):
-        if cli.threading:
-            # TODO: Test this.
-            if game.isLive():
-                print("game is live")
-                curIdx = game.game.get("liveData", {}).get("plays", {}).get("currentPlay", {}).get("about", {}).get("atBatIndex", -1)
-                thisBatIdx = atBatToProcess.get("about", {}).get("atBatIndex", -1)
-                print(curIdx)
-                print(thisBatIdx)
-                if curIdx == thisBatIdx and curIdx != -1:
-                    if isABigPlay(playEvent, atBatToProcess, game):
-                        description = atBatToProcess.get("result", {}).get("description", "")
-                        postPitchToThreads(situation, filepath, description=description)
-            else:
-                if isABigPlay(playEvent, atBatToProcess, game):
-                    description = atBatToProcess.get("result", {}).get("description", "")
-                    postPitchToThreads(situation, filepath, description=description)
-        else:
-            vprint("We are not posting a thread right now. -t or --thread to post a thread. -h or --help for other command line options")
+
+        # TODO: implement this as another flag - printing every pitch in the game (remove big play stuff...)
+        # playId = playEvent.get("playId", -1)
+        # filepath = f"images/{game.gamePk}/{playId}.png"
+        # #if (atBatToProcess.get("atBatIndex", -1) >= 65):
+        # if cli.threading:
+        #     if game.isLive():
+        #         print("game is live")
+        #         curIdx = game.game.get("liveData", {}).get("plays", {}).get("currentPlay", {}).get("about", {}).get("atBatIndex", -1)
+        #         thisBatIdx = atBatToProcess.get("about", {}).get("atBatIndex", -1)
+        #         print(curIdx)
+        #         print(thisBatIdx)
+        #         if curIdx == thisBatIdx and curIdx != -1:
+        #             if isABigPlay(playEvent, atBatToProcess, game):
+        #                 description = atBatToProcess.get("result", {}).get("description", "")
+        #                 postPitchToThreads(situation, filepath, description=description)
+        #     else:
+        #         if isABigPlay(playEvent, atBatToProcess, game):
+        #             description = atBatToProcess.get("result", {}).get("description", "")
+        #             postPitchToThreads(situation, filepath, description=description)
+        # else:
+        #     vprint("We are not posting a thread right now. -t or --thread to post a thread. -h or --help for other command line options")
 
     # update if a run scored mid at bat - wild pitch, stolen home, error on pick off, etc
     awayScore = playEvent.get("details", {}).get("awayScore", -1)
@@ -179,7 +183,7 @@ def processAtBat(game, atBatIndexToProcess, output, gamePk, stop_event):
                 playEvents = atBatToProcess.get("playEvents", [])
                 latestPlayEventIndex = playEvents[-1].get("index", -1) if playEvents else -1
 
-    situation.processAtBatFinished(atBatToProcess)
+    game.processAtBatFinished(atBatToProcess)
 
 def printAllPitchesFromLiveGame(gamePk, output, stop_event):
     while not stop_event.is_set():

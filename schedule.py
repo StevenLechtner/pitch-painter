@@ -47,7 +47,7 @@ class ScheduleWorker(QtCore.QObject):
             self.schedule = statsapi.schedule(date=self.date.toString("yyyy-M-d"))
             self.scheduleStr = f"Games for {self.date.toString("MMMM d, yyyy")}:\n"
             for game in self.schedule:
-                dprint(game)
+                # dprint(game)
                 self.gamePks.append(game.get("game_id", -1))
                 summary = game.get("summary", "")
                 dateRemoved = re.sub(r"^\d{4}-\d{2}-\d{2} - ", "", summary)

@@ -14,6 +14,7 @@ class Situation():
         self.baserunners = {1: False, 2: False, 3: False}
         self.baserunnersAtStartOfAtBat = {1: False, 2: False, 3: False}
         self.gameOver = False
+        self.playEventId = -1
 
     def startNewGame(self, home: str, away: str, pitcher: str = None):
         self.homeTeam = home
@@ -44,6 +45,9 @@ class Situation():
 
     def setAwayScore(self, score: int):
         self.awayScore = score
+
+    def setPlayEventId(self, playEventId: int):
+        self.playEventId = playEventId
 
     def setInning(self, inning: int):
         # FIXME: Ghost runner logic. Does not work for postseason baseball or pre-ghost runner baseball
@@ -305,30 +309,6 @@ class Situation():
     #                 basesOccupied[3] = True
 
     #     self.baserunners = basesOccupied
-
-    def processAtBatFinished(self, atBatToProcess):
-        self.setAwayScore(atBatToProcess.get("result", {}).get("awayScore", -1))
-        self.setHomeScore(atBatToProcess.get("result", {}).get("homeScore", -1))
-        self.setOuts(atBatToProcess.get("count", {}).get("outs", -1))
-        self.setBalls(0)
-        self.setStrikes(0)
-        #self.setBaserunnersFromPlay(atBatToProcess, True)
-        self.setBaserunnersAtEndOfAtBat(atBatToProcess)
-        # Check if the result of this at bat finished the game
-        if self.inning >= 9:
-            if self.outs >= 3:
-                if self.top:
-                    if self.homeScore > self.awayScore:
-                        self.gameOver = True
-                else:
-                    if self.homeScore != self.awayScore:
-                        self.gameOver = True
-            else:
-                if not self.top and self.homeScore > self.awayScore:
-                    self.gameOver = True
-        # Half inning is over but game is not done yet - set outs to 0
-        if not self.gameOver and self.outs == 3:
-            self.setOuts(0)
 
     def __str__(self):
         return f"Home Team: {self.homeTeam}\nAway Team: {self.awayTeam}\nHome Score: {self.homeScore}\nAway Score: {self.awayScore}\nInning: {self.inning}\nTop: {self.top}\nBalls: {self.balls}\nStrikes: {self.strikes}\nOuts: {self.outs}\nPitcher: {self.pitcher}\nPitch Count: {self.pitchCount}\nBaserunners: {self.baserunners}\nGame Over: {self.gameOver}"

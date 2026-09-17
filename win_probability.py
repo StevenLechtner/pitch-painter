@@ -68,6 +68,14 @@ class WinProbability():
                 return score > self.THRESHOLD
         return False
 
+    def isABigPlay(self, atBatIndex):
+        winProbabilityList = self.getGameWinProbabilities()
+        scoringPlay = False
+        if len(winProbabilityList) > atBatIndex:
+            # TODO: Don't assume that the at bat index for self.getGameWinProbabilities()[atBatIndex] == atBatIndex
+            scoringPlay = self.getGameWinProbabilities()[atBatIndex].get("about", {}).get("isScoringPlay", False)
+        return self.isAboveThreshold(atBatIndex) or scoringPlay
+
     def setWinProbabilities(self):
         winProbabilityList = self.getGameWinProbabilities()
         winProbabilities = []

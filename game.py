@@ -174,7 +174,7 @@ class Game():
         # Post last pitch of at bat to threads if it's a big play
         if cli.threading:
             # Uncomment to skip posting until at or beyond a specific at bat (debugging purposes)
-            # if (atBatToProcess.get("atBatIndex", -1) < 69):
+            # if (atBatToProcess.get("atBatIndex", -1) < 79):
             #     vprint("At bat processed!")
             #     return
             now = datetime.datetime.now()
@@ -183,28 +183,28 @@ class Game():
 
             # # Uncomment below to post all big plays of a game, even if the game is live - retroactively post big pitches form earlier in the game
             # # TODO: make this a flag
-            winProb = win_probability.WinProbability(self.gamePk)
-            if winProb.isABigPlay(atBatToProcess.get("about", {}).get("atBatIndex", -1)):
-                description = atBatToProcess.get("result", {}).get("description", "")
-                scoringPlay = atBatToProcess.get("about", {}).get("isScoringPlay", False)
-                postPitchToThreads(self.lastPitch, filepath, description=description, scoringPlay=scoringPlay, awayScore=self.situation.awayScore, homeScore=self.situation.homeScore)
+            # winProb = win_probability.WinProbability(self.gamePk)
+            # if winProb.isABigPlay(atBatToProcess.get("about", {}).get("atBatIndex", -1)):
+            #     description = atBatToProcess.get("result", {}).get("description", "")
+            #     scoringPlay = atBatToProcess.get("about", {}).get("isScoringPlay", False)
+            #     postPitchToThreads(self.lastPitch, filepath, description=description, scoringPlay=scoringPlay, awayScore=self.situation.awayScore, homeScore=self.situation.homeScore)
 
             # # Uncomment below to post live game pitches when actually live - don't retroactively post big pitches from earlier in the game
             # # TODO: make this a flag
-            # curIdx = -1
-            # thisBatIdx = -1
-            # if self.isLive():
-            #     dprint("game is live")
-            #     curIdx = self.game.get("liveData", {}).get("plays", {}).get("currentPlay", {}).get("about", {}).get("atBatIndex", -1)
-            #     thisBatIdx = atBatToProcess.get("about", {}).get("atBatIndex", -1)
-            #     dprint(f"curIdx: {curIdx}")
-            #     dprint(f"thisBatIdx: {thisBatIdx}")
-            # if not self.isLive() or (self.isLive() and curIdx == thisBatIdx and curIdx != -1):
-            #     winProb = win_probability.WinProbability(self.gamePk)
-            #     if winProb.isABigPlay(atBatToProcess.get("about", {}).get("atBatIndex", -1)):
-            #         description = atBatToProcess.get("result", {}).get("description", "")
-            #         scoringPlay = atBatToProcess.get("about", {}).get("isScoringPlay", False)
-            #         postPitchToThreads(self.lastPitch, filepath, description=description, scoringPlay=scoringPlay, awayScore=self.situation.awayScore, homeScore=self.situation.homeScore)
+            curIdx = -1
+            thisBatIdx = -1
+            if self.isLive():
+                dprint("game is live")
+                curIdx = self.game.get("liveData", {}).get("plays", {}).get("currentPlay", {}).get("about", {}).get("atBatIndex", -1)
+                thisBatIdx = atBatToProcess.get("about", {}).get("atBatIndex", -1)
+                dprint(f"curIdx: {curIdx}")
+                dprint(f"thisBatIdx: {thisBatIdx}")
+            if not self.isLive() or (self.isLive() and curIdx == thisBatIdx and curIdx != -1):
+                winProb = win_probability.WinProbability(self.gamePk)
+                if winProb.isABigPlay(atBatToProcess.get("about", {}).get("atBatIndex", -1)):
+                    description = atBatToProcess.get("result", {}).get("description", "")
+                    scoringPlay = atBatToProcess.get("about", {}).get("isScoringPlay", False)
+                    postPitchToThreads(self.lastPitch, filepath, description=description, scoringPlay=scoringPlay, awayScore=self.situation.awayScore, homeScore=self.situation.homeScore)
         else:
             vprint("We are not posting a thread right now. -t or --thread to post a thread. -h or --help for other command line options")
 

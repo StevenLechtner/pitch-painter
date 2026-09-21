@@ -42,6 +42,47 @@ class WinProbability():
                     winProbabilityList.clear()
         return []
 
+    # TODO: Test this in a live game
+    def getFinishedAtBat(self, atBatIndex):
+        # wait for at bat at given atBatIndex to be complete with win probability numbers
+        # just check if the next atBatIndex is present
+        # if not, check if a win probability is 100% (indicates game over)
+        while True:
+            winProbabilityList = self.getGameWinProbabilities()
+            latestAtBat = winProbabilityList[-1]
+            latestAtBatIndex = latestAtBat.get("atBatIndex", -1)
+            if latestAtBatIndex > atBatIndex:
+                # there is a new at bat, this at bat is complete
+                break
+            elif latestAtBatIndex < atBatIndex:
+                # error check: this at bat has not even happened yet
+                dprint(f"Win probability at bat has not happened yet! {atBatIndex} < {latestAtBatIndex}")
+                break
+            elif latestAtBat.get("homeTeamWinProbability", -1) >= 100 or latestAtBat.get("awayTeamWinProbability", -1) >= 100:
+                # no new at bat because the game is over, this at bat is complete
+                break
+            else:
+                # at bat is not yet complete
+                time.sleep(5)
+
+        for atBat in winProbabilityList:
+            if atBat.get("atBatIndex", -1) == atBatIndex:
+                return atBat
+        return None
+
+        # time.sleep(30)
+        # for attempt in range(10):
+        #     winProbabilityList = self.getGameWinProbabilities()
+        #     for atBat in winProbabilityList:
+        #         if atBat.get("atBatIndex", -1) == atBatIndex:
+        #             # TODO: Fix this. The at bat technically could be a 0.0 win prob added probably?
+        #             if atBat.get("about", {}).get("isComplete", False) and abs(atBat.get("homeTeamWinProbabilityAdded", 0.0)) > 0.0:
+        #                 return atBat
+        #             else:
+        #                 time.sleep(5)
+        # print(f"Win probability for at bat index {atBatIndex} complete failed after 10 attempts.")
+        # return None
+
     def getWinProbabilityInfo(self, atBat):
         homeProb = atBat.get("homeTeamWinProbability", 0.0)
         awayProb = atBat.get("awayTeamWinProbability", 0.0)
@@ -52,21 +93,50 @@ class WinProbability():
         return WinProbabilityInfo(homeProb, awayProb, homeProbAdded, levIdx, dramaIdx, atBatIdx)
 
     def isAboveThreshold(self, atBatIndex):
-        winProbabilityList = self.getGameWinProbabilities()
-        for atBat in winProbabilityList:
-            if atBat.get("atBatIndex", -1) == atBatIndex:
-                winProb = self.getWinProbabilityInfo(atBat)
-                probsAddedVal = abs(winProb.homeTeamWinProbabilityAdded)
-                levIdxVal = winProb.leverageIndex
-                dramaIdxVal = winProb.dramaIndex
-                score = (
-                    self.PROBS_ADDED_WEIGHT * (probsAddedVal / self.NORM_PROBS_ADDED) 
-                    + self.LEV_IDX_WEIGHT * (levIdxVal / self.NORM_LEV_IDX) 
-                    + self.DRAMA_IDX_WEIGHT * (dramaIdxVal / self.NORM_DRAMA_IDX)
-                )
-                dprint(f"At Bat score {score}/{self.THRESHOLD}")
-                return score > self.THRESHOLD
-        return False
+        atBat = self.getFinishedAtBat(atBatIndex)
+        if atBat is None:
+            return False
+
+        winProb = self.getWinProbabilityInfo(atBat)
+        probsAddedVal = abs(winProb.homeTeamWinProbabilityAdded)
+        levIdxVal = winProb.leverageIndex
+        dramaIdxVal = winProb.dramaIndex
+        score = (
+            self.PROBS_ADDED_WEIGHT * (probsAddedVal / self.NORM_PROBS_ADDED) 
+            + self.LEV_IDX_WEIGHT * (levIdxVal / self.NORM_LEV_IDX) 
+            + self.DRAMA_IDX_WEIGHT * (dramaIdxVal / self.NORM_DRAMA_IDX)
+        )
+        dprint(f"At Bat score {score}/{self.THRESHOLD}")
+        dprint(f"probsAddedVal: {probsAddedVal}")
+        dprint(f"levIdxVal: {levIdxVal}")
+        dprint(f"dramaIdxVal: {dramaIdxVal}")
+        dprint(f"win prob complete? {atBat.get("about", {}).get("isComplete", False)}")
+        dprint(f"win prob atBatIndex: {atBat.get("atBatIndex", -1)}")
+        return score > self.THRESHOLD
+        
+        # winProbabilityList = self.getGameWinProbabilities()
+        # for atBat in winProbabilityList:
+        #     if atBat.get("atBatIndex", -1) == atBatIndex:
+
+        #         if not atBat.get("about", {}).get("isComplete", False):
+
+        #         winProb = self.getWinProbabilityInfo(atBat)
+        #         probsAddedVal = abs(winProb.homeTeamWinProbabilityAdded)
+        #         levIdxVal = winProb.leverageIndex
+        #         dramaIdxVal = winProb.dramaIndex
+        #         score = (
+        #             self.PROBS_ADDED_WEIGHT * (probsAddedVal / self.NORM_PROBS_ADDED) 
+        #             + self.LEV_IDX_WEIGHT * (levIdxVal / self.NORM_LEV_IDX) 
+        #             + self.DRAMA_IDX_WEIGHT * (dramaIdxVal / self.NORM_DRAMA_IDX)
+        #         )
+        #         dprint(f"At Bat score {score}/{self.THRESHOLD}")
+        #         dprint(f"probsAddedVal: {probsAddedVal}")
+        #         dprint(f"levIdxVal: {levIdxVal}")
+        #         dprint(f"dramaIdxVal: {dramaIdxVal}")
+        #         dprint(f"win prob complete? {atBat.get("about", {}).get("isComplete", False)}")
+        #         dprint(f"win prob atBatIndex: {atBat.get("atBatIndex", -1)}")
+        #         return score > self.THRESHOLD
+        # return False
 
     def isABigPlay(self, atBatIndex):
         winProbabilityList = self.getGameWinProbabilities()

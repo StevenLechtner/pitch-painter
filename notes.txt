@@ -16,6 +16,9 @@ Live game that updates pitch by pitch with descriptions of each pitch and at bat
 Add a settings menu in the app to toggle on tweeting, descriptions, debug logs, specific game from json, etc.
 Get game diff instead of whole new game for live game updating
 Make the app look pretty
+Remove imgbb account
+Remove cloudinary account
+Update pitchpainter email (make my own, not stevenlech35@gmail.com)
 Add to github but make it private, idk? - copyright issue...
 
 For Threads:
@@ -131,7 +134,10 @@ OAuth 2.0:
 Client ID: NzdCRG44ZTlOTHNlNU55MVpzRW46MTpjaQ
 Client Secret: jpNYdzcIvpkjGQo2wz20ujesGPIgrnFtPbNEON3Ji_q1xnYNsa
 
-
+virtualenv:
+https://stackoverflow.com/questions/34503686/virtualenv-does-not-include-pip
+pyenv:
+https://realpython.com/intro-to-pyenv/
 
 Given:
 |—————————————|
@@ -443,3 +449,14 @@ if __name__ == "__main__":
 #             basesOccupied[3] = True
 #         case _:
 #             pass
+
+
+IT TOOK 38 SECONDS BETWEEN SEEING THE AT LIVE AT BAT END AND THE WIN PROBABILITY AT BAT END
+    have a buffer of up to 1-2 minutes before breaking in win prob??
+More complex idea:
+Wait until atBatIndex + 1 is present in the List (next at bat starts to be processed) OR home/away win prob is 100% (game over)
+ANOTHER WAY (Maybe use both to confirm...):
+    "batterHotColdZones" is [] when at bat is done processing and len > 0 when it's current at bat or last in game I think, need to test live...
+
+dropbox api for python:
+https://dropbox-sdk-python.readthedocs.io/en/latest/index.html

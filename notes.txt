@@ -1,4 +1,6 @@
 Bug fixes:
+Remove while True in win_probability.py and replace with a thread and stop_event
+    Add additional check for mid inning updates - it won't add a new at bat for atBatIndex check until next at bat starts (~2 mins delay for last at bat to post to threads)
 Have the image url be valid every time so /threads and /threads_publish always work as expected
     Delete all images in dropbox and os on application close (make image uploading a thread and delete all images on thread close - a queue of what to add and what's added, remove from added when deleted successfully)
         maybe just delete parent images folder on close - could provide a --save flag to save images?
@@ -457,6 +459,8 @@ More complex idea:
 Wait until atBatIndex + 1 is present in the List (next at bat starts to be processed) OR home/away win prob is 100% (game over)
 ANOTHER WAY (Maybe use both to confirm...):
     "batterHotColdZones" is [] when at bat is done processing and len > 0 when it's current at bat or last in game I think, need to test live...
+    OR
+    "batterHotColdZoneStats" is present or not.
 
 dropbox api for python:
 https://dropbox-sdk-python.readthedocs.io/en/latest/index.html

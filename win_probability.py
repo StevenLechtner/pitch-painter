@@ -139,12 +139,17 @@ class WinProbability():
         # return False
 
     def isABigPlay(self, atBatIndex):
-        winProbabilityList = self.getGameWinProbabilities()
-        scoringPlay = False
-        if len(winProbabilityList) > atBatIndex:
-            # TODO: Don't assume that the at bat index for self.getGameWinProbabilities()[atBatIndex] == atBatIndex
-            scoringPlay = self.getGameWinProbabilities()[atBatIndex].get("about", {}).get("isScoringPlay", False)
+        # TODO: make this smarter. we want to wait for at bat to be done before checking isScoringPlay and isAboveThreshold, but this currently checks at bat finish twice (here + isAboveThreshold())
+        atBat = self.getFinishedAtBat(atBatIndex)
+        scoringPlay = atBat.get("about", {}).get("isScoringPlay", False)
         return self.isAboveThreshold(atBatIndex) or scoringPlay
+
+        # winProbabilityList = self.getGameWinProbabilities()
+        # scoringPlay = False
+        # if len(winProbabilityList) > atBatIndex:
+        #     # TODO: Don't assume that the at bat index for self.getGameWinProbabilities()[atBatIndex] == atBatIndex
+        #     scoringPlay = self.getGameWinProbabilities()[atBatIndex].get("about", {}).get("isScoringPlay", False)
+        # return self.isAboveThreshold(atBatIndex) or scoringPlay
 
     def setWinProbabilities(self):
         winProbabilityList = self.getGameWinProbabilities()

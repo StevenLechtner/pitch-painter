@@ -225,7 +225,7 @@ def printAllPitchesFromGame(game):
     plays = game["liveData"]["plays"]["allPlays"]
     playIdx = 0
     i = 0
-    while not situation.gameOver:
+    while not game.gameOver:
         currentPlay = game["liveData"]["plays"]["currentPlay"]
         currentPlay = plays[playIdx]
         liveDescription = currentPlay["result"]["description"]
@@ -280,13 +280,13 @@ def printAllPitchesFromGame(game):
                 if situation.outs >= 3:
                     if situation.top:
                         if situation.homeScore > situation.awayScore:
-                            situation.gameOver = True
+                            game.gameOver = True
                     else:
                         if situation.homeScore != situation.awayScore:
-                            situation.gameOver = True
+                            game.gameOver = True
                 else:
                     if not situation.top and situation.homeScore > situation.awayScore:
-                        situation.gameOver = True
+                        game.gameOver = True
         playIdx += 1
 
     border = ""
@@ -315,7 +315,7 @@ def listAllPitchesFromGame(game):
     plays = game["liveData"]["plays"]["allPlays"]
     playIdx = 0
     i = 0
-    while not situation.gameOver:
+    while not game.gameOver:
         currentPlay = game["liveData"]["plays"]["currentPlay"]
         currentPlay = plays[playIdx]
         liveDescription = currentPlay["result"]["description"]
@@ -360,13 +360,13 @@ def listAllPitchesFromGame(game):
                 if situation.outs >= 3:
                     if situation.top:
                         if situation.homeScore > situation.awayScore:
-                            situation.gameOver = True
+                            game.gameOver = True
                     else:
                         if situation.homeScore != situation.awayScore:
-                            situation.gameOver = True
+                            game.gameOver = True
                 else:
                     if not situation.top and situation.homeScore > situation.awayScore:
-                        situation.gameOver = True
+                        game.gameOver = True
         playIdx += 1
 
     border = ""
@@ -391,7 +391,7 @@ def printLiveGame(game):
     situation = Situation(homeAbbr, awayAbbr, currentPitcher)
     lastDescription = ""
     currentPlay = game["liveData"]["plays"]["currentPlay"]
-    while not situation.gameOver:
+    while not game.gameOver:
         currentPlay = game["liveData"]["plays"]["currentPlay"]
         liveDescription = lastDescription
         if (lastDescription == liveDescription):
@@ -438,10 +438,10 @@ def printLiveGame(game):
             if situation.outs >= 3 and situation.inning >= 9:
                 if situation.top:
                     if situation.homeScore > situation.awayScore:
-                        situation.gameOver = True
+                        game.gameOver = True
                 else:
                     if situation.homeScore != situation.awayScore:
-                        situation.gameOver = True
+                        game.gameOver = True
 
     border = ""
     recap = ""

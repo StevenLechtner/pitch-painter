@@ -1,0 +1,3155 @@
+(pitch_painter) [steven] ~/Desktop/Projects/pitch_painter $ python application.py -d -v -t
+catch-up
+Game status: Status.LIVE (I)
+atBatIndexToProcess 0
+latestAtBatIndex 43
+New at bat. Index:  0
+Now batting: Fernando Tatis Jr.
+Is current play complete?  True
+Current playEvents[-1] index 8
+Current playEvent index 0
+Fernando Tatis Jr. now batting.
+Status Change - Pre-Game
+Is current play complete?  True
+Status Change - Warmup
+Current playEvents[-1] index 8
+Current playEvent index 1
+Is current play complete?  True
+Current playEvents[-1] index 8
+Current playEvent index 2
+Is current play complete?  True
+Current playEvents[-1] index 8
+Current playEvent index 3
+Is current play complete?  True
+Current playEvents[-1] index 8
+Current playEvent index 4
+Is current play complete?  True
+Current playEvents[-1] index 8
+Current playEvent index 5
+Is current play complete?  True
+Current playEvents[-1] index 8
+Current playEvent index 6
+Is current play complete?  True
+Current playEvents[-1] index 8
+Current playEvent index 7
+Is current play complete?  True
+Current playEvents[-1] index 8
+Current playEvent index 8
+Processing at bat finished...
+Status Change - In Progress
++─────────────────────────+
+|SD  0         ◇     ▲    |
+|LAD 0        ◇ ◇    1    |
+|            ○ ○ ○  0-0   |
+|─────────────────────────|
+|Tyler Glasnow      P:0   |
++─────────────────────────+
+Swinging Strike
++─────────────────────────+
+|SD  0         ◇     ▲    |
+|LAD 0        ◇ ◇    1    |
+|            ○ ○ ○  0-1   |
+|─────────────────────────|
+|Tyler Glasnow      P:1   |
++─────────────────────────+
+Called Strike
++─────────────────────────+
+|SD  0         ◇     ▲    |
+|LAD 0        ◇ ◇    1    |
+|            ○ ○ ○  0-2   |
+|─────────────────────────|
+|Tyler Glasnow      P:2   |
++─────────────────────────+
+Ball
++─────────────────────────+
+|SD  0         ◇     ▲    |
+|LAD 0        ◇ ◇    1    |
+|            ○ ○ ○  1-2   |
+|─────────────────────────|
+|Tyler Glasnow      P:3   |
++─────────────────────────+
+Ball
++─────────────────────────+
+|SD  0         ◇     ▲    |
+|LAD 0        ◇ ◇    1    |
+|            ○ ○ ○  2-2   |
+|─────────────────────────|
+|Tyler Glasnow      P:4   |
++─────────────────────────+
+Ball
++─────────────────────────+
+|SD  0         ◇     ▲    |
+|LAD 0        ◇ ◇    1    |
+|            ○ ○ ○  3-2   |
+|─────────────────────────|
+|Tyler Glasnow      P:5   |
++─────────────────────────+
+Swinging Strike
+Fernando Tatis Jr. strikes out swinging.
+At Bat score 0.06160000000000008/0.375
+probsAddedVal: 2.200000000000003
+levIdxVal: 0.0
+dramaIdxVal: 0.0
+win prob complete? True
+win prob atBatIndex: 0
+At bat processed!
+Fernando Tatis Jr. strikes out swinging.
+atBatIndexToProcess 1
+latestAtBatIndex 43
+New at bat. Index:  1
+Now batting: Dustin Harris
+Dustin Harris now batting.
++─────────────────────────+
+|SD  0         ◇     ▲    |
+|LAD 0        ◇ ◇    1    |
+|            ● ○ ○  0-0   |
+|─────────────────────────|
+|Tyler Glasnow      P:6   |
++─────────────────────────+
+Is current play complete?  True
+Current playEvents[-1] index 6
+Current playEvent index 0
+Is current play complete?  True
+Current playEvents[-1] index 6
+Current playEvent index 1
+Is current play complete?  True
+Current playEvents[-1] index 6
+Current playEvent index 2
+Is current play complete?  True
+Current playEvents[-1] index 6
+Current playEvent index 3
+Is current play complete?  True
+Current playEvents[-1] index 6
+Current playEvent index 4
+Is current play complete?  True
+Current playEvents[-1] index 6
+Current playEvent index 5
+Is current play complete?  True
+Current playEvents[-1] index 6
+Current playEvent index 6
+Processing at bat finished...
+Ball
++─────────────────────────+
+|SD  0         ◇     ▲    |
+|LAD 0        ◇ ◇    1    |
+|            ● ○ ○  1-0   |
+|─────────────────────────|
+|Tyler Glasnow      P:7   |
++─────────────────────────+
+Called Strike
+Batter Timeout.
++─────────────────────────+
+|SD  0         ◇     ▲    |
+|LAD 0        ◇ ◇    1    |
+|            ● ○ ○  1-1   |
+|─────────────────────────|
+|Tyler Glasnow      P:8   |
++─────────────────────────+
+Ball
++─────────────────────────+
+|SD  0         ◇     ▲    |
+|LAD 0        ◇ ◇    1    |
+|            ● ○ ○  2-1   |
+|─────────────────────────|
+|Tyler Glasnow      P:9   |
++─────────────────────────+
+Ball
++─────────────────────────+
+|SD  0         ◇     ▲    |
+|LAD 0        ◇ ◇    1    |
+|            ● ○ ○  3-1   |
+|─────────────────────────|
+|Tyler Glasnow      P:10  |
++─────────────────────────+
+Called Strike
++─────────────────────────+
+|SD  0         ◇     ▲    |
+|LAD 0        ◇ ◇    1    |
+|            ● ○ ○  3-2   |
+|─────────────────────────|
+|Tyler Glasnow      P:11  |
++─────────────────────────+
+Called Strike
+Dustin Harris called out on strikes.
+At Bat score 0.11360000000000003/0.375
+probsAddedVal: 1.6000000000000014
+levIdxVal: 0.63
+dramaIdxVal: 31.0
+win prob complete? True
+win prob atBatIndex: 1
+At bat processed!
+Dustin Harris called out on strikes.
+atBatIndexToProcess 2
+latestAtBatIndex 43
+New at bat. Index:  2
+Now batting: Manny Machado
+Manny Machado now batting.
++─────────────────────────+
+|SD  0         ◇     ▲    |
+|LAD 0        ◇ ◇    1    |
+|            ● ● ○  0-0   |
+|─────────────────────────|
+|Tyler Glasnow      P:12  |
++─────────────────────────+
+Is current play complete?  True
+Current playEvents[-1] index 1
+Current playEvent index 0
+Is current play complete?  True
+Current playEvents[-1] index 1
+Current playEvent index 1
+Processing at bat finished...
+Called Strike
++─────────────────────────+
+|SD  0         ◇     ▲    |
+|LAD 0        ◇ ◇    1    |
+|            ● ● ○  0-1   |
+|─────────────────────────|
+|Tyler Glasnow      P:13  |
++─────────────────────────+
+In play, out(s)
+Manny Machado flies out to right fielder Kyle Tucker.
+At Bat score 0.073/0.375
+probsAddedVal: 1.0
+levIdxVal: 0.4
+dramaIdxVal: 21.0
+win prob complete? True
+win prob atBatIndex: 2
+At bat processed!
+Manny Machado flies out to right fielder Kyle Tucker.
+atBatIndexToProcess 3
+latestAtBatIndex 43
+New at bat. Index:  3
+Now batting: Shohei Ohtani
+Is current play complete?  True
+Current playEvents[-1] index 6
+Current playEvent index 0
+Is current play complete?  True
+Current playEvents[-1] index 6
+Current playEvent index 1
+Is current play complete?  True
+Current playEvents[-1] index 6
+Current playEvent index 2
+Is current play complete?  True
+Current playEvents[-1] index 6
+Current playEvent index 3
+Shohei Ohtani now batting.
+Is current play complete?  True
+Current playEvents[-1] index 6
+Current playEvent index 4
+Is current play complete?  True
+Current playEvents[-1] index 6
+Current playEvent index 5
++─────────────────────────+
+|SD  0         ◇     1    |
+|LAD 0        ◇ ◇    ▼    |
+|            ○ ○ ○  0-0   |
+|─────────────────────────|
+|Nick Pivetta       P:0   |
++─────────────────────────+
+Ball
++─────────────────────────+
+|SD  0         ◇     1    |
+|LAD 0        ◇ ◇    ▼    |
+|            ○ ○ ○  1-0   |
+|─────────────────────────|
+|Nick Pivetta       P:1   |
++─────────────────────────+
+Ball
++─────────────────────────+
+|SD  0         ◇     1    |
+|LAD 0        ◇ ◇    ▼    |
+|            ○ ○ ○  2-0   |
+|─────────────────────────|
+|Nick Pivetta       P:2   |
++─────────────────────────+
+Called Strike
++─────────────────────────+
+|SD  0         ◇     1    |
+|LAD 0        ◇ ◇    ▼    |
+|            ○ ○ ○  2-1   |
+|─────────────────────────|
+|Nick Pivetta       P:3   |
++─────────────────────────+
+Swinging Strike
+Batter Timeout.
+Is current play complete?  True
+Current playEvents[-1] index 6
+Current playEvent index 6
+Processing at bat finished...
++─────────────────────────+
+|SD  0         ◇     1    |
+|LAD 0        ◇ ◇    ▼    |
+|            ○ ○ ○  2-2   |
+|─────────────────────────|
+|Nick Pivetta       P:4   |
++─────────────────────────+
+Ball
++─────────────────────────+
+|SD  0         ◇     1    |
+|LAD 0        ◇ ◇    ▼    |
+|            ○ ○ ○  3-2   |
+|─────────────────────────|
+|Nick Pivetta       P:5   |
++─────────────────────────+
+In play, out(s)
+Shohei Ohtani flies out sharply to center fielder Jackson Merrill.
+At Bat score 0.15320000000000009/0.375
+probsAddedVal: 2.200000000000003
+levIdxVal: 0.86
+dramaIdxVal: 40.0
+win prob complete? True
+win prob atBatIndex: 3
+At bat processed!
+Shohei Ohtani flies out sharply to center fielder Jackson Merrill.
+atBatIndexToProcess 4
+latestAtBatIndex 43
+New at bat. Index:  4
+Now batting: Mookie Betts
+Mookie Betts now batting.
+Is current play complete?  True
+Current playEvents[-1] index 1
++─────────────────────────+
+|SD  0         ◇     1    |
+|LAD 0        ◇ ◇    ▼    |
+|            ● ○ ○  0-0   |
+|─────────────────────────|
+|Nick Pivetta       P:6   |
++─────────────────────────+
+Current playEvent index 0
+Ball
+Is current play complete?  True
+Current playEvents[-1] index 1
+Current playEvent index 1
+Processing at bat finished...
++─────────────────────────+
+|SD  0         ◇     1    |
+|LAD 0        ◇ ◇    ▼    |
+|            ● ○ ○  1-0   |
+|─────────────────────────|
+|Nick Pivetta       P:7   |
++─────────────────────────+
+In play, no out
+Mookie Betts doubles (25) on a sharp line drive to left fielder Dustin Harris.
+At Bat score 0.19859999999999983/0.375
+probsAddedVal: 4.099999999999994
+levIdxVal: 0.63
+dramaIdxVal: 46.0
+win prob complete? True
+win prob atBatIndex: 4
+At bat processed!
+Mookie Betts doubles (25) on a sharp line drive to left fielder Dustin Harris.
+atBatIndexToProcess 5
+latestAtBatIndex 43
+New at bat. Index:  5
+Now batting: Freddie Freeman
+Freddie Freeman now batting.
++─────────────────────────+
+|SD  0         ◆     1    |
+|LAD 0        ◇ ◇    ▼    |
+|            ● ○ ○  0-0   |
+|─────────────────────────|
+|Nick Pivetta       P:8   |
++─────────────────────────+
+Is current play complete?  True
+Current playEvents[-1] index 3
+Current playEvent index 0
+Is current play complete?  True
+Current playEvents[-1] index 3
+Current playEvent index 1
+Is current play complete?  True
+Current playEvents[-1] index 3
+Current playEvent index 2
+Is current play complete?  True
+Current playEvents[-1] index 3
+Current playEvent index 3
+Processing at bat finished...
+Foul
++─────────────────────────+
+|SD  0         ◆     1    |
+|LAD 0        ◇ ◇    ▼    |
+|            ● ○ ○  0-1   |
+|─────────────────────────|
+|Nick Pivetta       P:9   |
++─────────────────────────+
+Foul
++─────────────────────────+
+|SD  0         ◆     1    |
+|LAD 0        ◇ ◇    ▼    |
+|            ● ○ ○  0-2   |
+|─────────────────────────|
+|Nick Pivetta       P:10  |
++─────────────────────────+
+Foul
++─────────────────────────+
+|SD  0         ◆     1    |
+|LAD 0        ◇ ◇    ▼    |
+|            ● ○ ○  0-2   |
+|─────────────────────────|
+|Nick Pivetta       P:11  |
++─────────────────────────+
+In play, out(s)
+Freddie Freeman grounds out, second baseman Jake Cronenworth to first baseman Ty France. Mookie Betts to 3rd.
+At Bat score 0.2145999999999998/0.375
+probsAddedVal: 2.999999999999993
+levIdxVal: 1.26
+dramaIdxVal: 55.0
+win prob complete? True
+win prob atBatIndex: 5
+At bat processed!
+Freddie Freeman grounds out, second baseman Jake Cronenworth to first baseman Ty France. Mookie Betts to 3rd.
+atBatIndexToProcess 6
+latestAtBatIndex 43
+New at bat. Index:  6
+Now batting: Teoscar Hernández
+Is current play complete?  True
+Current playEvents[-1] index 4
+Current playEvent index 0
+Teoscar Hernández now batting.
+Is current play complete?  True
+Current playEvents[-1] index 4
+Current playEvent index 1
++─────────────────────────+
+|SD  0         ◇     1    |
+|LAD 0        ◆ ◇    ▼    |
+|            ● ● ○  0-0   |
+|─────────────────────────|
+|Nick Pivetta       P:12  |
++─────────────────────────+
+Foul
++─────────────────────────+
+|SD  0         ◇     1    |
+|LAD 0        ◆ ◇    ▼    |
+|            ● ● ○  0-1   |
+|─────────────────────────|
+|Nick Pivetta       P:13  |
++─────────────────────────+
+Is current play complete?  True
+Current playEvents[-1] index 4
+Current playEvent index 2
+Swinging Strike
+Is current play complete?  True
+Current playEvents[-1] index 4
+Current playEvent index 3
+Is current play complete?  True
+Current playEvents[-1] index 4
+Current playEvent index 4
+Processing at bat finished...
+Batter Timeout.
++─────────────────────────+
+|SD  0         ◇     1    |
+|LAD 0        ◆ ◇    ▼    |
+|            ● ● ○  0-2   |
+|─────────────────────────|
+|Nick Pivetta       P:14  |
++─────────────────────────+
+Foul
++─────────────────────────+
+|SD  0         ◇     1    |
+|LAD 0        ◆ ◇    ▼    |
+|            ● ● ○  0-2   |
+|─────────────────────────|
+|Nick Pivetta       P:15  |
++─────────────────────────+
+Swinging Strike
+Teoscar Hernández strikes out swinging.
+At Bat score 0.2472000000000001/0.375
+probsAddedVal: 3.700000000000003
+levIdxVal: 1.36
+dramaIdxVal: 62.0
+win prob complete? True
+win prob atBatIndex: 6
+At bat processed!
+Teoscar Hernández strikes out swinging.
+atBatIndexToProcess 7
+latestAtBatIndex 43
+New at bat. Index:  7
+Now batting: Ty France
+Ty France now batting.
+Is current play complete?  True
+Current playEvents[-1] index 2
+Current playEvent index 0
++─────────────────────────+
+|SD  0         ◇     ▲    |
+|LAD 0        ◇ ◇    2    |
+|            ○ ○ ○  0-0   |
+|─────────────────────────|
+|Tyler Glasnow      P:14  |
++─────────────────────────+
+Is current play complete?  True
+Current playEvents[-1] index 2
+Current playEvent index 1
+Is current play complete?  True
+Current playEvents[-1] index 2
+Current playEvent index 2
+Processing at bat finished...
+Called Strike
++─────────────────────────+
+|SD  0         ◇     ▲    |
+|LAD 0        ◇ ◇    2    |
+|            ○ ○ ○  0-1   |
+|─────────────────────────|
+|Tyler Glasnow      P:15  |
++─────────────────────────+
+Swinging Strike
++─────────────────────────+
+|SD  0         ◇     ▲    |
+|LAD 0        ◇ ◇    2    |
+|            ○ ○ ○  0-2   |
+|─────────────────────────|
+|Tyler Glasnow      P:16  |
++─────────────────────────+
+Swinging Strike
+Ty France strikes out swinging.
+At Bat score 0.1616000000000001/0.375
+probsAddedVal: 2.3000000000000043
+levIdxVal: 0.92
+dramaIdxVal: 42.0
+win prob complete? True
+win prob atBatIndex: 7
+At bat processed!
+Ty France strikes out swinging.
+atBatIndexToProcess 8
+latestAtBatIndex 43
+New at bat. Index:  8
+Now batting: Jackson Merrill
+Jackson Merrill now batting.
++─────────────────────────+
+|SD  0         ◇     ▲    |
+|LAD 0        ◇ ◇    2    |
+|            ● ○ ○  0-0   |
+|─────────────────────────|
+|Tyler Glasnow      P:17  |
++─────────────────────────+
+Is current play complete?  True
+Current playEvents[-1] index 4
+Current playEvent index 0
+Is current play complete?  True
+Current playEvents[-1] index 4
+Current playEvent index 1
+Is current play complete?  True
+Current playEvents[-1] index 4
+Current playEvent index 2
+Is current play complete?  True
+Current playEvents[-1] index 4
+Current playEvent index 3
+Is current play complete?  True
+Current playEvents[-1] index 4
+Current playEvent index 4
+Processing at bat finished...
+Foul
++─────────────────────────+
+|SD  0         ◇     ▲    |
+|LAD 0        ◇ ◇    2    |
+|            ● ○ ○  0-1   |
+|─────────────────────────|
+|Tyler Glasnow      P:18  |
++─────────────────────────+
+Ball
++─────────────────────────+
+|SD  0         ◇     ▲    |
+|LAD 0        ◇ ◇    2    |
+|            ● ○ ○  1-1   |
+|─────────────────────────|
+|Tyler Glasnow      P:19  |
++─────────────────────────+
+Ball
++─────────────────────────+
+|SD  0         ◇     ▲    |
+|LAD 0        ◇ ◇    2    |
+|            ● ○ ○  2-1   |
+|─────────────────────────|
+|Tyler Glasnow      P:20  |
++─────────────────────────+
+Foul
++─────────────────────────+
+|SD  0         ◇     ▲    |
+|LAD 0        ◇ ◇    2    |
+|            ● ○ ○  2-2   |
+|─────────────────────────|
+|Tyler Glasnow      P:21  |
++─────────────────────────+
+In play, out(s)
+Jackson Merrill grounds out, second baseman Tommy Edman to first baseman Freddie Freeman.
+At Bat score 0.12079999999999988/0.375
+probsAddedVal: 1.6999999999999957
+levIdxVal: 0.67
+dramaIdxVal: 33.0
+win prob complete? True
+win prob atBatIndex: 8
+At bat processed!
+Jackson Merrill grounds out, second baseman Tommy Edman to first baseman Freddie Freeman.
+atBatIndexToProcess 9
+latestAtBatIndex 43
+New at bat. Index:  9
+Now batting: Xander Bogaerts
+Is current play complete?  True
+Current playEvents[-1] index 4
+Current playEvent index 0
+Is current play complete?  True
+Current playEvents[-1] index 4
+Current playEvent index 1
+Xander Bogaerts now batting.
++─────────────────────────+
+|SD  0         ◇     ▲    |
+|LAD 0        ◇ ◇    2    |
+|            ● ● ○  0-0   |
+|─────────────────────────|
+|Tyler Glasnow      P:22  |
++─────────────────────────+
+Ball
++─────────────────────────+
+|SD  0         ◇     ▲    |
+|LAD 0        ◇ ◇    2    |
+|            ● ● ○  1-0   |
+|─────────────────────────|
+|Tyler Glasnow      P:23  |
++─────────────────────────+
+Is current play complete?  True
+Ball
+Current playEvents[-1] index 4
++─────────────────────────+
+|SD  0         ◇     ▲    |
+|LAD 0        ◇ ◇    2    |
+|            ● ● ○  2-0   |
+|─────────────────────────|
+|Tyler Glasnow      P:24  |
++─────────────────────────+
+Current playEvent index 2
+Called Strike
+Is current play complete?  True
+Current playEvents[-1] index 4
+Current playEvent index 3
+Is current play complete?  True
+Current playEvents[-1] index 4
+Current playEvent index 4
+Processing at bat finished...
++─────────────────────────+
+|SD  0         ◇     ▲    |
+|LAD 0        ◇ ◇    2    |
+|            ● ● ○  2-1   |
+|─────────────────────────|
+|Tyler Glasnow      P:25  |
++─────────────────────────+
+Foul
++─────────────────────────+
+|SD  0         ◇     ▲    |
+|LAD 0        ◇ ◇    2    |
+|            ● ● ○  2-2   |
+|─────────────────────────|
+|Tyler Glasnow      P:26  |
++─────────────────────────+
+In play, out(s)
+Xander Bogaerts flies out to shortstop Mookie Betts.
+At Bat score 0.07960000000000003/0.375
+probsAddedVal: 1.1000000000000014
+levIdxVal: 0.43
+dramaIdxVal: 23.0
+win prob complete? True
+win prob atBatIndex: 9
+At bat processed!
+Xander Bogaerts flies out to shortstop Mookie Betts.
+atBatIndexToProcess 10
+latestAtBatIndex 43
+New at bat. Index:  10
+Now batting: Kyle Tucker
+Is current play complete?  True
+Current playEvents[-1] index 3
+Current playEvent index 0
+Is current play complete?  True
+Current playEvents[-1] index 3
+Current playEvent index 1
+Is current play complete?  True
+Current playEvents[-1] index 3
+Current playEvent index 2
+Kyle Tucker now batting.
++─────────────────────────+
+|SD  0         ◇     2    |
+|LAD 0        ◇ ◇    ▼    |
+|            ○ ○ ○  0-0   |
+|─────────────────────────|
+|Nick Pivetta       P:16  |
++─────────────────────────+
+Called Strike
+Is current play complete?  True
+Current playEvents[-1] index 3
+Current playEvent index 3
++─────────────────────────+
+|SD  0         ◇     2    |
+|LAD 0        ◇ ◇    ▼    |
+|            ○ ○ ○  0-1   |
+|─────────────────────────|
+|Nick Pivetta       P:17  |
++─────────────────────────+
+Processing at bat finished...
+Swinging Strike
++─────────────────────────+
+|SD  0         ◇     2    |
+|LAD 0        ◇ ◇    ▼    |
+|            ○ ○ ○  0-2   |
+|─────────────────────────|
+|Nick Pivetta       P:18  |
++─────────────────────────+
+Ball
++─────────────────────────+
+|SD  0         ◇     2    |
+|LAD 0        ◇ ◇    ▼    |
+|            ○ ○ ○  1-2   |
+|─────────────────────────|
+|Nick Pivetta       P:19  |
++─────────────────────────+
+Foul Tip
+Kyle Tucker strikes out on a foul tip.
+At Bat score 0.16099999999999992/0.375
+probsAddedVal: 2.299999999999997
+levIdxVal: 0.91
+dramaIdxVal: 42.0
+win prob complete? True
+win prob atBatIndex: 10
+At bat processed!
+Kyle Tucker strikes out on a foul tip.
+atBatIndexToProcess 11
+latestAtBatIndex 43
+New at bat. Index:  11
+Now batting: Max Muncy
+Is current play complete?  True
+Current playEvents[-1] index 3
+Current playEvent index 0
+Max Muncy now batting.
++─────────────────────────+
+|SD  0         ◇     2    |
+|LAD 0        ◇ ◇    ▼    |
+|            ● ○ ○  0-0   |
+|─────────────────────────|
+|Nick Pivetta       P:20  |
++─────────────────────────+
+Called Strike
++─────────────────────────+
+|SD  0         ◇     2    |
+|LAD 0        ◇ ◇    ▼    |
+|            ● ○ ○  0-1   |
+|─────────────────────────|
+|Nick Pivetta       P:21  |
++─────────────────────────+
+Is current play complete?  True
+Current playEvents[-1] index 3
+Current playEvent index 1
+Called Strike
+Is current play complete?  True
+Current playEvents[-1] index 3
+Current playEvent index 2
+Is current play complete?  True
+Current playEvents[-1] index 3
+Current playEvent index 3
+Processing at bat finished...
++─────────────────────────+
+|SD  0         ◇     2    |
+|LAD 0        ◇ ◇    ▼    |
+|            ● ○ ○  0-2   |
+|─────────────────────────|
+|Nick Pivetta       P:22  |
++─────────────────────────+
+Ball
++─────────────────────────+
+|SD  0         ◇     2    |
+|LAD 0        ◇ ◇    ▼    |
+|            ● ○ ○  1-2   |
+|─────────────────────────|
+|Nick Pivetta       P:23  |
++─────────────────────────+
+Swinging Strike
+Max Muncy strikes out swinging.
+At Bat score 0.12140000000000009/0.375
+probsAddedVal: 1.7000000000000028
+levIdxVal: 0.68
+dramaIdxVal: 33.0
+win prob complete? True
+win prob atBatIndex: 11
+At bat processed!
+Max Muncy strikes out swinging.
+atBatIndexToProcess 12
+latestAtBatIndex 43
+New at bat. Index:  12
+Now batting: Andy Pages
+Is current play complete?  True
+Current playEvents[-1] index 4
+Current playEvent index 0
+Andy Pages now batting.
++─────────────────────────+
+|SD  0         ◇     2    |
+|LAD 0        ◇ ◇    ▼    |
+|            ● ● ○  0-0   |
+|─────────────────────────|
+|Nick Pivetta       P:24  |
++─────────────────────────+
+Ball
++─────────────────────────+
+|SD  0         ◇     2    |
+|LAD 0        ◇ ◇    ▼    |
+|            ● ● ○  1-0   |
+|─────────────────────────|
+|Nick Pivetta       P:25  |
++─────────────────────────+
+Is current play complete?  True
+Current playEvents[-1] index 4
+Current playEvent index 1
+Is current play complete?  True
+Current playEvents[-1] index 4
+Current playEvent index 2
+Is current play complete?  True
+Current playEvents[-1] index 4
+Current playEvent index 3
+Is current play complete?  True
+Current playEvents[-1] index 4
+Current playEvent index 4
+Processing at bat finished...
+Called Strike
++─────────────────────────+
+|SD  0         ◇     2    |
+|LAD 0        ◇ ◇    ▼    |
+|            ● ● ○  1-1   |
+|─────────────────────────|
+|Nick Pivetta       P:26  |
++─────────────────────────+
+Called Strike
+Batter Timeout.
++─────────────────────────+
+|SD  0         ◇     2    |
+|LAD 0        ◇ ◇    ▼    |
+|            ● ● ○  1-2   |
+|─────────────────────────|
+|Nick Pivetta       P:27  |
++─────────────────────────+
+Swinging Strike
+Andy Pages strikes out swinging.
+At Bat score 0.08020000000000004/0.375
+probsAddedVal: 1.1000000000000014
+levIdxVal: 0.44
+dramaIdxVal: 23.0
+win prob complete? True
+win prob atBatIndex: 12
+At bat processed!
+Andy Pages strikes out swinging.
+atBatIndexToProcess 13
+latestAtBatIndex 43
+New at bat. Index:  13
+Now batting: Jake Cronenworth
+Is current play complete?  True
+Current playEvents[-1] index 4
+Current playEvent index 0
+Jake Cronenworth now batting.
++─────────────────────────+
+|SD  0         ◇     ▲    |
+|LAD 0        ◇ ◇    3    |
+|            ○ ○ ○  0-0   |
+|─────────────────────────|
+|Tyler Glasnow      P:27  |
++─────────────────────────+
+Called Strike
++─────────────────────────+
+|SD  0         ◇     ▲    |
+|LAD 0        ◇ ◇    3    |
+|            ○ ○ ○  0-1   |
+|─────────────────────────|
+|Tyler Glasnow      P:28  |
++─────────────────────────+
+Foul
+Is current play complete?  True
+Current playEvents[-1] index 4
+Current playEvent index 1
+Is current play complete?  True
+Current playEvents[-1] index 4
+Current playEvent index 2
+Is current play complete?  True
+Current playEvents[-1] index 4
+Current playEvent index 3
+Is current play complete?  True
+Current playEvents[-1] index 4
+Current playEvent index 4
+Processing at bat finished...
+Batter Timeout.
++─────────────────────────+
+|SD  0         ◇     ▲    |
+|LAD 0        ◇ ◇    3    |
+|            ○ ○ ○  0-2   |
+|─────────────────────────|
+|Tyler Glasnow      P:29  |
++─────────────────────────+
+Ball
++─────────────────────────+
+|SD  0         ◇     ▲    |
+|LAD 0        ◇ ◇    3    |
+|            ○ ○ ○  1-2   |
+|─────────────────────────|
+|Tyler Glasnow      P:30  |
++─────────────────────────+
+Swinging Strike (Blocked)
+Jake Cronenworth strikes out swinging.
+At Bat score 0.1738/0.375
+probsAddedVal: 2.5
+levIdxVal: 0.98
+dramaIdxVal: 45.0
+win prob complete? True
+win prob atBatIndex: 13
+At bat processed!
+Jake Cronenworth strikes out swinging.
+atBatIndexToProcess 14
+latestAtBatIndex 43
+New at bat. Index:  14
+Now batting: Samad Taylor
+Samad Taylor now batting.
++─────────────────────────+
+|SD  0         ◇     ▲    |
+|LAD 0        ◇ ◇    3    |
+|            ● ○ ○  0-0   |
+|─────────────────────────|
+|Tyler Glasnow      P:31  |
++─────────────────────────+
+In play, out(s)
+Is current play complete?  True
+Current playEvents[-1] index 0
+Current playEvent index 0
+Processing at bat finished...
+Samad Taylor bunt grounds out, third baseman Max Muncy to first baseman Freddie Freeman.
+At Bat score 0.12920000000000012/0.375
+probsAddedVal: 1.8000000000000043
+levIdxVal: 0.73
+dramaIdxVal: 35.0
+win prob complete? True
+win prob atBatIndex: 14
+At bat processed!
+Samad Taylor bunt grounds out, third baseman Max Muncy to first baseman Freddie Freeman.
+atBatIndexToProcess 15
+latestAtBatIndex 43
+New at bat. Index:  15
+Now batting: Ethan Salas
+Is current play complete?  True
+Current playEvents[-1] index 5
+Current playEvent index 0
+Is current play complete?  True
+Current playEvents[-1] index 5
+Current playEvent index 1
+Ethan Salas now batting.
+Is current play complete?  True
+Current playEvents[-1] index 5
+Current playEvent index 2
+Is current play complete?  True
+Current playEvents[-1] index 5
+Current playEvent index 3
+Is current play complete?  True
+Current playEvents[-1] index 5
+Current playEvent index 4
++─────────────────────────+
+|SD  0         ◇     ▲    |
+|LAD 0        ◇ ◇    3    |
+|            ● ● ○  0-0   |
+|─────────────────────────|
+|Tyler Glasnow      P:32  |
++─────────────────────────+
+Called Strike
++─────────────────────────+
+|SD  0         ◇     ▲    |
+|LAD 0        ◇ ◇    3    |
+|            ● ● ○  0-1   |
+|─────────────────────────|
+|Tyler Glasnow      P:33  |
++─────────────────────────+
+Ball
++─────────────────────────+
+|SD  0         ◇     ▲    |
+|LAD 0        ◇ ◇    3    |
+|            ● ● ○  1-1   |
+|─────────────────────────|
+|Tyler Glasnow      P:34  |
++─────────────────────────+
+Ball
+Is current play complete?  True
+Current playEvents[-1] index 5
+Current playEvent index 5
+Processing at bat finished...
++─────────────────────────+
+|SD  0         ◇     ▲    |
+|LAD 0        ◇ ◇    3    |
+|            ● ● ○  2-1   |
+|─────────────────────────|
+|Tyler Glasnow      P:35  |
++─────────────────────────+
+Called Strike
+Batter Timeout.
++─────────────────────────+
+|SD  0         ◇     ▲    |
+|LAD 0        ◇ ◇    3    |
+|            ● ● ○  2-2   |
+|─────────────────────────|
+|Tyler Glasnow      P:36  |
++─────────────────────────+
+Swinging Strike
+Ethan Salas strikes out swinging.
+At Bat score 0.08680000000000007/0.375
+probsAddedVal: 1.2000000000000028
+levIdxVal: 0.47
+dramaIdxVal: 25.0
+win prob complete? True
+win prob atBatIndex: 15
+At bat processed!
+Ethan Salas strikes out swinging.
+atBatIndexToProcess 16
+latestAtBatIndex 43
+New at bat. Index:  16
+Now batting: Hunter Feduccia
+Is current play complete?  True
+Current playEvents[-1] index 0
+Current playEvent index 0
+Hunter Feduccia now batting.
+Processing at bat finished...
++─────────────────────────+
+|SD  0         ◇     3    |
+|LAD 0        ◇ ◇    ▼    |
+|            ○ ○ ○  0-0   |
+|─────────────────────────|
+|Nick Pivetta       P:28  |
++─────────────────────────+
+In play, out(s)
+Hunter Feduccia flies out to center fielder Jackson Merrill.
+At Bat score 0.17380000000000018/0.375
+probsAddedVal: 2.500000000000007
+levIdxVal: 0.98
+dramaIdxVal: 45.0
+win prob complete? True
+win prob atBatIndex: 16
+At bat processed!
+Hunter Feduccia flies out to center fielder Jackson Merrill.
+atBatIndexToProcess 17
+latestAtBatIndex 43
+New at bat. Index:  17
+Now batting: Tommy Edman
+Tommy Edman now batting.
+Is current play complete?  True
+Current playEvents[-1] index 4
+Current playEvent index 0
+Is current play complete?  True
+Current playEvents[-1] index 4
+Current playEvent index 1
+Is current play complete?  True
+Current playEvents[-1] index 4
+Current playEvent index 2
+Is current play complete?  True
+Current playEvents[-1] index 4
+Current playEvent index 3
+Is current play complete?  True
+Current playEvents[-1] index 4
+Current playEvent index 4
+Processing at bat finished...
+Batter Timeout.
++─────────────────────────+
+|SD  0         ◇     3    |
+|LAD 0        ◇ ◇    ▼    |
+|            ● ○ ○  0-0   |
+|─────────────────────────|
+|Nick Pivetta       P:29  |
++─────────────────────────+
+Called Strike
++─────────────────────────+
+|SD  0         ◇     3    |
+|LAD 0        ◇ ◇    ▼    |
+|            ● ○ ○  0-1   |
+|─────────────────────────|
+|Nick Pivetta       P:30  |
++─────────────────────────+
+Foul
++─────────────────────────+
+|SD  0         ◇     3    |
+|LAD 0        ◇ ◇    ▼    |
+|            ● ○ ○  0-2   |
+|─────────────────────────|
+|Nick Pivetta       P:31  |
++─────────────────────────+
+Ball
++─────────────────────────+
+|SD  0         ◇     3    |
+|LAD 0        ◇ ◇    ▼    |
+|            ● ○ ○  1-2   |
+|─────────────────────────|
+|Nick Pivetta       P:32  |
++─────────────────────────+
+Foul Tip
+Tommy Edman strikes out on a foul tip.
+At Bat score 0.12919999999999993/0.375
+probsAddedVal: 1.7999999999999972
+levIdxVal: 0.73
+dramaIdxVal: 35.0
+win prob complete? True
+win prob atBatIndex: 17
+At bat processed!
+Tommy Edman strikes out on a foul tip.
+atBatIndexToProcess 18
+latestAtBatIndex 43
+New at bat. Index:  18
+Now batting: Shohei Ohtani
+Is current play complete?  True
+Current playEvents[-1] index 4
+Current playEvent index 0
+Shohei Ohtani now batting.
++─────────────────────────+
+|SD  0         ◇     3    |
+|LAD 0        ◇ ◇    ▼    |
+|            ● ● ○  0-0   |
+|─────────────────────────|
+|Nick Pivetta       P:33  |
++─────────────────────────+
+Called Strike
++─────────────────────────+
+|SD  0         ◇     3    |
+|LAD 0        ◇ ◇    ▼    |
+|            ● ● ○  0-1   |
+|─────────────────────────|
+|Nick Pivetta       P:34  |
++─────────────────────────+
+Is current play complete?  True
+Current playEvents[-1] index 4
+Current playEvent index 1
+Is current play complete?  True
+Current playEvents[-1] index 4
+Current playEvent index 2
+Is current play complete?  True
+Current playEvents[-1] index 4
+Current playEvent index 3
+Is current play complete?  True
+Current playEvents[-1] index 4
+Current playEvent index 4
+Processing at bat finished...
+Swinging Strike
+Batter Timeout.
++─────────────────────────+
+|SD  0         ◇     3    |
+|LAD 0        ◇ ◇    ▼    |
+|            ● ● ○  0-2   |
+|─────────────────────────|
+|Nick Pivetta       P:35  |
++─────────────────────────+
+Ball
++─────────────────────────+
+|SD  0         ◇     3    |
+|LAD 0        ◇ ◇    ▼    |
+|            ● ● ○  1-2   |
+|─────────────────────────|
+|Nick Pivetta       P:36  |
++─────────────────────────+
+In play, no out
+Shohei Ohtani singles on a line drive to right fielder Fernando Tatis Jr.
+At Bat score 0.09399999999999994/0.375
+probsAddedVal: 1.3999999999999986
+levIdxVal: 0.48
+dramaIdxVal: 26.0
+win prob complete? True
+win prob atBatIndex: 18
+At bat processed!
+Shohei Ohtani singles on a line drive to right fielder Fernando Tatis Jr.
+atBatIndexToProcess 19
+latestAtBatIndex 43
+New at bat. Index:  19
+Now batting: Mookie Betts
+Mookie Betts now batting.
++─────────────────────────+
+|SD  0         ◇     3    |
+|LAD 0        ◇ ◆    ▼    |
+|            ● ● ○  0-0   |
+|─────────────────────────|
+|Nick Pivetta       P:37  |
++─────────────────────────+
+Is current play complete?  True
+Current playEvents[-1] index 5
+Current playEvent index 0
+Is current play complete?  True
+Current playEvents[-1] index 5
+Current playEvent index 1
+Is current play complete?  True
+Current playEvents[-1] index 5
+Current playEvent index 2
+Is current play complete?  True
+Current playEvents[-1] index 5
+Current playEvent index 3
+Is current play complete?  True
+Current playEvents[-1] index 5
+Current playEvent index 4
+Is current play complete?  True
+Current playEvents[-1] index 5
+Current playEvent index 5
+Processing at bat finished...
+Swinging Strike
++─────────────────────────+
+|SD  0         ◇     3    |
+|LAD 0        ◇ ◆    ▼    |
+|            ● ● ○  0-1   |
+|─────────────────────────|
+|Nick Pivetta       P:38  |
++─────────────────────────+
+Called Strike
++─────────────────────────+
+|SD  0         ◇     3    |
+|LAD 0        ◇ ◆    ▼    |
+|            ● ● ○  0-2   |
+|─────────────────────────|
+|Nick Pivetta       P:39  |
++─────────────────────────+
+Foul
++─────────────────────────+
+|SD  0         ◇     3    |
+|LAD 0        ◇ ◆    ▼    |
+|            ● ● ○  0-2   |
+|─────────────────────────|
+|Nick Pivetta       P:40  |
++─────────────────────────+
+Ball
++─────────────────────────+
+|SD  0         ◇     3    |
+|LAD 0        ◇ ◆    ▼    |
+|            ● ● ○  1-2   |
+|─────────────────────────|
+|Nick Pivetta       P:41  |
++─────────────────────────+
+Ball
++─────────────────────────+
+|SD  0         ◇     3    |
+|LAD 0        ◇ ◆    ▼    |
+|            ● ● ○  2-2   |
+|─────────────────────────|
+|Nick Pivetta       P:42  |
++─────────────────────────+
+In play, no out
+Mookie Betts singles on a line drive to right fielder Fernando Tatis Jr. Shohei Ohtani to 2nd.
+At Bat score 0.1700000000000001/0.375
+probsAddedVal: 2.3000000000000043
+levIdxVal: 1.01
+dramaIdxVal: 45.0
+win prob complete? True
+win prob atBatIndex: 19
+At bat processed!
+Mookie Betts singles on a line drive to right fielder Fernando Tatis Jr. Shohei Ohtani to 2nd.
+atBatIndexToProcess 20
+latestAtBatIndex 43
+New at bat. Index:  20
+Now batting: Freddie Freeman
+Freddie Freeman now batting.
+Is current play complete?  True
+Current playEvents[-1] index 3
+Current playEvent index 0
+Is current play complete?  True
+Current playEvents[-1] index 3
+Current playEvent index 1
++─────────────────────────+
+|SD  0         ◆     3    |
+|LAD 0        ◇ ◆    ▼    |
+|            ● ● ○  0-0   |
+|─────────────────────────|
+|Nick Pivetta       P:43  |
++─────────────────────────+
+Ball
++─────────────────────────+
+|SD  0         ◆     3    |
+|LAD 0        ◇ ◆    ▼    |
+|            ● ● ○  1-0   |
+|─────────────────────────|
+|Nick Pivetta       P:44  |
++─────────────────────────+
+Called Strike
++─────────────────────────+
+|SD  0         ◆     3    |
+|LAD 0        ◇ ◆    ▼    |
+|            ● ● ○  1-1   |
+|─────────────────────────|
+|Nick Pivetta       P:45  |
++─────────────────────────+
+Is current play complete?  True
+Current playEvents[-1] index 3
+Current playEvent index 2
+Is current play complete?  True
+Current playEvents[-1] index 3
+Current playEvent index 3
+Processing at bat finished...
+Foul
++─────────────────────────+
+|SD  0         ◆     3    |
+|LAD 0        ◇ ◆    ▼    |
+|            ● ● ○  1-2   |
+|─────────────────────────|
+|Nick Pivetta       P:46  |
++─────────────────────────+
+Called Strike
+Freddie Freeman called out on strikes.
+At Bat score 0.3376000000000002/0.375
+probsAddedVal: 4.900000000000006
+levIdxVal: 1.94
+dramaIdxVal: 84.0
+win prob complete? True
+win prob atBatIndex: 20
+At bat processed!
+Freddie Freeman called out on strikes.
+atBatIndexToProcess 21
+latestAtBatIndex 43
+New at bat. Index:  21
+Now batting: Fernando Tatis Jr.
+Fernando Tatis Jr. now batting.
++─────────────────────────+
+|SD  0         ◇     ▲    |
+|LAD 0        ◇ ◇    4    |
+|            ○ ○ ○  0-0   |
+|─────────────────────────|
+|Tyler Glasnow      P:37  |
++─────────────────────────+
+Ball
+Is current play complete?  True
+Current playEvents[-1] index 3
+Current playEvent index 0
+Is current play complete?  True
+Current playEvents[-1] index 3
+Current playEvent index 1
+Is current play complete?  True
+Current playEvents[-1] index 3
+Current playEvent index 2
+Is current play complete?  True
+Current playEvents[-1] index 3
+Current playEvent index 3
+Processing at bat finished...
++─────────────────────────+
+|SD  0         ◇     ▲    |
+|LAD 0        ◇ ◇    4    |
+|            ○ ○ ○  1-0   |
+|─────────────────────────|
+|Tyler Glasnow      P:38  |
++─────────────────────────+
+Ball
++─────────────────────────+
+|SD  0         ◇     ▲    |
+|LAD 0        ◇ ◇    4    |
+|            ○ ○ ○  2-0   |
+|─────────────────────────|
+|Tyler Glasnow      P:39  |
++─────────────────────────+
+Ball
++─────────────────────────+
+|SD  0         ◇     ▲    |
+|LAD 0        ◇ ◇    4    |
+|            ○ ○ ○  3-0   |
+|─────────────────────────|
+|Tyler Glasnow      P:40  |
++─────────────────────────+
+Ball
+Fernando Tatis Jr. walks.
+At Bat score 0.24639999999999995/0.375
+probsAddedVal: 4.399999999999999
+levIdxVal: 1.07
+dramaIdxVal: 59.0
+win prob complete? True
+win prob atBatIndex: 21
+At bat processed!
+Fernando Tatis Jr. walks.
+atBatIndexToProcess 22
+latestAtBatIndex 43
+New at bat. Index:  22
+Now batting: Dustin Harris
+Is current play complete?  True
+Current playEvents[-1] index 3
+Dustin Harris now batting.
+Current playEvent index 0
+Batter Timeout.
+Is current play complete?  True
+Current playEvents[-1] index 3
+Current playEvent index 1
++─────────────────────────+
+|SD  0         ◇     ▲    |
+|LAD 0        ◇ ◆    4    |
+|            ○ ○ ○  0-0   |
+|─────────────────────────|
+|Tyler Glasnow      P:41  |
++─────────────────────────+
+Called Strike
+Is current play complete?  True
+Current playEvents[-1] index 3
+Current playEvent index 2
+Is current play complete?  True
+Current playEvents[-1] index 3
+Current playEvent index 3
+Processing at bat finished...
++─────────────────────────+
+|SD  0         ◇     ▲    |
+|LAD 0        ◇ ◆    4    |
+|            ○ ○ ○  0-1   |
+|─────────────────────────|
+|Tyler Glasnow      P:42  |
++─────────────────────────+
+Called Strike
++─────────────────────────+
+|SD  0         ◇     ▲    |
+|LAD 0        ◇ ◆    4    |
+|            ○ ○ ○  0-2   |
+|─────────────────────────|
+|Tyler Glasnow      P:43  |
++─────────────────────────+
+Called Strike
+Hunter Feduccia challenged (pitch result), call on the field was overturned: Dustin Harris called out on strikes.
+At Bat score 0.29660000000000003/0.375
+probsAddedVal: 4.100000000000001
+levIdxVal: 1.78
+dramaIdxVal: 75.0
+win prob complete? True
+win prob atBatIndex: 22
+At bat processed!
+Hunter Feduccia challenged (pitch result), call on the field was overturned: Dustin Harris called out on strikes.
+atBatIndexToProcess 23
+latestAtBatIndex 43
+New at bat. Index:  23
+Now batting: Manny Machado
+Is current play complete?  True
+Current playEvents[-1] index 7
+Current playEvent index 0
+Manny Machado now batting.
+Pickoff Attempt 1B
+Is current play complete?  True
+Current playEvents[-1] index 7
+Current playEvent index 1
++─────────────────────────+
+|SD  0         ◇     ▲    |
+|LAD 0        ◇ ◆    4    |
+|            ● ○ ○  0-0   |
+|─────────────────────────|
+|Tyler Glasnow      P:44  |
++─────────────────────────+
+Is current play complete?  True
+Called Strike
+Current playEvents[-1] index 7
+Current playEvent index 2
+Is current play complete?  True
+Current playEvents[-1] index 7
+Current playEvent index 3
+Is current play complete?  True
+Current playEvents[-1] index 7
+Current playEvent index 4
+Is current play complete?  True
+Current playEvents[-1] index 7
+Current playEvent index 5
+Is current play complete?  True
+Current playEvents[-1] index 7
+Current playEvent index 6
+Is current play complete?  True
+Current playEvents[-1] index 7
+Current playEvent index 7
+Processing at bat finished...
+Manny Machado challenged (pitch result), call on the field was confirmed: Fernando Tatis Jr. steals (37) 2nd base.
++─────────────────────────+
+|SD  0         ◆     ▲    |
+|LAD 0        ◇ ◇    4    |
+|            ● ○ ○  0-1   |
+|─────────────────────────|
+|Tyler Glasnow      P:45  |
++─────────────────────────+
+Ball
++─────────────────────────+
+|SD  0         ◆     ▲    |
+|LAD 0        ◇ ◇    4    |
+|            ● ○ ○  1-1   |
+|─────────────────────────|
+|Tyler Glasnow      P:46  |
++─────────────────────────+
+Ball
++─────────────────────────+
+|SD  0         ◆     ▲    |
+|LAD 0        ◇ ◇    4    |
+|            ● ○ ○  2-1   |
+|─────────────────────────|
+|Tyler Glasnow      P:47  |
++─────────────────────────+
+Foul
+Batter Timeout.
++─────────────────────────+
+|SD  0         ◆     ▲    |
+|LAD 0        ◇ ◇    4    |
+|            ● ○ ○  2-2   |
+|─────────────────────────|
+|Tyler Glasnow      P:48  |
++─────────────────────────+
+Swinging Strike
+Manny Machado strikes out swinging.
+At Bat score 0.2658000000000001/0.375
+probsAddedVal: 4.300000000000004
+levIdxVal: 1.49
+dramaIdxVal: 56.0
+win prob complete? True
+win prob atBatIndex: 23
+At bat processed!
+Manny Machado strikes out swinging.
+atBatIndexToProcess 24
+latestAtBatIndex 43
+New at bat. Index:  24
+Now batting: Ty France
+Ty France now batting.
+Is current play complete?  True
+Current playEvents[-1] index 0
+Current playEvent index 0
++─────────────────────────+
+|SD  0         ◆     ▲    |
+|LAD 0        ◇ ◇    4    |
+|            ● ● ○  0-0   |
+|─────────────────────────|
+|Tyler Glasnow      P:49  |
++─────────────────────────+
+In play, out(s)
+Processing at bat finished...
+Ty France flies out to center fielder Andy Pages.
+At Bat score 0.2762000000000002/0.375
+probsAddedVal: 4.1000000000000085
+levIdxVal: 1.54
+dramaIdxVal: 69.0
+win prob complete? True
+win prob atBatIndex: 24
+At bat processed!
+Ty France flies out to center fielder Andy Pages.
+atBatIndexToProcess 25
+latestAtBatIndex 43
+New at bat. Index:  25
+Now batting: Teoscar Hernández
+Is current play complete?  True
+Current playEvents[-1] index 7
+Current playEvent index 0
+Teoscar Hernández now batting.
++─────────────────────────+
+|SD  0         ◇     4    |
+|LAD 0        ◇ ◇    ▼    |
+|            ○ ○ ○  0-0   |
+|─────────────────────────|
+|Nick Pivetta       P:47  |
++─────────────────────────+
+Ball
++─────────────────────────+
+|SD  0         ◇     4    |
+|LAD 0        ◇ ◇    ▼    |
+|            ○ ○ ○  1-0   |
+|─────────────────────────|
+|Nick Pivetta       P:48  |
++─────────────────────────+
+Is current play complete?  True
+Current playEvents[-1] index 7
+Current playEvent index 1
+Is current play complete?  True
+Current playEvents[-1] index 7
+Current playEvent index 2
+Is current play complete?  True
+Current playEvents[-1] index 7
+Current playEvent index 3
+Is current play complete?  True
+Current playEvents[-1] index 7
+Current playEvent index 4
+Is current play complete?  True
+Current playEvents[-1] index 7
+Current playEvent index 5
+Is current play complete?  True
+Current playEvents[-1] index 7
+Current playEvent index 6
+Is current play complete?  True
+Current playEvents[-1] index 7
+Current playEvent index 7
+Processing at bat finished...
+Called Strike
++─────────────────────────+
+|SD  0         ◇     4    |
+|LAD 0        ◇ ◇    ▼    |
+|            ○ ○ ○  1-1   |
+|─────────────────────────|
+|Nick Pivetta       P:49  |
++─────────────────────────+
+Foul
+Batter Timeout.
++─────────────────────────+
+|SD  0         ◇     4    |
+|LAD 0        ◇ ◇    ▼    |
+|            ○ ○ ○  1-2   |
+|─────────────────────────|
+|Nick Pivetta       P:50  |
++─────────────────────────+
+Ball
++─────────────────────────+
+|SD  0         ◇     4    |
+|LAD 0        ◇ ◇    ▼    |
+|            ○ ○ ○  2-2   |
+|─────────────────────────|
+|Nick Pivetta       P:51  |
++─────────────────────────+
+Ball
++─────────────────────────+
+|SD  0         ◇     4    |
+|LAD 0        ◇ ◇    ▼    |
+|            ○ ○ ○  3-2   |
+|─────────────────────────|
+|Nick Pivetta       P:52  |
++─────────────────────────+
+Foul
++─────────────────────────+
+|SD  0         ◇     4    |
+|LAD 0        ◇ ◇    ▼    |
+|            ○ ○ ○  3-2   |
+|─────────────────────────|
+|Nick Pivetta       P:53  |
++─────────────────────────+
+Hit By Pitch
+Teoscar Hernández hit by pitch.
+At Bat score 0.24199999999999972/0.375
+probsAddedVal: 4.29999999999999
+levIdxVal: 1.06
+dramaIdxVal: 58.0
+win prob complete? True
+win prob atBatIndex: 25
+At bat processed!
+Teoscar Hernández hit by pitch.
+atBatIndexToProcess 26
+latestAtBatIndex 43
+New at bat. Index:  26
+Now batting: Kyle Tucker
+Is current play complete?  True
+Current playEvents[-1] index 0
+Current playEvent index 0
+Processing at bat finished...
+Kyle Tucker now batting.
++─────────────────────────+
+|SD  0         ◇     4    |
+|LAD 0        ◇ ◆    ▼    |
+|            ○ ○ ○  0-0   |
+|─────────────────────────|
+|Nick Pivetta       P:54  |
++─────────────────────────+
+In play, out(s)
+Kyle Tucker flies out to right fielder Fernando Tatis Jr.
+At Bat score 0.2894/0.375
+probsAddedVal: 4.0
+levIdxVal: 1.74
+dramaIdxVal: 73.0
+win prob complete? True
+win prob atBatIndex: 26
+At bat processed!
+Kyle Tucker flies out to right fielder Fernando Tatis Jr.
+atBatIndexToProcess 27
+latestAtBatIndex 43
+New at bat. Index:  27
+Now batting: Max Muncy
+Max Muncy now batting.
+Is current play complete?  True
+Current playEvents[-1] index 5
+Current playEvent index 0
+Is current play complete?  True
+Current playEvents[-1] index 5
+Current playEvent index 1
+Is current play complete?  True
+Current playEvents[-1] index 5
+Current playEvent index 2
+Is current play complete?  True
+Current playEvents[-1] index 5
+Current playEvent index 3
+Is current play complete?  True
+Current playEvents[-1] index 5
+Current playEvent index 4
+Is current play complete?  True
+Current playEvents[-1] index 5
+Current playEvent index 5
+Processing at bat finished...
++─────────────────────────+
+|SD  0         ◇     4    |
+|LAD 0        ◇ ◆    ▼    |
+|            ● ○ ○  0-0   |
+|─────────────────────────|
+|Nick Pivetta       P:55  |
++─────────────────────────+
+Ball In Dirt
++─────────────────────────+
+|SD  0         ◇     4    |
+|LAD 0        ◇ ◆    ▼    |
+|            ● ○ ○  1-0   |
+|─────────────────────────|
+|Nick Pivetta       P:56  |
++─────────────────────────+
+Swinging Strike
++─────────────────────────+
+|SD  0         ◇     4    |
+|LAD 0        ◇ ◆    ▼    |
+|            ● ○ ○  1-1   |
+|─────────────────────────|
+|Nick Pivetta       P:57  |
++─────────────────────────+
+Ball
++─────────────────────────+
+|SD  0         ◇     4    |
+|LAD 0        ◇ ◆    ▼    |
+|            ● ○ ○  2-1   |
+|─────────────────────────|
+|Nick Pivetta       P:58  |
++─────────────────────────+
+Swinging Strike
++─────────────────────────+
+|SD  0         ◇     4    |
+|LAD 0        ◇ ◆    ▼    |
+|            ● ○ ○  2-2   |
+|─────────────────────────|
+|Nick Pivetta       P:59  |
++─────────────────────────+
+Foul
++─────────────────────────+
+|SD  0         ◇     4    |
+|LAD 0        ◇ ◆    ▼    |
+|            ● ○ ○  2-2   |
+|─────────────────────────|
+|Nick Pivetta       P:60  |
++─────────────────────────+
+Foul Tip
+Max Muncy strikes out on a foul tip.
+At Bat score 0.2507999999999998/0.375
+probsAddedVal: 3.499999999999993
+levIdxVal: 1.48
+dramaIdxVal: 64.0
+win prob complete? True
+win prob atBatIndex: 27
+At bat processed!
+Max Muncy strikes out on a foul tip.
+atBatIndexToProcess 28
+latestAtBatIndex 43
+New at bat. Index:  28
+Now batting: Andy Pages
+Andy Pages now batting.
++─────────────────────────+
+|SD  0         ◇     4    |
+|LAD 0        ◇ ◆    ▼    |
+|            ● ● ○  0-0   |
+|─────────────────────────|
+|Nick Pivetta       P:61  |
++─────────────────────────+
+Is current play complete?  True
+Current playEvents[-1] index 7
+Current playEvent index 0
+Is current play complete?  True
+Current playEvents[-1] index 7
+Current playEvent index 1
+Is current play complete?  True
+Current playEvents[-1] index 7
+Current playEvent index 2
+Is current play complete?  True
+Current playEvents[-1] index 7
+Current playEvent index 3
+Is current play complete?  True
+Current playEvents[-1] index 7
+Current playEvent index 4
+Is current play complete?  True
+Current playEvents[-1] index 7
+Current playEvent index 5
+Is current play complete?  True
+Current playEvents[-1] index 7
+Current playEvent index 6
+Is current play complete?  True
+Current playEvents[-1] index 7
+Current playEvent index 7
+Processing at bat finished...
+Swinging Strike
++─────────────────────────+
+|SD  0         ◇     4    |
+|LAD 0        ◇ ◆    ▼    |
+|            ● ● ○  0-1   |
+|─────────────────────────|
+|Nick Pivetta       P:62  |
++─────────────────────────+
+Called Strike
+Batter Timeout.
++─────────────────────────+
+|SD  0         ◇     4    |
+|LAD 0        ◇ ◆    ▼    |
+|            ● ● ○  0-2   |
+|─────────────────────────|
+|Nick Pivetta       P:63  |
++─────────────────────────+
+Ball
++─────────────────────────+
+|SD  0         ◇     4    |
+|LAD 0        ◇ ◆    ▼    |
+|            ● ● ○  1-2   |
+|─────────────────────────|
+|Nick Pivetta       P:64  |
++─────────────────────────+
+Ball
++─────────────────────────+
+|SD  0         ◇     4    |
+|LAD 0        ◇ ◆    ▼    |
+|            ● ● ○  2-2   |
+|─────────────────────────|
+|Nick Pivetta       P:65  |
++─────────────────────────+
+Foul
++─────────────────────────+
+|SD  0         ◇     4    |
+|LAD 0        ◇ ◆    ▼    |
+|            ● ● ○  2-2   |
+|─────────────────────────|
+|Nick Pivetta       P:66  |
++─────────────────────────+
+Ball
++─────────────────────────+
+|SD  0         ◇     4    |
+|LAD 0        ◇ ◆    ▼    |
+|            ● ● ○  3-2   |
+|─────────────────────────|
+|Nick Pivetta       P:67  |
++─────────────────────────+
+Ball
+Andy Pages walks. Teoscar Hernández to 2nd.
+At Bat score 0.1856/0.375
+probsAddedVal: 2.5
+levIdxVal: 1.11
+dramaIdxVal: 49.0
+win prob complete? True
+win prob atBatIndex: 28
+At bat processed!
+Andy Pages walks. Teoscar Hernández to 2nd.
+atBatIndexToProcess 29
+latestAtBatIndex 43
+New at bat. Index:  29
+Now batting: Hunter Feduccia
+Hunter Feduccia now batting.
+Is current play complete?  True
+Current playEvents[-1] index 7
+Current playEvent index 0
+Mound Visit.
+Is current play complete?  True
+Current playEvents[-1] index 7
+Current playEvent index 1
+Is current play complete?  True
+Current playEvents[-1] index 7
+Current playEvent index 2
+Is current play complete?  True
+Current playEvents[-1] index 7
+Current playEvent index 3
+Is current play complete?  True
+Current playEvents[-1] index 7
+Current playEvent index 4
+Is current play complete?  True
+Current playEvents[-1] index 7
+Current playEvent index 5
+Is current play complete?  True
+Current playEvents[-1] index 7
+Current playEvent index 6
+Is current play complete?  True
+Current playEvents[-1] index 7
+Current playEvent index 7
+Processing at bat finished...
++─────────────────────────+
+|SD  0         ◆     4    |
+|LAD 0        ◇ ◆    ▼    |
+|            ● ● ○  0-0   |
+|─────────────────────────|
+|Nick Pivetta       P:68  |
++─────────────────────────+
+Ball
+Wild pitch by pitcher Nick Pivetta. Teoscar Hernández to 3rd. Andy Pages to 2nd.
++─────────────────────────+
+|SD  0         ◆     4    |
+|LAD 0        ◆ ◇    ▼    |
+|            ● ● ○  1-0   |
+|─────────────────────────|
+|Nick Pivetta       P:69  |
++─────────────────────────+
+Called Strike
++─────────────────────────+
+|SD  0         ◆     4    |
+|LAD 0        ◆ ◇    ▼    |
+|            ● ● ○  1-1   |
+|─────────────────────────|
+|Nick Pivetta       P:70  |
++─────────────────────────+
+Foul
+Batter Timeout.
++─────────────────────────+
+|SD  0         ◆     4    |
+|LAD 0        ◆ ◇    ▼    |
+|            ● ● ○  1-2   |
+|─────────────────────────|
+|Nick Pivetta       P:71  |
++─────────────────────────+
+Ball
++─────────────────────────+
+|SD  0         ◆     4    |
+|LAD 0        ◆ ◇    ▼    |
+|            ● ● ○  2-2   |
+|─────────────────────────|
+|Nick Pivetta       P:72  |
++─────────────────────────+
+In play, out(s)
+Hunter Feduccia grounds out, pitcher Nick Pivetta to first baseman Ty France.
+At Bat score 0.41359999999999975/0.375
+probsAddedVal: 6.999999999999993
+levIdxVal: 2.11
+dramaIdxVal: 91.0
+win prob complete? True
+win prob atBatIndex: 29
+Direct image URL: https://dl.dropboxusercontent.com/scl/fi/6v3r9q751czkuejtgg20z/play_id_227f1852-d275-37c3-b948-060037de1cd0_created_2026-09-24_23-53-57.793.png?rlkey=vqh5rlpp1selz0qmi3zgakcjl&dl=0
+Checking url status...
+URL Check Response: 
+	Status code: 200
+	Content-Type: image/png
+	URL: https://dl.dropboxusercontent.com/scl/fi/6v3r9q751czkuejtgg20z/play_id_227f1852-d275-37c3-b948-060037de1cd0_created_2026-09-24_23-53-57.793.png?rlkey=vqh5rlpp1selz0qmi3zgakcjl&dl=0
+POST endpoint /threads with image url https://dl.dropboxusercontent.com/scl/fi/6v3r9q751czkuejtgg20z/play_id_227f1852-d275-37c3-b948-060037de1cd0_created_2026-09-24_23-53-57.793.png?rlkey=vqh5rlpp1selz0qmi3zgakcjl&dl=0...
+Thread drafted successfully! (id=18113957599915017)
+POST endpoint /threads_publish with creation id 18113957599915017...
+Thread posted successfully! (id=18626902663046706)
+At bat processed!
+Hunter Feduccia grounds out, pitcher Nick Pivetta to first baseman Ty France.
+atBatIndexToProcess 30
+latestAtBatIndex 43
+New at bat. Index:  30
+Now batting: Jackson Merrill
+Is current play complete?  True
+Current playEvents[-1] index 4
+Current playEvent index 0
+Jackson Merrill now batting.
+Is current play complete?  True
+Current playEvents[-1] index 4
+Current playEvent index 1
+Is current play complete?  True
+Current playEvents[-1] index 4
+Current playEvent index 2
++─────────────────────────+
+|SD  0         ◇     ▲    |
+|LAD 0        ◇ ◇    5    |
+|            ○ ○ ○  0-0   |
+|─────────────────────────|
+|Tyler Glasnow      P:50  |
++─────────────────────────+
+Called Strike
++─────────────────────────+
+|SD  0         ◇     ▲    |
+|LAD 0        ◇ ◇    5    |
+|            ○ ○ ○  0-1   |
+|─────────────────────────|
+|Tyler Glasnow      P:51  |
++─────────────────────────+
+Swinging Strike
+Batter Timeout.
++─────────────────────────+
+|SD  0         ◇     ▲    |
+|LAD 0        ◇ ◇    5    |
+|            ○ ○ ○  0-2   |
+|─────────────────────────|
+|Tyler Glasnow      P:52  |
++─────────────────────────+
+Is current play complete?  True
+Current playEvents[-1] index 4
+Current playEvent index 3
+Is current play complete?  True
+Current playEvents[-1] index 4
+Current playEvent index 4
+Processing at bat finished...
+Ball
++─────────────────────────+
+|SD  0         ◇     ▲    |
+|LAD 0        ◇ ◇    5    |
+|            ○ ○ ○  1-2   |
+|─────────────────────────|
+|Tyler Glasnow      P:53  |
++─────────────────────────+
+Swinging Strike
+Jackson Merrill strikes out swinging.
+At Bat score 0.2072/0.375
+probsAddedVal: 3.0
+levIdxVal: 1.17
+dramaIdxVal: 53.0
+win prob complete? True
+win prob atBatIndex: 30
+At bat processed!
+Jackson Merrill strikes out swinging.
+atBatIndexToProcess 31
+latestAtBatIndex 43
+New at bat. Index:  31
+Now batting: Xander Bogaerts
+Is current play complete?  True
+Current playEvents[-1] index 8
+Current playEvent index 0
+Is current play complete?  True
+Current playEvents[-1] index 8
+Current playEvent index 1
+Is current play complete?  True
+Current playEvents[-1] index 8
+Current playEvent index 2
+Xander Bogaerts now batting.
+Is current play complete?  True
+Current playEvents[-1] index 8
+Current playEvent index 3
++─────────────────────────+
+|SD  0         ◇     ▲    |
+|LAD 0        ◇ ◇    5    |
+|            ● ○ ○  0-0   |
+|─────────────────────────|
+|Tyler Glasnow      P:54  |
++─────────────────────────+
+Is current play complete?  True
+Ball
+Current playEvents[-1] index 8
+Current playEvent index 4
+Is current play complete?  True
+Current playEvents[-1] index 8
+Current playEvent index 5
++─────────────────────────+
+|SD  0         ◇     ▲    |
+|LAD 0        ◇ ◇    5    |
+|            ● ○ ○  1-0   |
+|─────────────────────────|
+|Tyler Glasnow      P:55  |
++─────────────────────────+
+Is current play complete?  True
+Current playEvents[-1] index 8
+Current playEvent index 6
+Called Strike
+Is current play complete?  True
+Current playEvents[-1] index 8
+Current playEvent index 7
+Batter Timeout.
+Is current play complete?  True
+Current playEvents[-1] index 8
+Current playEvent index 8
+Processing at bat finished...
++─────────────────────────+
+|SD  0         ◇     ▲    |
+|LAD 0        ◇ ◇    5    |
+|            ● ○ ○  1-1   |
+|─────────────────────────|
+|Tyler Glasnow      P:56  |
++─────────────────────────+
+Ball
++─────────────────────────+
+|SD  0         ◇     ▲    |
+|LAD 0        ◇ ◇    5    |
+|            ● ○ ○  2-1   |
+|─────────────────────────|
+|Tyler Glasnow      P:57  |
++─────────────────────────+
+Swinging Strike
++─────────────────────────+
+|SD  0         ◇     ▲    |
+|LAD 0        ◇ ◇    5    |
+|            ● ○ ○  2-2   |
+|─────────────────────────|
+|Tyler Glasnow      P:58  |
++─────────────────────────+
+Foul
++─────────────────────────+
+|SD  0         ◇     ▲    |
+|LAD 0        ◇ ◇    5    |
+|            ● ○ ○  2-2   |
+|─────────────────────────|
+|Tyler Glasnow      P:59  |
++─────────────────────────+
+Foul
++─────────────────────────+
+|SD  0         ◇     ▲    |
+|LAD 0        ◇ ◇    5    |
+|            ● ○ ○  2-2   |
+|─────────────────────────|
+|Tyler Glasnow      P:60  |
++─────────────────────────+
+Ball
++─────────────────────────+
+|SD  0         ◇     ▲    |
+|LAD 0        ◇ ◇    5    |
+|            ● ○ ○  3-2   |
+|─────────────────────────|
+|Tyler Glasnow      P:61  |
++─────────────────────────+
+In play, out(s)
+Xander Bogaerts grounds out, shortstop Mookie Betts to first baseman Freddie Freeman.
+At Bat score 0.15540000000000007/0.375
+probsAddedVal: 2.200000000000003
+levIdxVal: 0.88
+dramaIdxVal: 41.0
+win prob complete? True
+win prob atBatIndex: 31
+At bat processed!
+Xander Bogaerts grounds out, shortstop Mookie Betts to first baseman Freddie Freeman.
+atBatIndexToProcess 32
+latestAtBatIndex 43
+New at bat. Index:  32
+Now batting: Jake Cronenworth
+Is current play complete?  True
+Current playEvents[-1] index 5
+Current playEvent index 0
+Is current play complete?  True
+Current playEvents[-1] index 5
+Current playEvent index 1
+Is current play complete?  True
+Current playEvents[-1] index 5
+Current playEvent index 2
+Is current play complete?  True
+Current playEvents[-1] index 5
+Current playEvent index 3
+Is current play complete?  True
+Current playEvents[-1] index 5
+Current playEvent index 4
+Jake Cronenworth now batting.
++─────────────────────────+
+|SD  0         ◇     ▲    |
+|LAD 0        ◇ ◇    5    |
+|            ● ● ○  0-0   |
+|─────────────────────────|
+|Tyler Glasnow      P:62  |
++─────────────────────────+
+Foul
++─────────────────────────+
+|SD  0         ◇     ▲    |
+|LAD 0        ◇ ◇    5    |
+|            ● ● ○  0-1   |
+|─────────────────────────|
+|Tyler Glasnow      P:63  |
++─────────────────────────+
+Ball
++─────────────────────────+
+|SD  0         ◇     ▲    |
+|LAD 0        ◇ ◇    5    |
+|            ● ● ○  1-1   |
+|─────────────────────────|
+|Tyler Glasnow      P:64  |
++─────────────────────────+
+Is current play complete?  True
+Current playEvents[-1] index 5
+Current playEvent index 5
+Ball
+Processing at bat finished...
++─────────────────────────+
+|SD  0         ◇     ▲    |
+|LAD 0        ◇ ◇    5    |
+|            ● ● ○  2-1   |
+|─────────────────────────|
+|Tyler Glasnow      P:65  |
++─────────────────────────+
+Swinging Strike
+Batter Timeout.
++─────────────────────────+
+|SD  0         ◇     ▲    |
+|LAD 0        ◇ ◇    5    |
+|            ● ● ○  2-2   |
+|─────────────────────────|
+|Tyler Glasnow      P:66  |
++─────────────────────────+
+Foul Tip
+Jake Cronenworth strikes out on a foul tip.
+At Bat score 0.10579999999999978/0.375
+probsAddedVal: 1.499999999999993
+levIdxVal: 0.58
+dramaIdxVal: 29.0
+win prob complete? True
+win prob atBatIndex: 32
+At bat processed!
+Jake Cronenworth strikes out on a foul tip.
+atBatIndexToProcess 33
+latestAtBatIndex 43
+New at bat. Index:  33
+Now batting: Tommy Edman
+Tommy Edman now batting.
++─────────────────────────+
+|SD  0         ◇     5    |
+|LAD 0        ◇ ◇    ▼    |
+|            ○ ○ ○  0-0   |
+|─────────────────────────|
+|Nick Pivetta       P:73  |
++─────────────────────────+
+Called Strike
+Is current play complete?  True
+Current playEvents[-1] index 1
+Current playEvent index 0
+Is current play complete?  True
+Current playEvents[-1] index 1
+Current playEvent index 1
+Processing at bat finished...
++─────────────────────────+
+|SD  0         ◇     5    |
+|LAD 0        ◇ ◇    ▼    |
+|            ○ ○ ○  0-1   |
+|─────────────────────────|
+|Nick Pivetta       P:74  |
++─────────────────────────+
+In play, out(s)
+Tommy Edman flies out to center fielder Jackson Merrill.
+At Bat score 0.20659999999999978/0.375
+probsAddedVal: 2.999999999999993
+levIdxVal: 1.16
+dramaIdxVal: 53.0
+win prob complete? True
+win prob atBatIndex: 33
+At bat processed!
+Tommy Edman flies out to center fielder Jackson Merrill.
+atBatIndexToProcess 34
+latestAtBatIndex 43
+New at bat. Index:  34
+Now batting: Shohei Ohtani
+Is current play complete?  True
+Current playEvents[-1] index 4
+Shohei Ohtani now batting.
+Current playEvent index 0
++─────────────────────────+
+|SD  0         ◇     5    |
+|LAD 0        ◇ ◇    ▼    |
+|            ● ○ ○  0-0   |
+|─────────────────────────|
+|Nick Pivetta       P:75  |
++─────────────────────────+
+Foul
+Is current play complete?  True
+Current playEvents[-1] index 4
+Current playEvent index 1
++─────────────────────────+
+|SD  0         ◇     5    |
+|LAD 0        ◇ ◇    ▼    |
+|            ● ○ ○  0-1   |
+|─────────────────────────|
+|Nick Pivetta       P:76  |
++─────────────────────────+
+Ball
+Is current play complete?  True
+Current playEvents[-1] index 4
+Current playEvent index 2
+Is current play complete?  True
+Current playEvents[-1] index 4
+Current playEvent index 3
+Is current play complete?  True
+Current playEvents[-1] index 4
+Current playEvent index 4
+Processing at bat finished...
++─────────────────────────+
+|SD  0         ◇     5    |
+|LAD 0        ◇ ◇    ▼    |
+|            ● ○ ○  1-1   |
+|─────────────────────────|
+|Nick Pivetta       P:77  |
++─────────────────────────+
+Swinging Strike
+Batter Timeout.
++─────────────────────────+
+|SD  0         ◇     5    |
+|LAD 0        ◇ ◇    ▼    |
+|            ● ○ ○  1-2   |
+|─────────────────────────|
+|Nick Pivetta       P:78  |
++─────────────────────────+
+In play, out(s)
+Shohei Ohtani flies out to center fielder Jackson Merrill.
+At Bat score 0.15540000000000007/0.375
+probsAddedVal: 2.200000000000003
+levIdxVal: 0.88
+dramaIdxVal: 41.0
+win prob complete? True
+win prob atBatIndex: 34
+At bat processed!
+Shohei Ohtani flies out to center fielder Jackson Merrill.
+atBatIndexToProcess 35
+latestAtBatIndex 43
+New at bat. Index:  35
+Now batting: Mookie Betts
+Is current play complete?  True
+Current playEvents[-1] index 7
+Current playEvent index 0
+Is current play complete?  True
+Current playEvents[-1] index 7
+Current playEvent index 1
+Is current play complete?  True
+Current playEvents[-1] index 7
+Current playEvent index 2
+Mookie Betts now batting.
++─────────────────────────+
+|SD  0         ◇     5    |
+|LAD 0        ◇ ◇    ▼    |
+|            ● ● ○  0-0   |
+|─────────────────────────|
+|Nick Pivetta       P:79  |
++─────────────────────────+
+Called Strike
++─────────────────────────+
+|SD  0         ◇     5    |
+|LAD 0        ◇ ◇    ▼    |
+|            ● ● ○  0-1   |
+|─────────────────────────|
+|Nick Pivetta       P:80  |
++─────────────────────────+
+Ball
++─────────────────────────+
+|SD  0         ◇     5    |
+|LAD 0        ◇ ◇    ▼    |
+|            ● ● ○  1-1   |
+|─────────────────────────|
+|Nick Pivetta       P:81  |
++─────────────────────────+
+Called Strike
++─────────────────────────+
+|SD  0         ◇     5    |
+|LAD 0        ◇ ◇    ▼    |
+|            ● ● ○  1-2   |
+|─────────────────────────|
+|Nick Pivetta       P:82  |
++─────────────────────────+
+Is current play complete?  True
+Current playEvents[-1] index 7
+Current playEvent index 3
+Is current play complete?  True
+Current playEvents[-1] index 7
+Current playEvent index 4
+Is current play complete?  True
+Current playEvents[-1] index 7
+Current playEvent index 5
+Is current play complete?  True
+Current playEvents[-1] index 7
+Current playEvent index 6
+Is current play complete?  True
+Current playEvents[-1] index 7
+Current playEvent index 7
+Processing at bat finished...
+Ball
++─────────────────────────+
+|SD  0         ◇     5    |
+|LAD 0        ◇ ◇    ▼    |
+|            ● ● ○  2-2   |
+|─────────────────────────|
+|Nick Pivetta       P:83  |
++─────────────────────────+
+Foul
++─────────────────────────+
+|SD  0         ◇     5    |
+|LAD 0        ◇ ◇    ▼    |
+|            ● ● ○  2-2   |
+|─────────────────────────|
+|Nick Pivetta       P:84  |
++─────────────────────────+
+Foul
++─────────────────────────+
+|SD  0         ◇     5    |
+|LAD 0        ◇ ◇    ▼    |
+|            ● ● ○  2-2   |
+|─────────────────────────|
+|Nick Pivetta       P:85  |
++─────────────────────────+
+Ball
++─────────────────────────+
+|SD  0         ◇     5    |
+|LAD 0        ◇ ◇    ▼    |
+|            ● ● ○  3-2   |
+|─────────────────────────|
+|Nick Pivetta       P:86  |
++─────────────────────────+
+In play, no out
+Mookie Betts singles on a sharp line drive to left fielder Dustin Harris.
+At Bat score 0.11020000000000002/0.375
+probsAddedVal: 1.6000000000000014
+levIdxVal: 0.59
+dramaIdxVal: 30.0
+win prob complete? True
+win prob atBatIndex: 35
+At bat processed!
+Mookie Betts singles on a sharp line drive to left fielder Dustin Harris.
+atBatIndexToProcess 36
+latestAtBatIndex 43
+New at bat. Index:  36
+Now batting: Freddie Freeman
+Freddie Freeman now batting.
+Is current play complete?  True
+Current playEvents[-1] index 9
+Current playEvent index 0
+Mound Visit.
+Is current play complete?  True
+Current playEvents[-1] index 9
+Current playEvent index 1
+Is current play complete?  True
+Current playEvents[-1] index 9
+Current playEvent index 2
+Is current play complete?  True
+Current playEvents[-1] index 9
+Current playEvent index 3
+Is current play complete?  True
+Current playEvents[-1] index 9
+Current playEvent index 4
+Is current play complete?  True
+Current playEvents[-1] index 9
+Current playEvent index 5
+Is current play complete?  True
+Current playEvents[-1] index 9
+Current playEvent index 6
+Is current play complete?  True
+Current playEvents[-1] index 9
+Current playEvent index 7
+Is current play complete?  True
+Current playEvents[-1] index 9
+Current playEvent index 8
+Is current play complete?  True
+Current playEvents[-1] index 9
+Current playEvent index 9
+Processing at bat finished...
+Pitching Change: Yuki Matsui replaces Nick Pivetta.
++─────────────────────────+
+|SD  0         ◇     5    |
+|LAD 0        ◇ ◆    ▼    |
+|            ● ● ○  0-0   |
+|─────────────────────────|
+|Yuki Matsui        P:0   |
++─────────────────────────+
+Called Strike
++─────────────────────────+
+|SD  0         ◇     5    |
+|LAD 0        ◇ ◆    ▼    |
+|            ● ● ○  0-1   |
+|─────────────────────────|
+|Yuki Matsui        P:1   |
++─────────────────────────+
+Ball In Dirt
++─────────────────────────+
+|SD  0         ◇     5    |
+|LAD 0        ◇ ◆    ▼    |
+|            ● ● ○  1-1   |
+|─────────────────────────|
+|Yuki Matsui        P:2   |
++─────────────────────────+
+Ball
++─────────────────────────+
+|SD  0         ◇     5    |
+|LAD 0        ◇ ◆    ▼    |
+|            ● ● ○  2-1   |
+|─────────────────────────|
+|Yuki Matsui        P:3   |
++─────────────────────────+
+Swinging Strike
++─────────────────────────+
+|SD  0         ◇     5    |
+|LAD 0        ◇ ◆    ▼    |
+|            ● ● ○  2-2   |
+|─────────────────────────|
+|Yuki Matsui        P:4   |
++─────────────────────────+
+Foul
++─────────────────────────+
+|SD  0         ◇     5    |
+|LAD 0        ◇ ◆    ▼    |
+|            ● ● ○  2-2   |
+|─────────────────────────|
+|Yuki Matsui        P:5   |
++─────────────────────────+
+Foul
++─────────────────────────+
+|SD  0         ◇     5    |
+|LAD 0        ◇ ◆    ▼    |
+|            ● ● ○  2-2   |
+|─────────────────────────|
+|Yuki Matsui        P:6   |
++─────────────────────────+
+Foul
++─────────────────────────+
+|SD  0         ◇     5    |
+|LAD 0        ◇ ◆    ▼    |
+|            ● ● ○  2-2   |
+|─────────────────────────|
+|Yuki Matsui        P:7   |
++─────────────────────────+
+In play, no out
+Freddie Freeman singles on a line drive to center fielder Jackson Merrill. Mookie Betts to 3rd.
+At Bat score 0.2325999999999998/0.375
+probsAddedVal: 3.5999999999999943
+levIdxVal: 1.23
+dramaIdxVal: 58.0
+win prob complete? True
+win prob atBatIndex: 36
+At bat processed!
+Freddie Freeman singles on a line drive to center fielder Jackson Merrill. Mookie Betts to 3rd.
+atBatIndexToProcess 37
+latestAtBatIndex 43
+New at bat. Index:  37
+Now batting: Teoscar Hernández
+Is current play complete?  True
+Current playEvents[-1] index 3
+Current playEvent index 0
+Teoscar Hernández now batting.
+Mound Visit.
+Is current play complete?  True
++─────────────────────────+
+|SD  0         ◇     5    |
+|LAD 0        ◆ ◆    ▼    |
+|            ● ● ○  0-0   |
+|─────────────────────────|
+|Yuki Matsui        P:8   |
++─────────────────────────+
+Current playEvents[-1] index 3
+Current playEvent index 1
+Called Strike
+Is current play complete?  True
+Current playEvents[-1] index 3
+Current playEvent index 2
+Is current play complete?  True
+Current playEvents[-1] index 3
+Current playEvent index 3
+Processing at bat finished...
++─────────────────────────+
+|SD  0         ◇     5    |
+|LAD 0        ◆ ◆    ▼    |
+|            ● ● ○  0-1   |
+|─────────────────────────|
+|Yuki Matsui        P:9   |
++─────────────────────────+
+Foul
++─────────────────────────+
+|SD  0         ◇     5    |
+|LAD 0        ◆ ◆    ▼    |
+|            ● ● ○  0-2   |
+|─────────────────────────|
+|Yuki Matsui        P:10  |
++─────────────────────────+
+Swinging Strike
+Teoscar Hernández strikes out swinging.
+At Bat score 0.44999999999999984/0.375
+probsAddedVal: 6.699999999999996
+levIdxVal: 2.54
+dramaIdxVal: 110.0
+win prob complete? True
+win prob atBatIndex: 37
+Direct image URL: https://dl.dropboxusercontent.com/scl/fi/gy9ob89h2ofwm6l4g680t/play_id_8c6c47cc-b292-3101-bb5d-a15a22c82ec7_created_2026-09-24_23-54-15.754.png?rlkey=crhtdmxjcxmy150lzrimrvs3g&dl=0
+Checking url status...
+URL Check Response: 
+	Status code: 200
+	Content-Type: image/png
+	URL: https://dl.dropboxusercontent.com/scl/fi/gy9ob89h2ofwm6l4g680t/play_id_8c6c47cc-b292-3101-bb5d-a15a22c82ec7_created_2026-09-24_23-54-15.754.png?rlkey=crhtdmxjcxmy150lzrimrvs3g&dl=0
+POST endpoint /threads with image url https://dl.dropboxusercontent.com/scl/fi/gy9ob89h2ofwm6l4g680t/play_id_8c6c47cc-b292-3101-bb5d-a15a22c82ec7_created_2026-09-24_23-54-15.754.png?rlkey=crhtdmxjcxmy150lzrimrvs3g&dl=0...
+Thread drafted successfully! (id=18113957683915017)
+POST endpoint /threads_publish with creation id 18113957683915017...
+Thread posted successfully! (id=17902989354356875)
+At bat processed!
+Teoscar Hernández strikes out swinging.
+atBatIndexToProcess 38
+latestAtBatIndex 43
+New at bat. Index:  38
+Now batting: Samad Taylor
+Is current play complete?  True
+Current playEvents[-1] index 4
+Current playEvent index 0
+Samad Taylor now batting.
+Is current play complete?  True
+Current playEvents[-1] index 4
++─────────────────────────+
+|SD  0         ◇     ▲    |
+|LAD 0        ◇ ◇    6    |
+|            ○ ○ ○  0-0   |
+|─────────────────────────|
+|Tyler Glasnow      P:67  |
++─────────────────────────+
+Current playEvent index 1
+Is current play complete?  True
+Current playEvents[-1] index 4
+Current playEvent index 2
+Swinging Strike
+Is current play complete?  True
+Current playEvents[-1] index 4
+Current playEvent index 3
+Is current play complete?  True
+Current playEvents[-1] index 4
+Current playEvent index 4
+Processing at bat finished...
++─────────────────────────+
+|SD  0         ◇     ▲    |
+|LAD 0        ◇ ◇    6    |
+|            ○ ○ ○  0-1   |
+|─────────────────────────|
+|Tyler Glasnow      P:68  |
++─────────────────────────+
+Called Strike
+Batter Timeout.
++─────────────────────────+
+|SD  0         ◇     ▲    |
+|LAD 0        ◇ ◇    6    |
+|            ○ ○ ○  0-2   |
+|─────────────────────────|
+|Tyler Glasnow      P:69  |
++─────────────────────────+
+Ball
++─────────────────────────+
+|SD  0         ◇     ▲    |
+|LAD 0        ◇ ◇    6    |
+|            ○ ○ ○  1-2   |
+|─────────────────────────|
+|Tyler Glasnow      P:70  |
++─────────────────────────+
+Swinging Strike
+Samad Taylor strikes out swinging.
+At Bat score 0.23340000000000016/0.375
+probsAddedVal: 3.4000000000000057
+levIdxVal: 1.32
+dramaIdxVal: 59.0
+win prob complete? True
+win prob atBatIndex: 38
+At bat processed!
+Samad Taylor strikes out swinging.
+atBatIndexToProcess 39
+latestAtBatIndex 43
+New at bat. Index:  39
+Now batting: Ethan Salas
+Is current play complete?  True
+Current playEvents[-1] index 0
+Current playEvent index 0
+Ethan Salas now batting.
++─────────────────────────+
+|SD  0         ◇     ▲    |
+|LAD 0        ◇ ◇    6    |
+|            ● ○ ○  0-0   |
+|─────────────────────────|
+|Tyler Glasnow      P:71  |
++─────────────────────────+
+In play, no out
+Processing at bat finished...
+Ethan Salas singles on a ground ball to left fielder Teoscar Hernández.
+At Bat score 0.21660000000000007/0.375
+probsAddedVal: 3.700000000000003
+levIdxVal: 1.0
+dramaIdxVal: 53.0
+win prob complete? True
+win prob atBatIndex: 39
+At bat processed!
+Ethan Salas singles on a ground ball to left fielder Teoscar Hernández.
+atBatIndexToProcess 40
+latestAtBatIndex 43
+New at bat. Index:  40
+Now batting: Fernando Tatis Jr.
+Is current play complete?  True
+Current playEvents[-1] index 0
+Current playEvent index 0
+Fernando Tatis Jr. now batting.
+Processing at bat finished...
++─────────────────────────+
+|SD  0         ◇     ▲    |
+|LAD 0        ◇ ◆    6    |
+|            ● ○ ○  0-0   |
+|─────────────────────────|
+|Tyler Glasnow      P:72  |
++─────────────────────────+
+In play, no out
+Fernando Tatis Jr. singles on a sharp ground ball to right fielder Kyle Tucker. Ethan Salas to 3rd.
+At Bat score 0.4957999999999999/0.375
+probsAddedVal: 9.799999999999997
+levIdxVal: 1.84
+dramaIdxVal: 111.0
+win prob complete? True
+win prob atBatIndex: 40
+Direct image URL: https://dl.dropboxusercontent.com/scl/fi/raj94hu430k4fngtx2n5j/play_id_48bdcde9-95f8-3095-9a96-b547e47eef51_created_2026-09-24_23-54-30.943.png?rlkey=06a9t9e7ee971vogav6o9o9nz&dl=0
+Checking url status...
+URL Check Response: 
+	Status code: 200
+	Content-Type: image/png
+	URL: https://dl.dropboxusercontent.com/scl/fi/raj94hu430k4fngtx2n5j/play_id_48bdcde9-95f8-3095-9a96-b547e47eef51_created_2026-09-24_23-54-30.943.png?rlkey=06a9t9e7ee971vogav6o9o9nz&dl=0
+POST endpoint /threads with image url https://dl.dropboxusercontent.com/scl/fi/raj94hu430k4fngtx2n5j/play_id_48bdcde9-95f8-3095-9a96-b547e47eef51_created_2026-09-24_23-54-30.943.png?rlkey=06a9t9e7ee971vogav6o9o9nz&dl=0...
+Thread drafted successfully! (id=18113957896915017)
+POST endpoint /threads_publish with creation id 18113957896915017...
+Thread posted successfully! (id=17869945485641503)
+At bat processed!
+Fernando Tatis Jr. singles on a sharp ground ball to right fielder Kyle Tucker. Ethan Salas to 3rd.
+atBatIndexToProcess 41
+latestAtBatIndex 43
+New at bat. Index:  41
+Now batting: Dustin Harris
+Is current play complete?  True
+Current playEvents[-1] index 0
+Current playEvent index 0
+Dustin Harris now batting.
+Processing at bat finished...
++─────────────────────────+
+|SD  0         ◇     ▲    |
+|LAD 0        ◆ ◆    6    |
+|            ● ○ ○  0-0   |
+|─────────────────────────|
+|Tyler Glasnow      P:73  |
++─────────────────────────+
+In play, run(s)
+Dustin Harris out on a sacrifice fly to center fielder Andy Pages. Ethan Salas scores.
+At Bat score 0.34560000000000013/0.375
+probsAddedVal: 2.9000000000000057
+levIdxVal: 2.84
+dramaIdxVal: 94.0
+win prob complete? True
+win prob atBatIndex: 41
+Direct image URL: https://dl.dropboxusercontent.com/scl/fi/aaubnnreizmo7qeek162w/play_id_5873ef6e-a1b5-3fc7-a612-23fc2d1bc90d_created_2026-09-24_23-54-44.155.png?rlkey=5757q7n2xw0utqf89aaqos0dj&dl=0
+Checking url status...
+URL Check Response: 
+	Status code: 200
+	Content-Type: image/png
+	URL: https://dl.dropboxusercontent.com/scl/fi/aaubnnreizmo7qeek162w/play_id_5873ef6e-a1b5-3fc7-a612-23fc2d1bc90d_created_2026-09-24_23-54-44.155.png?rlkey=5757q7n2xw0utqf89aaqos0dj&dl=0
+POST endpoint /threads with image url https://dl.dropboxusercontent.com/scl/fi/aaubnnreizmo7qeek162w/play_id_5873ef6e-a1b5-3fc7-a612-23fc2d1bc90d_created_2026-09-24_23-54-44.155.png?rlkey=5757q7n2xw0utqf89aaqos0dj&dl=0...
+Thread drafted successfully! (id=18113958022915017)
+POST endpoint /threads_publish with creation id 18113958022915017...
+Thread posted successfully! (id=17971541235148529)
+At bat processed!
+Dustin Harris out on a sacrifice fly to center fielder Andy Pages. Ethan Salas scores.
+atBatIndexToProcess 42
+latestAtBatIndex 43
+New at bat. Index:  42
+Now batting: Manny Machado
+Manny Machado now batting.
+Is current play complete?  True
+Current playEvents[-1] index 5
+Current playEvent index 0
+Is current play complete?  True
+Current playEvents[-1] index 5
+Current playEvent index 1
+Is current play complete?  True
+Current playEvents[-1] index 5
+Current playEvent index 2
++─────────────────────────+
+|SD  1         ◇     ▲    |
+|LAD 0        ◇ ◆    6    |
+|            ● ● ○  0-0   |
+|─────────────────────────|
+|Tyler Glasnow      P:74  |
++─────────────────────────+
+Is current play complete?  True
+Current playEvents[-1] index 5
+Current playEvent index 3
+Called Strike
+Is current play complete?  True
+Current playEvents[-1] index 5
+Current playEvent index 4
+Is current play complete?  True
+Current playEvents[-1] index 5
+Current playEvent index 5
+Processing at bat finished...
+Fernando Tatis Jr. steals (38) 2nd base.
++─────────────────────────+
+|SD  1         ◆     ▲    |
+|LAD 0        ◇ ◇    6    |
+|            ● ● ○  0-1   |
+|─────────────────────────|
+|Tyler Glasnow      P:75  |
++─────────────────────────+
+Ball
++─────────────────────────+
+|SD  1         ◆     ▲    |
+|LAD 0        ◇ ◇    6    |
+|            ● ● ○  1-1   |
+|─────────────────────────|
+|Tyler Glasnow      P:76  |
++─────────────────────────+
+Swinging Strike
++─────────────────────────+
+|SD  1         ◆     ▲    |
+|LAD 0        ◇ ◇    6    |
+|            ● ● ○  1-2   |
+|─────────────────────────|
+|Tyler Glasnow      P:77  |
++─────────────────────────+
+Foul
++─────────────────────────+
+|SD  1         ◆     ▲    |
+|LAD 0        ◇ ◇    6    |
+|            ● ● ○  1-2   |
+|─────────────────────────|
+|Tyler Glasnow      P:78  |
++─────────────────────────+
+Swinging Strike (Blocked)
+Manny Machado strikes out swinging.
+At Bat score 0.21800000000000014/0.375
+probsAddedVal: 3.9000000000000057
+levIdxVal: 1.03
+dramaIdxVal: 47.0
+win prob complete? True
+win prob atBatIndex: 42
+At bat processed!
+Manny Machado strikes out swinging.
+atBatIndexToProcess 43
+latestAtBatIndex 43
+New at bat. Index:  43
+Now batting: Kyle Tucker
+Kyle Tucker now batting.
+Is current play complete?  False
+Current playEvents[-1] index 2
+Current playEvent index 0
++─────────────────────────+
+|SD  1         ◇     6    |
+|LAD 0        ◇ ◇    ▼    |
+|            ○ ○ ○  0-0   |
+|─────────────────────────|
+|Yuki Matsui        P:11  |
++─────────────────────────+
+Is current play complete?  False
+Current playEvents[-1] index 2
+Current playEvent index 1
+Ball
++─────────────────────────+
+|SD  1         ◇     6    |
+|LAD 0        ◇ ◇    ▼    |
+|            ○ ○ ○  1-0   |
+|─────────────────────────|
+|Yuki Matsui        P:12  |
++─────────────────────────+
+Called Strike
+Is current play complete?  False
+Current playEvents[-1] index 2
+Current playEvent index 2
+Waiting for the next pitch of the at bat...
++─────────────────────────+
+|SD  1         ◇     6    |
+|LAD 0        ◇ ◇    ▼    |
+|            ○ ○ ○  1-1   |
+|─────────────────────────|
+|Yuki Matsui        P:13  |
++─────────────────────────+
+Called Strike
+atBatIndexToProcess:  43
+latestAtBatIndex:  44
++─────────────────────────+
+|SD  1         ◇     6    |
+|LAD 0        ◇ ◇    ▼    |
+|            ○ ○ ○  1-2   |
+|─────────────────────────|
+|Yuki Matsui        P:14  |
++─────────────────────────+
+Is current play complete?  True
+Current playEvents[-1] index 4
+Current playEvent index 3
+Is current play complete?  True
+Current playEvents[-1] index 4
+Current playEvent index 4
+Waiting for the next pitch of the at bat...
+Foul
++─────────────────────────+
+|SD  1         ◇     6    |
+|LAD 0        ◇ ◇    ▼    |
+|            ○ ○ ○  1-2   |
+|─────────────────────────|
+|Yuki Matsui        P:15  |
++─────────────────────────+
+In play, out(s)
+atBatIndexToProcess:  43
+latestAtBatIndex:  44
+Kyle Tucker grounds out, second baseman Jake Cronenworth to first baseman Ty France.
+Processing at bat finished...
+At Bat score 0.2746/0.375
+probsAddedVal: 4.0
+levIdxVal: 1.56
+dramaIdxVal: 69.0
+win prob complete? True
+win prob atBatIndex: 43
+At bat processed!
+Kyle Tucker grounds out, second baseman Jake Cronenworth to first baseman Ty France.
+atBatIndexToProcess 44
+latestAtBatIndex 44
+New at bat. Index:  44
+Now batting: Max Muncy
+Max Muncy now batting.
+Is current play complete?  False
+Current playEvents[-1] index 0
+Current playEvent index 0
+Waiting for the next pitch of the at bat...
++─────────────────────────+
+|SD  1         ◇     6    |
+|LAD 0        ◇ ◇    ▼    |
+|            ● ○ ○  0-0   |
+|─────────────────────────|
+|Yuki Matsui        P:16  |
++─────────────────────────+
+Foul
+atBatIndexToProcess:  44
+latestAtBatIndex:  44
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  44
+latestAtBatIndex:  44
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  44
+latestAtBatIndex:  44
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  44
+latestAtBatIndex:  44
++─────────────────────────+
+|SD  1         ◇     6    |
+|LAD 0        ◇ ◇    ▼    |
+|            ● ○ ○  0-1   |
+|─────────────────────────|
+|Yuki Matsui        P:17  |
++─────────────────────────+
+Is current play complete?  False
+Current playEvents[-1] index 1
+Current playEvent index 1
+Waiting for the next pitch of the at bat...
+Ball
+atBatIndexToProcess:  44
+latestAtBatIndex:  44
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  44
+latestAtBatIndex:  44
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  44
+latestAtBatIndex:  44
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  44
+latestAtBatIndex:  44
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  44
+latestAtBatIndex:  44
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  44
+latestAtBatIndex:  44
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  44
+latestAtBatIndex:  44
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  44
+latestAtBatIndex:  44
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  44
+latestAtBatIndex:  44
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  44
+latestAtBatIndex:  44
+Is current play complete?  True
+Current playEvents[-1] index 2
+Current playEvent index 2
+Waiting for the next pitch of the at bat...
++─────────────────────────+
+|SD  1         ◇     6    |
+|LAD 0        ◇ ◇    ▼    |
+|            ● ○ ○  1-1   |
+|─────────────────────────|
+|Yuki Matsui        P:18  |
++─────────────────────────+
+Hit By Pitch
+atBatIndexToProcess:  44
+latestAtBatIndex:  44
+Processing at bat finished...
+Max Muncy hit by pitch.
+At Bat score 0.20439999999999994/0.375
+probsAddedVal: 2.8999999999999986
+levIdxVal: 1.17
+dramaIdxVal: 53.0
+win prob complete? True
+win prob atBatIndex: 44
+At bat processed!
+Max Muncy hit by pitch.
+Waiting for next at bat to start...
+atBatIndexToProcess 45
+latestAtBatIndex 45
+New at bat. Index:  45
+Now batting: Andy Pages
+Is current play complete?  False
+Current playEvents[-1] index 0
+Current playEvent index 0
+Waiting for the next pitch of the at bat...
+Andy Pages now batting.
+Mound Visit.
+atBatIndexToProcess:  45
+latestAtBatIndex:  45
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  45
+latestAtBatIndex:  45
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  45
+latestAtBatIndex:  45
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  45
+latestAtBatIndex:  45
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  45
+latestAtBatIndex:  45
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  45
+latestAtBatIndex:  45
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  45
+latestAtBatIndex:  45
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  45
+latestAtBatIndex:  45
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  45
+latestAtBatIndex:  45
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  45
+latestAtBatIndex:  45
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  45
+latestAtBatIndex:  45
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  45
+latestAtBatIndex:  45
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  45
+latestAtBatIndex:  45
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  45
+latestAtBatIndex:  45
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  45
+latestAtBatIndex:  45
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  45
+latestAtBatIndex:  45
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  45
+latestAtBatIndex:  45
+Is current play complete?  False
+Current playEvents[-1] index 1
+Current playEvent index 1
+Pitching Change: Jason Adam replaces Yuki Matsui.
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  45
+latestAtBatIndex:  45
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  45
+latestAtBatIndex:  45
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  45
+latestAtBatIndex:  45
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  45
+latestAtBatIndex:  45
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  45
+latestAtBatIndex:  45
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  45
+latestAtBatIndex:  45
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  45
+latestAtBatIndex:  45
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  45
+latestAtBatIndex:  45
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  45
+latestAtBatIndex:  45
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  45
+latestAtBatIndex:  45
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  45
+latestAtBatIndex:  45
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  45
+latestAtBatIndex:  45
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  45
+latestAtBatIndex:  45
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  45
+latestAtBatIndex:  45
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  45
+latestAtBatIndex:  45
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  45
+latestAtBatIndex:  45
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  45
+latestAtBatIndex:  45
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  45
+latestAtBatIndex:  45
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  45
+latestAtBatIndex:  45
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  45
+latestAtBatIndex:  45
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  45
+latestAtBatIndex:  45
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  45
+latestAtBatIndex:  45
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  45
+latestAtBatIndex:  45
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  45
+latestAtBatIndex:  45
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  45
+latestAtBatIndex:  45
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  45
+latestAtBatIndex:  45
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  45
+latestAtBatIndex:  45
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  45
+latestAtBatIndex:  45
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  45
+latestAtBatIndex:  45
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  45
+latestAtBatIndex:  45
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  45
+latestAtBatIndex:  45
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  45
+latestAtBatIndex:  45
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  45
+latestAtBatIndex:  45
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  45
+latestAtBatIndex:  45
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  45
+latestAtBatIndex:  45
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  45
+latestAtBatIndex:  45
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  45
+latestAtBatIndex:  45
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  45
+latestAtBatIndex:  45
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  45
+latestAtBatIndex:  45
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  45
+latestAtBatIndex:  45
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  45
+latestAtBatIndex:  45
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  45
+latestAtBatIndex:  45
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  45
+latestAtBatIndex:  45
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  45
+latestAtBatIndex:  45
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  45
+latestAtBatIndex:  45
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  45
+latestAtBatIndex:  45
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  45
+latestAtBatIndex:  45
+Is current play complete?  False
+Current playEvents[-1] index 2
+Current playEvent index 2
+Waiting for the next pitch of the at bat...
++─────────────────────────+
+|SD  1         ◇     6    |
+|LAD 0        ◇ ◆    ▼    |
+|            ● ● ○  0-0   |
+|─────────────────────────|
+|Jason Adam         P:0   |
++─────────────────────────+
+In play, out(s)
+atBatIndexToProcess:  45
+latestAtBatIndex:  45
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  45
+latestAtBatIndex:  45
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  45
+latestAtBatIndex:  45
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  45
+latestAtBatIndex:  45
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  45
+latestAtBatIndex:  45
+Processing at bat finished...
+Andy Pages flies out to right fielder Fernando Tatis Jr.
+

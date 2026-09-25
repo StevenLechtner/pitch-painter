@@ -13,7 +13,6 @@ class Situation():
         self.pitchCount = 0
         self.baserunners = {1: False, 2: False, 3: False}
         self.baserunnersAtStartOfAtBat = {1: False, 2: False, 3: False}
-        self.gameOver = False
         self.playEventId = -1
 
     def startNewGame(self, home: str, away: str, pitcher: str = None):
@@ -32,7 +31,6 @@ class Situation():
         self.pitchCount = 0
         self.baserunners = {1: False, 2: False, 3: False}
         self.baserunnersById = {1: -1, 2: -1, 3: -1}
-        self.gameOver = False
 
     def setHomeTeam(self, team: str):
         self.homeTeam = team
@@ -311,4 +309,4 @@ class Situation():
     #     self.baserunners = basesOccupied
 
     def __str__(self):
-        return f"Home Team: {self.homeTeam}\nAway Team: {self.awayTeam}\nHome Score: {self.homeScore}\nAway Score: {self.awayScore}\nInning: {self.inning}\nTop: {self.top}\nBalls: {self.balls}\nStrikes: {self.strikes}\nOuts: {self.outs}\nPitcher: {self.pitcher}\nPitch Count: {self.pitchCount}\nBaserunners: {self.baserunners}\nGame Over: {self.gameOver}"
+        return f"Home Team: {self.homeTeam}\nAway Team: {self.awayTeam}\nHome Score: {self.homeScore}\nAway Score: {self.awayScore}\nInning: {self.inning}\nTop: {self.top}\nBalls: {self.balls}\nStrikes: {self.strikes}\nOuts: {self.outs}\nPitcher: {self.pitcher}\nPitch Count: {self.pitchCount}\nBaserunners: {self.baserunners}"

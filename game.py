@@ -31,6 +31,7 @@ class Game():
         self.gameStatus = Status.UNKNOWN
         self.detailedState = ""
         self.pitchCountDict = {}
+        self.gameOver = False
     """
         if game.game is None:
             output.emit("Game is None")
@@ -149,7 +150,7 @@ class Game():
     def setLastPitch(self, situation: Situation):
         self.lastPitch = copy.copy(situation)
 
-    def processAtBatFinished(self, atBatToProcess):
+    def processAtBatFinished(self, atBatToProcess, output=None):
         vprint("Processing at bat finished...")
         self.situation.setAwayScore(atBatToProcess.get("result", {}).get("awayScore", -1))
         self.situation.setHomeScore(atBatToProcess.get("result", {}).get("homeScore", -1))
@@ -162,16 +163,21 @@ class Game():
             if self.situation.outs >= 3:
                 if self.situation.top:
                     if self.situation.homeScore > self.situation.awayScore:
-                        self.situation.gameOver = True
+                        self.gameOver = True
                 else:
                     if self.situation.homeScore != self.situation.awayScore:
-                        self.situation.gameOver = True
+                        self.gameOver = True
             else:
                 if not self.situation.top and self.situation.homeScore > self.situation.awayScore:
-                    self.situation.gameOver = True
+                    self.gameOver = True
         # Half inning is over but game is not done yet - set outs to 0
-        if not self.situation.gameOver and self.situation.outs == 3:
+        if not self.gameOver and self.situation.outs == 3:
             self.situation.setOuts(0)
+            if output:
+                if self.situation.top:
+                    output.emit(f"Mid {ordinal(self.situation.inning)}.")
+                else:
+                    output.emit(f"End {ordinal(self.situation.inning)}.")
 
         # Post last pitch of at bat to threads if it's a big play
         if cli.threading:
@@ -223,3 +229,10 @@ class Game():
 
     def __str__(self):
         return f"{self.game}\ngamePK: {self.gamePk}\nsituation: {self.situation}"
+
+def ordinal(n: int):
+    if 11 <= (n % 100) <= 13:
+        suffix = 'th'
+    else:
+        suffix = ['th', 'st', 'nd', 'rd', 'th'][min(n % 10, 4)]
+    return str(n) + suffix

@@ -80,6 +80,7 @@ def processPlayEvent(playEvent, situation, atBatToProcess, game, output):
 
     if playEvent.get("isPitch", False):
         output.emit(drawPitch(situation))
+    output.emit(playEvent.get("details", {}).get("description", ""))
 
         # TODO: implement this as another flag - printing every pitch in the game (remove big play stuff...)
         # playId = playEvent.get("playId", -1)
@@ -165,6 +166,7 @@ def processAtBat(game, atBatIndexToProcess, output, gamePk, stop_event):
     latestPlayEventIndex = -1
     currentPlayEventToProcess = 0
     playEvents = atBatToProcess.get("playEvents", [])
+    output.emit(f"{atBatToProcess["matchup"]["batter"]["fullName"]} now batting.")
 
     # First process all pitches from currentPlay
     for playEvent in playEvents:
@@ -196,7 +198,8 @@ def processAtBat(game, atBatIndexToProcess, output, gamePk, stop_event):
                 playEvents = atBatToProcess.get("playEvents", [])
                 latestPlayEventIndex = playEvents[-1].get("index", -1) if playEvents else -1
 
-    game.processAtBatFinished(atBatToProcess)
+    output.emit(atBatToProcess.get("result", {}).get("description", ""))
+    game.processAtBatFinished(atBatToProcess, output)
 
 def printAllPitchesFromLiveGame(gamePk, output, stop_event):
     while not stop_event.is_set():
@@ -209,7 +212,7 @@ def printAllPitchesFromLiveGame(gamePk, output, stop_event):
             return
 
         atBatIndexToProcess = 0
-        while not game.situation.gameOver and not stop_event.is_set():
+        while not game.gameOver and not stop_event.is_set():
             if game.atBats:
                 latestAtBatIndex = game.atBats[-1].get("atBatIndex", -1)
             else:

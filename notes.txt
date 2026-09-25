@@ -8,10 +8,11 @@ Have the image url be valid every time so /threads and /threads_publish always w
 Extra innings centered error in drawing the pitch
 Do api call either more frequently or way less frequently
 Abs challenge ending the inning and then getting overturned
+    This also broke with at bat ending and then being overturned (I saw HBP be overturned live and fuck shit up)
+        hbp_munch_overturned_fail - the hbp was overturned, but I processed at bat finished on HBP, resulting in the rest of the at bat no being processed properly, and a "runner on first" when that actually wasn't the case
 
 Additional features:
 Make thread_poster a thread of its own (this time an actual multithreading thread)
-Add updated score text to the threads post
 Live game that updates pitch by pitch with descriptions of each pitch and at bat
     along with additional info like mid 5th after the top ends, for example
     Pitch info - type, speed, break, etc.
@@ -81,6 +82,11 @@ date: Thu, 10 Sep 2026 04:20:37 GMT
 x-fb-connection-quality: EXCELLENT; q=0.9, rtt=17, rtx=0, c=15, mss=1380, tbw=3665, tp=-1, tpl=-1, uplat=1114, ullat=0
 alt-svc: h3=":443"; ma=86400
 {"access_token":"THAANWViZC2T1NBYmJwQi1pTEg5NXE3ZA3ZAHOFhNMm5oekNONTRZAVm9OVEJoSlhDcjN5MmN5b2NodXRsdndCU25GNjBpZADFlLWQ4UC1rTk01ZAlFaQ1JhS2NkaWRNNUVTcmxYbWJuZAkRjY0Q2a3hPWEFzT0tZAMTZAWZA2JybEFSZAUVmSkdRUQZDZD","token_type":"bearer","expires_in":5183726}
+
+Get Threads API access token expiration time:
+curl -X GET "https://graph.threads.com/v1.0/debug_token?input_token=THAANWViZC2T1NBYmJwQi1pTEg5NXE3ZA3ZAHOFhNMm5oekNONTRZAVm9OVEJoSlhDcjN5MmN5b2NodXRsdndCU25GNjBpZADFlLWQ4UC1rTk01ZAlFaQ1JhS2NkaWRNNUVTcmxYbWJuZAkRjY0Q2a3hPWEFzT0tZAMTZAWZA2JybEFSZAUVmSkdRUQZDZD&access_token=THAANWViZC2T1NBYmJwQi1pTEg5NXE3ZA3ZAHOFhNMm5oekNONTRZAVm9OVEJoSlhDcjN5MmN5b2NodXRsdndCU25GNjBpZADFlLWQ4UC1rTk01ZAlFaQ1JhS2NkaWRNNUVTcmxYbWJuZAkRjY0Q2a3hPWEFzT0tZAMTZAWZA2JybEFSZAUVmSkdRUQZDZD"
+{"data":{"is_valid":true,"scopes":["threads_basic","threads_content_publish","threads_manage_replies","threads_manage_insights","threads_read_replies","threads_manage_mentions","threads_keyword_search","threads_delete","threads_location_tagging","threads_profile_discovery","threads_share_to_instagram"],"type":"USER","application":"Pitch Painter","data_access_expires_at":1796877428,"expires_at":1794285428,"issued_at":1789101428,"user_id":"28665889336435626"}}
+date -u -r 1794285428 to get human readable time (remove -u for local time)
 
 Dropbox refresh access token getter:
 curl https://api.dropbox.com/oauth2/token -d code=egJV_cQ2QZwAAAAAAAAAiTaLeyqb4gz7IWDamuDqOV4 -d grant_type=authorization_code -u c240comt7wz8sqo:uumup20acpe76wy
@@ -464,3 +470,9 @@ ANOTHER WAY (Maybe use both to confirm...):
 
 dropbox api for python:
 https://dropbox-sdk-python.readthedocs.io/en/latest/index.html
+
+
+
+
+
+https://graph.threads.com/v1.0/17936083089369828?fields=id,media_product_type,media_type,media_url,permalink,owner,username,text,topic_tag,timestamp,shortcode,thumbnail_url,children,is_quote_post&access_token=THAANWViZC2T1NBYmJwQi1pTEg5NXE3ZA3ZAHOFhNMm5oekNONTRZAVm9OVEJoSlhDcjN5MmN5b2NodXRsdndCU25GNjBpZADFlLWQ4UC1rTk01ZAlFaQ1JhS2NkaWRNNUVTcmxYbWJuZAkRjY0Q2a3hPWEFzT0tZAMTZAWZA2JybEFSZAUVmSkdRUQZDZD 

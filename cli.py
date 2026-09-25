@@ -3,6 +3,7 @@ import print_util
 import sys
 
 threading = False
+postingMode = "catch-up"
 
 def usage():
     print(f"Usage: python {sys.argv[0]} [options] arguments")
@@ -10,11 +11,11 @@ def usage():
     print("  -h, --help          Show this help message and exit")
     print("  -v, --verbose       Enable verbose mode")
     print("  -d, --debug         Enable debug logs")
-    print("  -t, --thread        Posting threads to meta threads")
+    print("  -t, --threading     Posting threads to meta threads")
 
 def getOptions(args):
-    options = "hvdto:"
-    long_options = ["help", "verbose", "debug", "thread", "output="]
+    options = "hvdt::o:"
+    long_options = ["help", "verbose", "debug", "threading=?", "output="]
     try:
         arguments, values = getopt.getopt(args, options, long_options)
         for currentArg, currentVal in arguments:
@@ -26,8 +27,20 @@ def getOptions(args):
                 print_util.setVerbose(True)
             elif currentArg in ("-d", "--debug"):
                 print_util.setDebug(True)
-            elif currentArg in ("-t", "--thread"):
-                global threading
+            elif currentArg in ("-t", "--threading"):
+                global threading, postingMode
+                # TODO: use this in game.py
+                if currentVal:
+                    match currentVal:
+                        case "catch-up":
+                            pass
+                        case "live-only":
+                            pass
+                        case _:
+                            usage()
+                            sys.exit(2)
+                    postingMode = currentVal
+                print(postingMode)
                 threading = True
             elif currentArg in ("-o", "--output"):
                 print("Output mode:", currentVal)

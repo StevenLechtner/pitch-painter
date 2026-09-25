@@ -141,9 +141,10 @@ def processPlayEvent(playEvent, situation, atBatToProcess, game, output):
 
     # Incrememnt pitch count for current pitcher
     if playEvent.get("isPitch", False):
-        pitchCount = situation.pitchCount.get(situation.pitcher, 0)
+        pitchCount = game.pitchCountDict.get(situation.pitcher, 0)
         pitchCount += 1
-        situation.pitchCount[situation.pitcher] = pitchCount
+        game.pitchCountDict[situation.pitcher] = pitchCount
+        situation.setPitchCount(pitchCount)
     # ANOTHER WAY - issue with this is that the pitch count only works if this pitch to process is the latest pitch (live):
     # ["liveData"]["plays"]["currentPlay"]["matchup"]["pitcher"]["id"]
     # ["liveData"]["boxscore"]["teams"]["away"]["players"]["ID676282"]["person"]["id"]
@@ -201,7 +202,7 @@ def printAllPitchesFromLiveGame(gamePk, output, stop_event):
     while not stop_event.is_set():
         game = Game()
         game.getGameByGamePk(gamePk)
-        # game.getGameByFilePath("tests/steal_second_third_and_home.json") # Uncomment to test from a json file instead of the server
+        # game.getGameByFilePath("tests/meadows.json") # Uncomment to test from a json file instead of the server
         game.setStatus()
         if not game.isValid() or game.gameStatus == Status.PREVIEW:
             output.emit(game.gameInfo)

@@ -52,7 +52,7 @@ def drawPitchForTweeting(situation: Situation):
         pitcher = pitcher.split(" ")[1][:18]
     while len(pitcher) < 18:
         pitcher += " "
-    pitchCount = str(situation.pitchCount.get(situation.pitcher, 0))[:4]
+    pitchCount = str(situation.pitchCount)[:4]
     while (len(pitchCount) < 4):
         pitchCount += " "
     pitcherRow = f"| {pitcher}        P: {pitchCount}       |"
@@ -153,7 +153,7 @@ def drawPitch(situation: Situation):
         pitcher = pitcher.split(" ")[1][:18]
     while len(pitcher) < 18:
         pitcher += " "
-    pitchCount = str(situation.pitchCount.get(situation.pitcher, 0))[:4]
+    pitchCount = str(situation.pitchCount)[:4]
     while (len(pitchCount) < 4):
         pitchCount += " "
     pitcherRow = f"|{pitcher} P:{pitchCount}|"
@@ -259,9 +259,10 @@ def printAllPitchesFromGame(game):
                     situation.setBaserunnersDuringAtBat(currentPlay, playEvent.get("index", -1))
 
                 # Incrememnt pitch count for current pitcher
-                pitchCount = situation.pitchCount.get(situation.pitcher, 0)
+                pitchCount = game.pitchCountDict.get(situation.pitcher, 0)
                 pitchCount += 1
-                situation.pitchCount[situation.pitcher] = pitchCount
+                game.pitchCountDict[situation.pitcher] = pitchCount
+                situation.setPitchCount(pitchCount)
 
                 print(f"{drawPitch(situation)}\n")
                 gamePk = game.get("gameData", {}).get("game", {}).get("pk", -1)
@@ -346,9 +347,10 @@ def listAllPitchesFromGame(game):
                     situation.setOuts(playEvent["count"]["outs"])
 
                 # Incrememnt pitch count for current pitcher
-                pitchCount = situation.pitchCount.get(situation.pitcher, 0)
+                pitchCount = game.pitchCountDict.get(situation.pitcher, 0)
                 pitchCount += 1
-                situation.pitchCount[situation.pitcher] = pitchCount
+                game.pitchCountDict[situation.pitcher] = pitchCount
+                situation.setPitchCount(pitchCount)
 
                 out.append(drawPitch(situation))
                 i += 1
@@ -425,9 +427,10 @@ def printLiveGame(game):
                         print(f"{playEvent["details"]["description"]} {situation.balls}.")
 
                 # Incrememnt pitch count for current pitcher
-                pitchCount = situation.pitchCount.get(situation.pitcher, 0)
+                pitchCount = game.pitchCountDict.get(situation.pitcher, 0)
                 pitchCount += 1
-                situation.pitchCount[situation.pitcher] = pitchCount
+                game.pitchCountDict[situation.pitcher] = pitchCount
+                situation.setPitchCount(pitchCount)
 
                 print(f"{drawPitch(situation)}\n")
 

@@ -10,7 +10,7 @@ class Situation():
         self.strikes = -1
         self.outs = -1
         self.pitcher = ""
-        self.pitchCount = {}
+        self.pitchCount = 0
         self.baserunners = {1: False, 2: False, 3: False}
         self.baserunnersAtStartOfAtBat = {1: False, 2: False, 3: False}
         self.gameOver = False
@@ -29,7 +29,7 @@ class Situation():
         self.pitcher = ""
         if pitcher is not None:
             self.pitcher = pitcher
-        self.pitchCount = {}
+        self.pitchCount = 0
         self.baserunners = {1: False, 2: False, 3: False}
         self.baserunnersById = {1: -1, 2: -1, 3: -1}
         self.gameOver = False

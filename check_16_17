@@ -1,0 +1,2718 @@
+(pitch_painter) [steven] ~/Desktop/Projects/pitch_painter $ python application.py -d -v -t
+Game status: Status.LIVE (I)
+atBatIndexToProcess 0
+latestAtBatIndex 14
+New at bat. Index:  0
+Now batting: Walker Jenkins
+Is current play complete?  True
+Current playEvents[-1] index 5
+Current playEvent index 0
+Is current play complete?  True
+Current playEvents[-1] index 5
+Current playEvent index 1
+Is current play complete?  True
+Current playEvents[-1] index 5
+Current playEvent index 2
+Is current play complete?  True
+Current playEvents[-1] index 5
+Current playEvent index 3
++─────────────────────────+
+|MIN 0         ◇     ▲    |
+|SF  0        ◇ ◇    1    |
+|            ○ ○ ○  0-0   |
+|─────────────────────────|
+|Blade Tidwell      P:0   |
++─────────────────────────+
++─────────────────────────+
+|MIN 0         ◇     ▲    |
+|SF  0        ◇ ◇    1    |
+|            ○ ○ ○  0-1   |
+|─────────────────────────|
+|Blade Tidwell      P:1   |
++─────────────────────────+
+Is current play complete?  True
+Current playEvents[-1] index 5
+Current playEvent index 4
+Is current play complete?  True
+Current playEvents[-1] index 5
+Current playEvent index 5
+Processing at bat finished...
++─────────────────────────+
+|MIN 0         ◇     ▲    |
+|SF  0        ◇ ◇    1    |
+|            ○ ○ ○  1-1   |
+|─────────────────────────|
+|Blade Tidwell      P:2   |
++─────────────────────────+
+At Bat score 0.06160000000000008/0.375
+probsAddedVal: 2.200000000000003
+levIdxVal: 0.0
+dramaIdxVal: 0.0
+win prob complete? True
+win prob atBatIndex: 0
+At bat processed!
+Walker Jenkins flies out to right fielder Bo Davidson.
+atBatIndexToProcess 1
+latestAtBatIndex 14
+New at bat. Index:  1
+Now batting: Luke Keaschall
+Is current play complete?  True
+Current playEvents[-1] index 0
+Current playEvent index 0
+Processing at bat finished...
++─────────────────────────+
+|MIN 0         ◇     ▲    |
+|SF  0        ◇ ◇    1    |
+|            ● ○ ○  0-0   |
+|─────────────────────────|
+|Blade Tidwell      P:3   |
++─────────────────────────+
+At Bat score 0.11360000000000003/0.375
+probsAddedVal: 1.6000000000000014
+levIdxVal: 0.63
+dramaIdxVal: 31.0
+win prob complete? True
+win prob atBatIndex: 1
+At bat processed!
+Luke Keaschall flies out to right fielder Bo Davidson.
+atBatIndexToProcess 2
+latestAtBatIndex 14
+New at bat. Index:  2
+Now batting: Brooks Lee
+Is current play complete?  True
+Current playEvents[-1] index 0
+Current playEvent index 0
+Processing at bat finished...
++─────────────────────────+
+|MIN 0         ◇     ▲    |
+|SF  0        ◇ ◇    1    |
+|            ● ● ○  0-0   |
+|─────────────────────────|
+|Blade Tidwell      P:4   |
++─────────────────────────+
+At Bat score 0.073/0.375
+probsAddedVal: 1.0
+levIdxVal: 0.4
+dramaIdxVal: 21.0
+win prob complete? True
+win prob atBatIndex: 2
+At bat processed!
+Brooks Lee grounds out, second baseman Jonah Cox to first baseman Brett Harris.
+atBatIndexToProcess 3
+latestAtBatIndex 14
+New at bat. Index:  3
+Now batting: Drew Gilbert
+Is current play complete?  True
+Current playEvents[-1] index 5
+Current playEvent index 0
+Is current play complete?  True
+Current playEvents[-1] index 5
+Current playEvent index 1
+Is current play complete?  True
+Current playEvents[-1] index 5
+Current playEvent index 2
+Is current play complete?  True
++─────────────────────────+
+|MIN 0         ◇     1    |
+|SF  0        ◇ ◇    ▼    |
+|            ○ ○ ○  0-0   |
+|─────────────────────────|
+|Zebby Matthews     P:0   |
++─────────────────────────+
+Current playEvents[-1] index 5
+Current playEvent index 3
++─────────────────────────+
+|MIN 0         ◇     1    |
+|SF  0        ◇ ◇    ▼    |
+|            ○ ○ ○  0-1   |
+|─────────────────────────|
+|Zebby Matthews     P:1   |
++─────────────────────────+
+Is current play complete?  True
+Current playEvents[-1] index 5
+Current playEvent index 4
++─────────────────────────+
+|MIN 0         ◇     1    |
+|SF  0        ◇ ◇    ▼    |
+|            ○ ○ ○  0-2   |
+|─────────────────────────|
+|Zebby Matthews     P:2   |
++─────────────────────────+
+Is current play complete?  True
+Current playEvents[-1] index 5
+Current playEvent index 5
+Processing at bat finished...
++─────────────────────────+
+|MIN 0         ◇     1    |
+|SF  0        ◇ ◇    ▼    |
+|            ○ ○ ○  1-2   |
+|─────────────────────────|
+|Zebby Matthews     P:3   |
++─────────────────────────+
++─────────────────────────+
+|MIN 0         ◇     1    |
+|SF  0        ◇ ◇    ▼    |
+|            ○ ○ ○  2-2   |
+|─────────────────────────|
+|Zebby Matthews     P:4   |
++─────────────────────────+
+At Bat score 0.19759999999999978/0.375
+probsAddedVal: 3.499999999999993
+levIdxVal: 0.86
+dramaIdxVal: 48.0
+win prob complete? True
+win prob atBatIndex: 3
+At bat processed!
+Drew Gilbert singles on a ground ball to third baseman Brooks Lee.
+atBatIndexToProcess 4
+latestAtBatIndex 14
+New at bat. Index:  4
+Now batting: Jonah Cox
+Is current play complete?  True
++─────────────────────────+
+|MIN 0         ◇     1    |
+|SF  0        ◇ ◆    ▼    |
+|            ○ ○ ○  0-0   |
+|─────────────────────────|
+|Zebby Matthews     P:5   |
++─────────────────────────+
+Current playEvents[-1] index 2
+Current playEvent index 0
+Is current play complete?  True
+Current playEvents[-1] index 2
+Current playEvent index 1
+Is current play complete?  True
+Current playEvents[-1] index 2
+Current playEvent index 2
+Processing at bat finished...
++─────────────────────────+
+|MIN 0         ◇     1    |
+|SF  0        ◇ ◆    ▼    |
+|            ○ ○ ○  0-1   |
+|─────────────────────────|
+|Zebby Matthews     P:6   |
++─────────────────────────+
++─────────────────────────+
+|MIN 0         ◇     1    |
+|SF  0        ◇ ◆    ▼    |
+|            ○ ○ ○  0-2   |
+|─────────────────────────|
+|Zebby Matthews     P:7   |
++─────────────────────────+
+At Bat score 0.23699999999999988/0.375
+probsAddedVal: 3.1999999999999957
+levIdxVal: 1.44
+dramaIdxVal: 61.0
+win prob complete? True
+win prob atBatIndex: 4
+At bat processed!
+Jonah Cox strikes out swinging.
+atBatIndexToProcess 5
+latestAtBatIndex 14
+New at bat. Index:  5
+Now batting: Bo Davidson
+Is current play complete?  True
+Current playEvents[-1] index 9
+Current playEvent index 0
+Is current play complete?  True
+Current playEvents[-1] index 9
+Current playEvent index 1
+Is current play complete?  True
+Current playEvents[-1] index 9
+Current playEvent index 2
+Is current play complete?  True
+Current playEvents[-1] index 9
++─────────────────────────+
+|MIN 0         ◇     1    |
+|SF  0        ◇ ◆    ▼    |
+|            ● ○ ○  0-0   |
+|─────────────────────────|
+|Zebby Matthews     P:8   |
++─────────────────────────+
+Current playEvent index 3
++─────────────────────────+
+|MIN 0         ◇     1    |
+|SF  0        ◇ ◆    ▼    |
+|            ● ○ ○  0-1   |
+|─────────────────────────|
+|Zebby Matthews     P:9   |
++─────────────────────────+
+Is current play complete?  True
+Current playEvents[-1] index 9
+Current playEvent index 4
++─────────────────────────+
+|MIN 0         ◇     1    |
+|SF  0        ◇ ◆    ▼    |
+|            ● ○ ○  0-2   |
+|─────────────────────────|
+|Zebby Matthews     P:10  |
++─────────────────────────+
+Is current play complete?  True
+Current playEvents[-1] index 9
+Current playEvent index 5
+Is current play complete?  True
+Current playEvents[-1] index 9
+Current playEvent index 6
+Is current play complete?  True
+Current playEvents[-1] index 9
+Current playEvent index 7
+Is current play complete?  True
+Current playEvents[-1] index 9
+Current playEvent index 8
+Is current play complete?  True
+Current playEvents[-1] index 9
+Current playEvent index 9
+Processing at bat finished...
++─────────────────────────+
+|MIN 0         ◇     1    |
+|SF  0        ◇ ◆    ▼    |
+|            ● ○ ○  1-2   |
+|─────────────────────────|
+|Zebby Matthews     P:11  |
++─────────────────────────+
++─────────────────────────+
+|MIN 0         ◇     1    |
+|SF  0        ◇ ◆    ▼    |
+|            ● ○ ○  2-2   |
+|─────────────────────────|
+|Zebby Matthews     P:12  |
++─────────────────────────+
++─────────────────────────+
+|MIN 0         ◇     1    |
+|SF  0        ◇ ◆    ▼    |
+|            ● ○ ○  2-2   |
+|─────────────────────────|
+|Zebby Matthews     P:13  |
++─────────────────────────+
++─────────────────────────+
+|MIN 0         ◇     1    |
+|SF  0        ◇ ◆    ▼    |
+|            ● ○ ○  3-2   |
+|─────────────────────────|
+|Zebby Matthews     P:14  |
++─────────────────────────+
++─────────────────────────+
+|MIN 0         ◇     1    |
+|SF  0        ◇ ◆    ▼    |
+|            ● ○ ○  3-2   |
+|─────────────────────────|
+|Zebby Matthews     P:15  |
++─────────────────────────+
++─────────────────────────+
+|MIN 0         ◇     1    |
+|SF  0        ◇ ◆    ▼    |
+|            ● ○ ○  3-2   |
+|─────────────────────────|
+|Zebby Matthews     P:16  |
++─────────────────────────+
+At Bat score 0.3185999999999999/0.375
+probsAddedVal: 6.199999999999996
+levIdxVal: 1.2
+dramaIdxVal: 73.0
+win prob complete? True
+win prob atBatIndex: 5
+At bat processed!
+Bo Davidson singles on a sharp line drive to right fielder Luke Keaschall. Drew Gilbert to 3rd.
+atBatIndexToProcess 6
+latestAtBatIndex 14
+New at bat. Index:  6
+Now batting: Marcelo Mayer
+Is current play complete?  True
+Current playEvents[-1] index 6
+Current playEvent index 0
+Is current play complete?  True
+Current playEvents[-1] index 6
+Current playEvent index 1
++─────────────────────────+
+|MIN 0         ◇     1    |
+|SF  0        ◆ ◆    ▼    |
+|            ● ○ ○  0-0   |
+|─────────────────────────|
+|Zebby Matthews     P:17  |
++─────────────────────────+
+Is current play complete?  True
+Current playEvents[-1] index 6
+Current playEvent index 2
++─────────────────────────+
+|MIN 0         ◇     1    |
+|SF  0        ◆ ◆    ▼    |
+|            ● ○ ○  1-0   |
+|─────────────────────────|
+|Zebby Matthews     P:18  |
++─────────────────────────+
+Is current play complete?  True
+Current playEvents[-1] index 6
+Current playEvent index 3
+Is current play complete?  True
+Current playEvents[-1] index 6
+Current playEvent index 4
+Is current play complete?  True
+Current playEvents[-1] index 6
+Current playEvent index 5
+Is current play complete?  True
+Current playEvents[-1] index 6
+Current playEvent index 6
+Processing at bat finished...
++─────────────────────────+
+|MIN 0         ◇     1    |
+|SF  0        ◆ ◆    ▼    |
+|            ● ○ ○  1-1   |
+|─────────────────────────|
+|Zebby Matthews     P:19  |
++─────────────────────────+
++─────────────────────────+
+|MIN 0         ◇     1    |
+|SF  0        ◆ ◆    ▼    |
+|            ● ○ ○  2-1   |
+|─────────────────────────|
+|Zebby Matthews     P:20  |
++─────────────────────────+
++─────────────────────────+
+|MIN 0         ◇     1    |
+|SF  0        ◆ ◆    ▼    |
+|            ● ○ ○  2-2   |
+|─────────────────────────|
+|Zebby Matthews     P:21  |
++─────────────────────────+
++─────────────────────────+
+|MIN 0         ◇     1    |
+|SF  0        ◆ ◆    ▼    |
+|            ● ○ ○  3-2   |
+|─────────────────────────|
+|Zebby Matthews     P:22  |
++─────────────────────────+
+At Bat score 0.35479999999999967/0.375
+probsAddedVal: 5.699999999999989
+levIdxVal: 1.82
+dramaIdxVal: 86.0
+win prob complete? True
+win prob atBatIndex: 6
+At bat processed!
+Marcelo Mayer called out on strikes. Bo Davidson steals (1) 2nd base.
+atBatIndexToProcess 7
+latestAtBatIndex 14
+New at bat. Index:  7
+Now batting: Brett Harris
+Is current play complete?  True
+Current playEvents[-1] index 5
+Current playEvent index 0
++─────────────────────────+
+|MIN 0         ◆     1    |
+|SF  0        ◆ ◇    ▼    |
+|            ● ● ○  0-0   |
+|─────────────────────────|
+|Zebby Matthews     P:23  |
++─────────────────────────+
+Is current play complete?  True
+Current playEvents[-1] index 5
+Current playEvent index 1
++─────────────────────────+
+|MIN 0         ◆     1    |
+|SF  0        ◆ ◇    ▼    |
+|            ● ● ○  0-1   |
+|─────────────────────────|
+|Zebby Matthews     P:24  |
++─────────────────────────+
+Is current play complete?  True
+Current playEvents[-1] index 5
+Current playEvent index 2
+Is current play complete?  True
+Current playEvents[-1] index 5
+Current playEvent index 3
+Is current play complete?  True
+Current playEvents[-1] index 5
+Current playEvent index 4
+Is current play complete?  True
+Current playEvents[-1] index 5
+Current playEvent index 5
+Processing at bat finished...
++─────────────────────────+
+|MIN 0         ◆     1    |
+|SF  0        ◆ ◇    ▼    |
+|            ● ● ○  1-1   |
+|─────────────────────────|
+|Zebby Matthews     P:25  |
++─────────────────────────+
++─────────────────────────+
+|MIN 0         ◆     1    |
+|SF  0        ◆ ◇    ▼    |
+|            ● ● ○  2-1   |
+|─────────────────────────|
+|Zebby Matthews     P:26  |
++─────────────────────────+
++─────────────────────────+
+|MIN 0         ◆     1    |
+|SF  0        ◆ ◇    ▼    |
+|            ● ● ○  3-1   |
+|─────────────────────────|
+|Zebby Matthews     P:27  |
++─────────────────────────+
++─────────────────────────+
+|MIN 0         ◆     1    |
+|SF  0        ◆ ◇    ▼    |
+|            ● ● ○  3-2   |
+|─────────────────────────|
+|Zebby Matthews     P:28  |
++─────────────────────────+
+At Bat score 0.7171999999999995/0.375
+probsAddedVal: 15.799999999999983
+levIdxVal: 2.03
+dramaIdxVal: 153.0
+win prob complete? True
+win prob atBatIndex: 7
+Direct image URL: https://dl.dropboxusercontent.com/scl/fi/4fe7huwoiuw96o1c3ij71/play_id_de181868-5cba-3c96-b025-f6dcb552cbcd_created_2026-09-21_22-16-37.842.png?rlkey=i95xt3tzd5c93ocjx0t1hlig5&dl=0
+Checking url status...
+URL Check Response: 
+	Status code: 200
+	Content-Type: image/png
+	URL: https://dl.dropboxusercontent.com/scl/fi/4fe7huwoiuw96o1c3ij71/play_id_de181868-5cba-3c96-b025-f6dcb552cbcd_created_2026-09-21_22-16-37.842.png?rlkey=i95xt3tzd5c93ocjx0t1hlig5&dl=0
+POST endpoint /threads with image url https://dl.dropboxusercontent.com/scl/fi/4fe7huwoiuw96o1c3ij71/play_id_de181868-5cba-3c96-b025-f6dcb552cbcd_created_2026-09-21_22-16-37.842.png?rlkey=i95xt3tzd5c93ocjx0t1hlig5&dl=0...
+Thread drafted successfully! (id=18112858291915017)
+POST endpoint /threads_publish with creation id 18112858291915017...
+Thread posted successfully! (id=17970167598171009)
+At bat processed!
+Brett Harris singles on a ground ball to center fielder Walker Jenkins. Drew Gilbert scores. Bo Davidson scores.
+atBatIndexToProcess 8
+latestAtBatIndex 14
+New at bat. Index:  8
+Now batting: Drew Cavanaugh
+Is current play complete?  True
+Current playEvents[-1] index 2
+Current playEvent index 0
+Is current play complete?  True
+Current playEvents[-1] index 2
+Current playEvent index 1
+Is current play complete?  True
+Current playEvents[-1] index 2
+Current playEvent index 2
+Processing at bat finished...
++─────────────────────────+
+|MIN 0         ◇     1    |
+|SF  2        ◇ ◆    ▼    |
+|            ● ● ○  0-0   |
+|─────────────────────────|
+|Zebby Matthews     P:29  |
++─────────────────────────+
++─────────────────────────+
+|MIN 0         ◇     1    |
+|SF  2        ◇ ◆    ▼    |
+|            ● ● ○  1-0   |
+|─────────────────────────|
+|Zebby Matthews     P:30  |
++─────────────────────────+
+At Bat score 0.11419999999999983/0.375
+probsAddedVal: 1.5999999999999943
+levIdxVal: 0.64
+dramaIdxVal: 31.0
+win prob complete? True
+win prob atBatIndex: 8
+At bat processed!
+Drew Cavanaugh grounds out, second baseman Kody Clemens to first baseman Aaron Sabato.
+atBatIndexToProcess 9
+latestAtBatIndex 14
+New at bat. Index:  9
+Now batting: Kody Clemens
+Is current play complete?  True
+Current playEvents[-1] index 2
+Current playEvent index 0
++─────────────────────────+
+|MIN 0         ◇     ▲    |
+|SF  2        ◇ ◇    2    |
+|            ○ ○ ○  0-0   |
+|─────────────────────────|
+|Blade Tidwell      P:5   |
++─────────────────────────+
+Is current play complete?  True
+Current playEvents[-1] index 2
+Current playEvent index 1
++─────────────────────────+
+|MIN 0         ◇     ▲    |
+|SF  2        ◇ ◇    2    |
+|            ○ ○ ○  0-1   |
+|─────────────────────────|
+|Blade Tidwell      P:6   |
++─────────────────────────+
+Is current play complete?  True
+Current playEvents[-1] index 2
+Current playEvent index 2
+Processing at bat finished...
++─────────────────────────+
+|MIN 0         ◇     ▲    |
+|SF  2        ◇ ◇    2    |
+|            ○ ○ ○  1-1   |
+|─────────────────────────|
+|Blade Tidwell      P:7   |
++─────────────────────────+
+At Bat score 0.16099999999999992/0.375
+probsAddedVal: 2.299999999999997
+levIdxVal: 0.91
+dramaIdxVal: 42.0
+win prob complete? True
+win prob atBatIndex: 9
+At bat processed!
+Kody Clemens flies out to left fielder Scott Bandura.
+atBatIndexToProcess 10
+latestAtBatIndex 14
+New at bat. Index:  10
+Now batting: Ryan Jeffers
+Is current play complete?  True
+Current playEvents[-1] index 5
+Current playEvent index 0
+Is current play complete?  True
+Current playEvents[-1] index 5
+Current playEvent index 1
++─────────────────────────+
+|MIN 0         ◇     ▲    |
+|SF  2        ◇ ◇    2    |
+|            ● ○ ○  0-0   |
+|─────────────────────────|
+|Blade Tidwell      P:8   |
++─────────────────────────+
+Is current play complete?  True
+Current playEvents[-1] index 5
+Current playEvent index 2
+Is current play complete?  True
+Current playEvents[-1] index 5
+Current playEvent index 3
++─────────────────────────+
+|MIN 0         ◇     ▲    |
+|SF  2        ◇ ◇    2    |
+|            ● ○ ○  0-1   |
+|─────────────────────────|
+|Blade Tidwell      P:9   |
++─────────────────────────+
+Is current play complete?  True
+Current playEvents[-1] index 5
+Current playEvent index 4
++─────────────────────────+
+|MIN 0         ◇     ▲    |
+|SF  2        ◇ ◇    2    |
+|            ● ○ ○  0-2   |
+|─────────────────────────|
+|Blade Tidwell      P:10  |
++─────────────────────────+
+Is current play complete?  True
+Current playEvents[-1] index 5
+Current playEvent index 5
+Processing at bat finished...
++─────────────────────────+
+|MIN 0         ◇     ▲    |
+|SF  2        ◇ ◇    2    |
+|            ● ○ ○  1-2   |
+|─────────────────────────|
+|Blade Tidwell      P:11  |
++─────────────────────────+
++─────────────────────────+
+|MIN 0         ◇     ▲    |
+|SF  2        ◇ ◇    2    |
+|            ● ○ ○  1-2   |
+|─────────────────────────|
+|Blade Tidwell      P:12  |
++─────────────────────────+
++─────────────────────────+
+|MIN 0         ◇     ▲    |
+|SF  2        ◇ ◇    2    |
+|            ● ○ ○  2-2   |
+|─────────────────────────|
+|Blade Tidwell      P:13  |
++─────────────────────────+
+At Bat score 0.11580000000000024/0.375
+probsAddedVal: 1.6000000000000085
+levIdxVal: 0.65
+dramaIdxVal: 32.0
+win prob complete? True
+win prob atBatIndex: 10
+At bat processed!
+Ryan Jeffers called out on strikes.
+atBatIndexToProcess 11
+latestAtBatIndex 14
+New at bat. Index:  11
+Now batting: Alan Roden
+Is current play complete?  True
+Current playEvents[-1] index 7
+Current playEvent index 0
+Is current play complete?  True
+Current playEvents[-1] index 7
+Current playEvent index 1
++─────────────────────────+
+|MIN 0         ◇     ▲    |
+|SF  2        ◇ ◇    2    |
+|            ● ● ○  0-0   |
+|─────────────────────────|
+|Blade Tidwell      P:14  |
++─────────────────────────+
+Is current play complete?  True
+Current playEvents[-1] index 7
+Current playEvent index 2
++─────────────────────────+
+|MIN 0         ◇     ▲    |
+|SF  2        ◇ ◇    2    |
+|            ● ● ○  1-0   |
+|─────────────────────────|
+|Blade Tidwell      P:15  |
++─────────────────────────+
+Is current play complete?  True
+Current playEvents[-1] index 7
+Current playEvent index 3
++─────────────────────────+
+|MIN 0         ◇     ▲    |
+|SF  2        ◇ ◇    2    |
+|            ● ● ○  2-0   |
+|─────────────────────────|
+|Blade Tidwell      P:16  |
++─────────────────────────+
+Is current play complete?  True
+Current playEvents[-1] index 7
+Current playEvent index 4
+Is current play complete?  True
+Current playEvents[-1] index 7
+Current playEvent index 5
+Is current play complete?  True
+Current playEvents[-1] index 7
+Current playEvent index 6
+Is current play complete?  True
+Current playEvents[-1] index 7
+Current playEvent index 7
+Processing at bat finished...
++─────────────────────────+
+|MIN 0         ◇     ▲    |
+|SF  2        ◇ ◇    2    |
+|            ● ● ○  2-1   |
+|─────────────────────────|
+|Blade Tidwell      P:17  |
++─────────────────────────+
++─────────────────────────+
+|MIN 0         ◇     ▲    |
+|SF  2        ◇ ◇    2    |
+|            ● ● ○  2-2   |
+|─────────────────────────|
+|Blade Tidwell      P:18  |
++─────────────────────────+
++─────────────────────────+
+|MIN 0         ◇     ▲    |
+|SF  2        ◇ ◇    2    |
+|            ● ● ○  2-2   |
+|─────────────────────────|
+|Blade Tidwell      P:19  |
++─────────────────────────+
++─────────────────────────+
+|MIN 0         ◇     ▲    |
+|SF  2        ◇ ◇    2    |
+|            ● ● ○  2-2   |
+|─────────────────────────|
+|Blade Tidwell      P:20  |
++─────────────────────────+
++─────────────────────────+
+|MIN 0         ◇     ▲    |
+|SF  2        ◇ ◇    2    |
+|            ● ● ○  3-2   |
+|─────────────────────────|
+|Blade Tidwell      P:21  |
++─────────────────────────+
+At Bat score 0.08060000000000007/0.375
+probsAddedVal: 1.2000000000000028
+levIdxVal: 0.4
+dramaIdxVal: 23.0
+win prob complete? True
+win prob atBatIndex: 11
+At bat processed!
+Alan Roden singles on a ground ball to right fielder Bo Davidson.
+atBatIndexToProcess 12
+latestAtBatIndex 14
+New at bat. Index:  12
+Now batting: Aaron Sabato
+Is current play complete?  True
+Current playEvents[-1] index 4
+Current playEvent index 0
++─────────────────────────+
+|MIN 0         ◇     ▲    |
+|SF  2        ◇ ◆    2    |
+|            ● ● ○  0-0   |
+|─────────────────────────|
+|Blade Tidwell      P:22  |
++─────────────────────────+
+Is current play complete?  True
+Current playEvents[-1] index 4
+Current playEvent index 1
+Is current play complete?  True
+Current playEvents[-1] index 4
+Current playEvent index 2
+Is current play complete?  True
+Current playEvents[-1] index 4
+Current playEvent index 3
++─────────────────────────+
+|MIN 0         ◇     ▲    |
+|SF  2        ◇ ◆    2    |
+|            ● ● ○  0-1   |
+|─────────────────────────|
+|Blade Tidwell      P:23  |
++─────────────────────────+
+Is current play complete?  True
+Current playEvents[-1] index 4
+Current playEvent index 4
+Processing at bat finished...
++─────────────────────────+
+|MIN 0         ◇     ▲    |
+|SF  2        ◇ ◆    2    |
+|            ● ● ○  0-2   |
+|─────────────────────────|
+|Blade Tidwell      P:24  |
++─────────────────────────+
++─────────────────────────+
+|MIN 0         ◇     ▲    |
+|SF  2        ◇ ◆    2    |
+|            ● ● ○  0-2   |
+|─────────────────────────|
+|Blade Tidwell      P:25  |
++─────────────────────────+
+At Bat score 0.15600000000000008/0.375
+probsAddedVal: 2.200000000000003
+levIdxVal: 0.89
+dramaIdxVal: 41.0
+win prob complete? True
+win prob atBatIndex: 12
+At bat processed!
+Aaron Sabato strikes out swinging.
+atBatIndexToProcess 13
+latestAtBatIndex 14
+New at bat. Index:  13
+Now batting: Osleivis Basabe
+Is current play complete?  True
+Current playEvents[-1] index 3
+Current playEvent index 0
+Is current play complete?  True
+Current playEvents[-1] index 3
+Current playEvent index 1
+Is current play complete?  True
+Current playEvents[-1] index 3
+Current playEvent index 2
+Is current play complete?  True
+Current playEvents[-1] index 3
+Current playEvent index 3
++─────────────────────────+
+|MIN 0         ◇     2    |
+|SF  2        ◇ ◇    ▼    |
+|            ○ ○ ○  0-0   |
+|─────────────────────────|
+|Zebby Matthews     P:31  |
++─────────────────────────+
+Processing at bat finished...
++─────────────────────────+
+|MIN 0         ◇     2    |
+|SF  2        ◇ ◇    ▼    |
+|            ○ ○ ○  1-0   |
+|─────────────────────────|
+|Zebby Matthews     P:32  |
++─────────────────────────+
++─────────────────────────+
+|MIN 0         ◇     2    |
+|SF  2        ◇ ◇    ▼    |
+|            ○ ○ ○  2-0   |
+|─────────────────────────|
+|Zebby Matthews     P:33  |
++─────────────────────────+
++─────────────────────────+
+|MIN 0         ◇     2    |
+|SF  2        ◇ ◇    ▼    |
+|            ○ ○ ○  2-1   |
+|─────────────────────────|
+|Zebby Matthews     P:34  |
++─────────────────────────+
+At Bat score 0.1432/0.375
+probsAddedVal: 2.5
+levIdxVal: 0.62
+dramaIdxVal: 36.0
+win prob complete? True
+win prob atBatIndex: 13
+At bat processed!
+Osleivis Basabe singles on a ground ball to shortstop Ryan Kreidler.
+atBatIndexToProcess 14
+latestAtBatIndex 14
+New at bat. Index:  14
+Now batting: Scott Bandura
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  14
+latestAtBatIndex:  14
+Is current play complete?  False
+Current playEvents[-1] index 1
+Current playEvent index 0
+Is current play complete?  False
+Current playEvents[-1] index 1
+Current playEvent index 1
+Waiting for the next pitch of the at bat...
++─────────────────────────+
+|MIN 0         ◇     2    |
+|SF  2        ◇ ◆    ▼    |
+|            ○ ○ ○  0-0   |
+|─────────────────────────|
+|Zebby Matthews     P:35  |
++─────────────────────────+
++─────────────────────────+
+|MIN 0         ◇     2    |
+|SF  2        ◇ ◆    ▼    |
+|            ○ ○ ○  1-0   |
+|─────────────────────────|
+|Zebby Matthews     P:36  |
++─────────────────────────+
+atBatIndexToProcess:  14
+latestAtBatIndex:  14
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  14
+latestAtBatIndex:  14
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  14
+latestAtBatIndex:  14
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  14
+latestAtBatIndex:  14
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  14
+latestAtBatIndex:  14
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  14
+latestAtBatIndex:  14
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  14
+latestAtBatIndex:  14
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  14
+latestAtBatIndex:  14
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  14
+latestAtBatIndex:  14
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  14
+latestAtBatIndex:  14
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  14
+latestAtBatIndex:  14
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  14
+latestAtBatIndex:  14
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  14
+latestAtBatIndex:  14
+Is current play complete?  False
+Current playEvents[-1] index 2
+Current playEvent index 2
+Waiting for the next pitch of the at bat...
++─────────────────────────+
+|MIN 0         ◇     2    |
+|SF  2        ◇ ◆    ▼    |
+|            ○ ○ ○  1-1   |
+|─────────────────────────|
+|Zebby Matthews     P:37  |
++─────────────────────────+
+atBatIndexToProcess:  14
+latestAtBatIndex:  14
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  14
+latestAtBatIndex:  14
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  14
+latestAtBatIndex:  14
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  14
+latestAtBatIndex:  14
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  14
+latestAtBatIndex:  14
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  14
+latestAtBatIndex:  14
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  14
+latestAtBatIndex:  14
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  14
+latestAtBatIndex:  14
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  14
+latestAtBatIndex:  14
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  14
+latestAtBatIndex:  15
+Is current play complete?  True
+Current playEvents[-1] index 3
+Current playEvent index 3
+Waiting for the next pitch of the at bat...
++─────────────────────────+
+|MIN 0         ◇     2    |
+|SF  2        ◇ ◆    ▼    |
+|            ○ ○ ○  2-1   |
+|─────────────────────────|
+|Zebby Matthews     P:38  |
++─────────────────────────+
+atBatIndexToProcess:  14
+latestAtBatIndex:  15
+Processing at bat finished...
+At Bat score 0.16999999999999993/0.375
+probsAddedVal: 2.299999999999997
+levIdxVal: 1.01
+dramaIdxVal: 45.0
+win prob complete? True
+win prob atBatIndex: 14
+At bat processed!
+Scott Bandura strikes out on a foul tip.
+atBatIndexToProcess 15
+latestAtBatIndex 15
+New at bat. Index:  15
+Now batting: Christian Koss
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  15
+latestAtBatIndex:  15
+Is current play complete?  False
+Current playEvents[-1] index 0
+Current playEvent index 0
+Waiting for the next pitch of the at bat...
++─────────────────────────+
+|MIN 0         ◇     2    |
+|SF  2        ◇ ◆    ▼    |
+|            ● ○ ○  0-0   |
+|─────────────────────────|
+|Zebby Matthews     P:39  |
++─────────────────────────+
+atBatIndexToProcess:  15
+latestAtBatIndex:  15
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  15
+latestAtBatIndex:  15
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  15
+latestAtBatIndex:  15
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  15
+latestAtBatIndex:  15
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  15
+latestAtBatIndex:  15
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  15
+latestAtBatIndex:  15
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  15
+latestAtBatIndex:  15
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  15
+latestAtBatIndex:  15
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  15
+latestAtBatIndex:  15
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  15
+latestAtBatIndex:  15
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  15
+latestAtBatIndex:  15
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  15
+latestAtBatIndex:  15
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  15
+latestAtBatIndex:  15
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  15
+latestAtBatIndex:  15
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  15
+latestAtBatIndex:  15
+Is current play complete?  False
+Current playEvents[-1] index 1
+Current playEvent index 1
++─────────────────────────+
+|MIN 0         ◇     2    |
+|SF  2        ◇ ◆    ▼    |
+|            ● ○ ○  0-1   |
+|─────────────────────────|
+|Zebby Matthews     P:40  |
++─────────────────────────+
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  15
+latestAtBatIndex:  15
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  15
+latestAtBatIndex:  15
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  15
+latestAtBatIndex:  15
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  15
+latestAtBatIndex:  15
+Is current play complete?  False
+Current playEvents[-1] index 2
+Current playEvent index 2
+Waiting for the next pitch of the at bat...
++─────────────────────────+
+|MIN 0         ◇     2    |
+|SF  2        ◇ ◆    ▼    |
+|            ● ○ ○  1-1   |
+|─────────────────────────|
+|Zebby Matthews     P:41  |
++─────────────────────────+
+atBatIndexToProcess:  15
+latestAtBatIndex:  15
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  15
+latestAtBatIndex:  15
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  15
+latestAtBatIndex:  15
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  15
+latestAtBatIndex:  15
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  15
+latestAtBatIndex:  15
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  15
+latestAtBatIndex:  15
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  15
+latestAtBatIndex:  15
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  15
+latestAtBatIndex:  15
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  15
+latestAtBatIndex:  16
+Processing at bat finished...
+At Bat score 0.27980000000000016/0.375
+probsAddedVal: 5.900000000000006
+levIdxVal: 0.86
+dramaIdxVal: 63.0
+win prob complete? True
+win prob atBatIndex: 15
+At bat processed!
+Christian Koss doubles (6) on a sharp line drive to left fielder Emmanuel Rodriguez. Osleivis Basabe to 3rd.
+atBatIndexToProcess 16
+latestAtBatIndex 16
+New at bat. Index:  16
+Now batting: Drew Gilbert
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  16
+latestAtBatIndex:  16
+Is current play complete?  False
+Current playEvents[-1] index 0
+Current playEvent index 0
+Waiting for the next pitch of the at bat...
++─────────────────────────+
+|MIN 0         ◆     2    |
+|SF  2        ◆ ◇    ▼    |
+|            ● ○ ○  0-0   |
+|─────────────────────────|
+|Zebby Matthews     P:42  |
++─────────────────────────+
+atBatIndexToProcess:  16
+latestAtBatIndex:  16
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  16
+latestAtBatIndex:  16
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  16
+latestAtBatIndex:  16
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  16
+latestAtBatIndex:  16
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  16
+latestAtBatIndex:  16
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  16
+latestAtBatIndex:  16
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  16
+latestAtBatIndex:  16
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  16
+latestAtBatIndex:  16
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  16
+latestAtBatIndex:  16
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  16
+latestAtBatIndex:  16
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  16
+latestAtBatIndex:  16
+Is current play complete?  False
+Current playEvents[-1] index 1
+Current playEvent index 1
+Waiting for the next pitch of the at bat...
++─────────────────────────+
+|MIN 0         ◆     2    |
+|SF  2        ◆ ◇    ▼    |
+|            ● ○ ○  0-1   |
+|─────────────────────────|
+|Zebby Matthews     P:43  |
++─────────────────────────+
+atBatIndexToProcess:  16
+latestAtBatIndex:  16
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  16
+latestAtBatIndex:  16
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  16
+latestAtBatIndex:  16
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  16
+latestAtBatIndex:  16
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  16
+latestAtBatIndex:  16
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  16
+latestAtBatIndex:  16
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  16
+latestAtBatIndex:  16
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  16
+latestAtBatIndex:  16
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  16
+latestAtBatIndex:  16
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  16
+latestAtBatIndex:  16
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  16
+latestAtBatIndex:  16
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  16
+latestAtBatIndex:  16
+Is current play complete?  False
+Current playEvents[-1] index 2
+Current playEvent index 2
+Waiting for the next pitch of the at bat...
++─────────────────────────+
+|MIN 0         ◆     2    |
+|SF  2        ◆ ◇    ▼    |
+|            ● ○ ○  1-1   |
+|─────────────────────────|
+|Zebby Matthews     P:44  |
++─────────────────────────+
+atBatIndexToProcess:  16
+latestAtBatIndex:  16
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  16
+latestAtBatIndex:  16
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  16
+latestAtBatIndex:  16
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  16
+latestAtBatIndex:  16
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  16
+latestAtBatIndex:  16
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  16
+latestAtBatIndex:  16
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  16
+latestAtBatIndex:  16
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  16
+latestAtBatIndex:  16
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  16
+latestAtBatIndex:  16
+Is current play complete?  False
+Current playEvents[-1] index 4
+Current playEvent index 3
+Is current play complete?  False
+Current playEvents[-1] index 4
+Current playEvent index 4
+Waiting for the next pitch of the at bat...
++─────────────────────────+
+|MIN 0         ◆     2    |
+|SF  2        ◆ ◇    ▼    |
+|            ● ○ ○  2-1   |
+|─────────────────────────|
+|Zebby Matthews     P:45  |
++─────────────────────────+
+atBatIndexToProcess:  16
+latestAtBatIndex:  16
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  16
+latestAtBatIndex:  16
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  16
+latestAtBatIndex:  16
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  16
+latestAtBatIndex:  16
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  16
+latestAtBatIndex:  16
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  16
+latestAtBatIndex:  16
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  16
+latestAtBatIndex:  16
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  16
+latestAtBatIndex:  16
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  16
+latestAtBatIndex:  16
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  16
+latestAtBatIndex:  16
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  16
+latestAtBatIndex:  16
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  16
+latestAtBatIndex:  16
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  16
+latestAtBatIndex:  16
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  16
+latestAtBatIndex:  16
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  16
+latestAtBatIndex:  16
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  16
+latestAtBatIndex:  16
+Is current play complete?  False
+Current playEvents[-1] index 5
+Current playEvent index 5
+Waiting for the next pitch of the at bat...
++─────────────────────────+
+|MIN 0         ◆     2    |
+|SF  2        ◆ ◇    ▼    |
+|            ● ○ ○  3-1   |
+|─────────────────────────|
+|Zebby Matthews     P:46  |
++─────────────────────────+
+atBatIndexToProcess:  16
+latestAtBatIndex:  16
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  16
+latestAtBatIndex:  16
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  16
+latestAtBatIndex:  16
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  16
+latestAtBatIndex:  16
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  16
+latestAtBatIndex:  16
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  16
+latestAtBatIndex:  16
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  16
+latestAtBatIndex:  16
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  16
+latestAtBatIndex:  16
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  16
+latestAtBatIndex:  16
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  16
+latestAtBatIndex:  16
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  16
+latestAtBatIndex:  16
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  16
+latestAtBatIndex:  16
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  16
+latestAtBatIndex:  16
+Is current play complete?  False
+Current playEvents[-1] index 6
+Current playEvent index 6
+Waiting for the next pitch of the at bat...
++─────────────────────────+
+|MIN 0         ◆     2    |
+|SF  2        ◆ ◇    ▼    |
+|            ● ○ ○  3-2   |
+|─────────────────────────|
+|Zebby Matthews     P:47  |
++─────────────────────────+
+atBatIndexToProcess:  16
+latestAtBatIndex:  16
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  16
+latestAtBatIndex:  16
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  16
+latestAtBatIndex:  16
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  16
+latestAtBatIndex:  16
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  16
+latestAtBatIndex:  16
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  16
+latestAtBatIndex:  16
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  16
+latestAtBatIndex:  16
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  16
+latestAtBatIndex:  16
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  16
+latestAtBatIndex:  16
+Is current play complete?  False
+Current playEvents[-1] index 7
+Current playEvent index 7
+Waiting for the next pitch of the at bat...
++─────────────────────────+
+|MIN 0         ◆     2    |
+|SF  2        ◆ ◇    ▼    |
+|            ● ○ ○  3-2   |
+|─────────────────────────|
+|Zebby Matthews     P:48  |
++─────────────────────────+
+atBatIndexToProcess:  16
+latestAtBatIndex:  16
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  16
+latestAtBatIndex:  16
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  16
+latestAtBatIndex:  16
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  16
+latestAtBatIndex:  16
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  16
+latestAtBatIndex:  17
+Processing at bat finished...
+At Bat score 0.3419999999999996/0.375
+probsAddedVal: 6.999999999999986
+levIdxVal: 1.15
+dramaIdxVal: 77.0
+win prob complete? True
+win prob atBatIndex: 16
+At bat processed!
+Drew Gilbert singles on a line drive to left fielder Emmanuel Rodriguez. Osleivis Basabe scores. Christian Koss scores.
+atBatIndexToProcess 17
+latestAtBatIndex 17
+New at bat. Index:  17
+Now batting: Jonah Cox
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  17
+latestAtBatIndex:  17
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  17
+latestAtBatIndex:  17
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  17
+latestAtBatIndex:  17
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  17
+latestAtBatIndex:  17
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  17
+latestAtBatIndex:  17
+Is current play complete?  False
+Current playEvents[-1] index 0
+Current playEvent index 0
+Waiting for the next pitch of the at bat...
++─────────────────────────+
+|MIN 0         ◇     2    |
+|SF  4        ◇ ◆    ▼    |
+|            ● ○ ○  0-0   |
+|─────────────────────────|
+|Zebby Matthews     P:49  |
++─────────────────────────+
+atBatIndexToProcess:  17
+latestAtBatIndex:  17
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  17
+latestAtBatIndex:  17
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  17
+latestAtBatIndex:  17
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  17
+latestAtBatIndex:  17
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  17
+latestAtBatIndex:  17
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  17
+latestAtBatIndex:  17
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  17
+latestAtBatIndex:  17
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  17
+latestAtBatIndex:  17
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  17
+latestAtBatIndex:  17
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  17
+latestAtBatIndex:  17
+Is current play complete?  False
+Current playEvents[-1] index 1
+Current playEvent index 1
+Waiting for the next pitch of the at bat...
++─────────────────────────+
+|MIN 0         ◇     2    |
+|SF  4        ◇ ◆    ▼    |
+|            ● ○ ○  0-1   |
+|─────────────────────────|
+|Zebby Matthews     P:50  |
++─────────────────────────+
+atBatIndexToProcess:  17
+latestAtBatIndex:  17
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  17
+latestAtBatIndex:  17
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  17
+latestAtBatIndex:  17
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  17
+latestAtBatIndex:  17
+Is current play complete?  False
+Current playEvents[-1] index 2
+Current playEvent index 2
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  17
+latestAtBatIndex:  17
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  17
+latestAtBatIndex:  17
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  17
+latestAtBatIndex:  17
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  17
+latestAtBatIndex:  17
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  17
+latestAtBatIndex:  17
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  17
+latestAtBatIndex:  17
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  17
+latestAtBatIndex:  17
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  17
+latestAtBatIndex:  17
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  17
+latestAtBatIndex:  17
+Is current play complete?  False
+Current playEvents[-1] index 3
+Current playEvent index 3
+Waiting for the next pitch of the at bat...
++─────────────────────────+
+|MIN 0         ◇     2    |
+|SF  4        ◇ ◆    ▼    |
+|            ● ○ ○  0-2   |
+|─────────────────────────|
+|Zebby Matthews     P:51  |
++─────────────────────────+
+atBatIndexToProcess:  17
+latestAtBatIndex:  17
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  17
+latestAtBatIndex:  17
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  17
+latestAtBatIndex:  17
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  17
+latestAtBatIndex:  17
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  17
+latestAtBatIndex:  17
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  17
+latestAtBatIndex:  17
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  17
+latestAtBatIndex:  17
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  17
+latestAtBatIndex:  17
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  17
+latestAtBatIndex:  17
+Is current play complete?  False
+Current playEvents[-1] index 4
+Current playEvent index 4
+Waiting for the next pitch of the at bat...
++─────────────────────────+
+|MIN 0         ◇     2    |
+|SF  4        ◇ ◆    ▼    |
+|            ● ○ ○  1-2   |
+|─────────────────────────|
+|Zebby Matthews     P:52  |
++─────────────────────────+
+atBatIndexToProcess:  17
+latestAtBatIndex:  17
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  17
+latestAtBatIndex:  17
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  17
+latestAtBatIndex:  17
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  17
+latestAtBatIndex:  17
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  17
+latestAtBatIndex:  17
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  17
+latestAtBatIndex:  17
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  17
+latestAtBatIndex:  17
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  17
+latestAtBatIndex:  17
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  17
+latestAtBatIndex:  17
+Is current play complete?  False
+Current playEvents[-1] index 5
+Current playEvent index 5
+Waiting for the next pitch of the at bat...
++─────────────────────────+
+|MIN 0         ◇     2    |
+|SF  4        ◇ ◆    ▼    |
+|            ● ○ ○  2-2   |
+|─────────────────────────|
+|Zebby Matthews     P:53  |
++─────────────────────────+
+atBatIndexToProcess:  17
+latestAtBatIndex:  17
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  17
+latestAtBatIndex:  17
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  17
+latestAtBatIndex:  17
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  17
+latestAtBatIndex:  17
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  17
+latestAtBatIndex:  17
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  17
+latestAtBatIndex:  17
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  17
+latestAtBatIndex:  17
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  17
+latestAtBatIndex:  17
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  17
+latestAtBatIndex:  17
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  17
+latestAtBatIndex:  17
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  17
+latestAtBatIndex:  17
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  17
+latestAtBatIndex:  17
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  17
+latestAtBatIndex:  18
+Is current play complete?  True
+Current playEvents[-1] index 6
+Current playEvent index 6
++─────────────────────────+
+|MIN 0         ◇     2    |
+|SF  4        ◇ ◆    ▼    |
+|            ● ○ ○  2-2   |
+|─────────────────────────|
+|Zebby Matthews     P:54  |
++─────────────────────────+
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  17
+latestAtBatIndex:  18
+Processing at bat finished...
+At Bat score 0.08299999999999985/0.375
+probsAddedVal: 1.0999999999999943
+levIdxVal: 0.47
+dramaIdxVal: 24.0
+win prob complete? True
+win prob atBatIndex: 17
+At bat processed!
+Jonah Cox strikes out swinging.
+atBatIndexToProcess 18
+latestAtBatIndex 18
+New at bat. Index:  18
+Now batting: Bo Davidson
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  18
+latestAtBatIndex:  18
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  18
+latestAtBatIndex:  18
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  18
+latestAtBatIndex:  18
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  18
+latestAtBatIndex:  18
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  18
+latestAtBatIndex:  18
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  18
+latestAtBatIndex:  18
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  18
+latestAtBatIndex:  18
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  18
+latestAtBatIndex:  18
+Is current play complete?  False
+Current playEvents[-1] index 0
+Current playEvent index 0
+Waiting for the next pitch of the at bat...
++─────────────────────────+
+|MIN 0         ◇     2    |
+|SF  4        ◇ ◆    ▼    |
+|            ● ● ○  0-0   |
+|─────────────────────────|
+|Zebby Matthews     P:55  |
++─────────────────────────+
+atBatIndexToProcess:  18
+latestAtBatIndex:  18
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  18
+latestAtBatIndex:  18
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  18
+latestAtBatIndex:  18
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  18
+latestAtBatIndex:  18
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  18
+latestAtBatIndex:  18
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  18
+latestAtBatIndex:  18
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  18
+latestAtBatIndex:  18
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  18
+latestAtBatIndex:  18
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  18
+latestAtBatIndex:  18
+Is current play complete?  False
+Current playEvents[-1] index 1
+Current playEvent index 1
+Waiting for the next pitch of the at bat...
++─────────────────────────+
+|MIN 0         ◇     2    |
+|SF  4        ◇ ◆    ▼    |
+|            ● ● ○  0-1   |
+|─────────────────────────|
+|Zebby Matthews     P:56  |
++─────────────────────────+
+atBatIndexToProcess:  18
+latestAtBatIndex:  18
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  18
+latestAtBatIndex:  18
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  18
+latestAtBatIndex:  18
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  18
+latestAtBatIndex:  18
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  18
+latestAtBatIndex:  18
+Is current play complete?  False
+Current playEvents[-1] index 2
+Current playEvent index 2
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  18
+latestAtBatIndex:  18
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  18
+latestAtBatIndex:  18
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  18
+latestAtBatIndex:  18
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  18
+latestAtBatIndex:  18
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  18
+latestAtBatIndex:  18
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  18
+latestAtBatIndex:  18
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  18
+latestAtBatIndex:  18
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  18
+latestAtBatIndex:  18
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  18
+latestAtBatIndex:  18
+Is current play complete?  False
+Current playEvents[-1] index 3
+Current playEvent index 3
+Waiting for the next pitch of the at bat...
++─────────────────────────+
+|MIN 0         ◇     2    |
+|SF  4        ◇ ◆    ▼    |
+|            ● ● ○  0-2   |
+|─────────────────────────|
+|Zebby Matthews     P:57  |
++─────────────────────────+
+atBatIndexToProcess:  18
+latestAtBatIndex:  18
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  18
+latestAtBatIndex:  18
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  18
+latestAtBatIndex:  18
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  18
+latestAtBatIndex:  18
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  18
+latestAtBatIndex:  18
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  18
+latestAtBatIndex:  18
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  18
+latestAtBatIndex:  18
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  18
+latestAtBatIndex:  18
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  18
+latestAtBatIndex:  18
+Is current play complete?  True
+Current playEvents[-1] index 4
++─────────────────────────+
+|MIN 0         ◇     2    |
+|SF  4        ◇ ◆    ▼    |
+|            ● ● ○  1-2   |
+|─────────────────────────|
+|Zebby Matthews     P:58  |
++─────────────────────────+
+Current playEvent index 4
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  18
+latestAtBatIndex:  18
+Processing at bat finished...
+At Bat score 0.06680000000000015/0.375
+probsAddedVal: 0.9000000000000057
+levIdxVal: 0.36
+dramaIdxVal: 20.0
+win prob complete? True
+win prob atBatIndex: 18
+At bat processed!
+Bo Davidson grounds out, shortstop Ryan Kreidler to first baseman Aaron Sabato.
+Waiting for next at bat to start...
+atBatIndexToProcess 19
+latestAtBatIndex 19
+New at bat. Index:  19
+Now batting: Emmanuel Rodriguez
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  19
+latestAtBatIndex:  19
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  19
+latestAtBatIndex:  19
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  19
+latestAtBatIndex:  19
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  19
+latestAtBatIndex:  19
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  19
+latestAtBatIndex:  19
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  19
+latestAtBatIndex:  19
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  19
+latestAtBatIndex:  19
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  19
+latestAtBatIndex:  19
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  19
+latestAtBatIndex:  19
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  19
+latestAtBatIndex:  19
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  19
+latestAtBatIndex:  19
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  19
+latestAtBatIndex:  19
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  19
+latestAtBatIndex:  19
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  19
+latestAtBatIndex:  19
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  19
+latestAtBatIndex:  19
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  19
+latestAtBatIndex:  19
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  19
+latestAtBatIndex:  19
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  19
+latestAtBatIndex:  19
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  19
+latestAtBatIndex:  19
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  19
+latestAtBatIndex:  19
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  19
+latestAtBatIndex:  19
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  19
+latestAtBatIndex:  19
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  19
+latestAtBatIndex:  19
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  19
+latestAtBatIndex:  19
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  19
+latestAtBatIndex:  19
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  19
+latestAtBatIndex:  19
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  19
+latestAtBatIndex:  19
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  19
+latestAtBatIndex:  19
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  19
+latestAtBatIndex:  19
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  19
+latestAtBatIndex:  19
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  19
+latestAtBatIndex:  19
+Is current play complete?  False
+Current playEvents[-1] index 0
+Current playEvent index 0
+Waiting for the next pitch of the at bat...
++─────────────────────────+
+|MIN 0         ◇     ▲    |
+|SF  4        ◇ ◇    3    |
+|            ○ ○ ○  0-0   |
+|─────────────────────────|
+|Blade Tidwell      P:26  |
++─────────────────────────+
+atBatIndexToProcess:  19
+latestAtBatIndex:  19
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  19
+latestAtBatIndex:  19
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  19
+latestAtBatIndex:  19
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  19
+latestAtBatIndex:  19
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  19
+latestAtBatIndex:  19
+Is current play complete?  False
++─────────────────────────+
+|MIN 0         ◇     ▲    |
+|SF  4        ◇ ◇    3    |
+|            ○ ○ ○  0-1   |
+|─────────────────────────|
+|Blade Tidwell      P:27  |
++─────────────────────────+
+Current playEvents[-1] index 1
+Current playEvent index 1
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  19
+latestAtBatIndex:  19
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  19
+latestAtBatIndex:  19
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  19
+latestAtBatIndex:  19
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  19
+latestAtBatIndex:  19
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  19
+latestAtBatIndex:  19
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  19
+latestAtBatIndex:  19
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  19
+latestAtBatIndex:  19
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  19
+latestAtBatIndex:  19
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  19
+latestAtBatIndex:  19
+Is current play complete?  False
+Current playEvents[-1] index 2
+Current playEvent index 2
++─────────────────────────+
+|MIN 0         ◇     ▲    |
+|SF  4        ◇ ◇    3    |
+|            ○ ○ ○  0-2   |
+|─────────────────────────|
+|Blade Tidwell      P:28  |
++─────────────────────────+
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  19
+latestAtBatIndex:  19
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  19
+latestAtBatIndex:  19
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  19
+latestAtBatIndex:  19
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  19
+latestAtBatIndex:  20
+Is current play complete?  True
+Current playEvents[-1] index 3
+Current playEvent index 3
+Waiting for the next pitch of the at bat...
++─────────────────────────+
+|MIN 0         ◇     ▲    |
+|SF  4        ◇ ◇    3    |
+|            ○ ○ ○  1-2   |
+|─────────────────────────|
+|Blade Tidwell      P:29  |
++─────────────────────────+
+atBatIndexToProcess:  19
+latestAtBatIndex:  20
+Processing at bat finished...
+At Bat score 0.12419999999999992/0.375
+probsAddedVal: 1.7999999999999972
+levIdxVal: 0.68
+dramaIdxVal: 33.0
+win prob complete? True
+win prob atBatIndex: 19
+At bat processed!
+Emmanuel Rodriguez strikes out swinging.
+atBatIndexToProcess 20
+latestAtBatIndex 20
+New at bat. Index:  20
+Now batting: Ryan Kreidler
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  20
+latestAtBatIndex:  20
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  20
+latestAtBatIndex:  20
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  20
+latestAtBatIndex:  20
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  20
+latestAtBatIndex:  20
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  20
+latestAtBatIndex:  20
+Is current play complete?  False
+Current playEvents[-1] index 0
+Current playEvent index 0
+Waiting for the next pitch of the at bat...
++─────────────────────────+
+|MIN 0         ◇     ▲    |
+|SF  4        ◇ ◇    3    |
+|            ● ○ ○  0-0   |
+|─────────────────────────|
+|Blade Tidwell      P:30  |
++─────────────────────────+
+atBatIndexToProcess:  20
+latestAtBatIndex:  20
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  20
+latestAtBatIndex:  20
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  20
+latestAtBatIndex:  20
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  20
+latestAtBatIndex:  20
+Is current play complete?  False
+Current playEvents[-1] index 1
++─────────────────────────+
+|MIN 0         ◇     ▲    |
+|SF  4        ◇ ◇    3    |
+|            ● ○ ○  1-0   |
+|─────────────────────────|
+|Blade Tidwell      P:31  |
++─────────────────────────+
+Current playEvent index 1
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  20
+latestAtBatIndex:  20
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  20
+latestAtBatIndex:  20
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  20
+latestAtBatIndex:  20
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  20
+latestAtBatIndex:  20
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  20
+latestAtBatIndex:  20
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  20
+latestAtBatIndex:  20
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  20
+latestAtBatIndex:  20
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  20
+latestAtBatIndex:  20
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  20
+latestAtBatIndex:  20
+Is current play complete?  False
+Current playEvents[-1] index 2
++─────────────────────────+
+|MIN 0         ◇     ▲    |
+|SF  4        ◇ ◇    3    |
+|            ● ○ ○  2-0   |
+|─────────────────────────|
+|Blade Tidwell      P:32  |
++─────────────────────────+
+Current playEvent index 2
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  20
+latestAtBatIndex:  20
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  20
+latestAtBatIndex:  20
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  20
+latestAtBatIndex:  20
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  20
+latestAtBatIndex:  20
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  20
+latestAtBatIndex:  20
+Is current play complete?  False
+Current playEvents[-1] index 3
+Current playEvent index 3
+Waiting for the next pitch of the at bat...
++─────────────────────────+
+|MIN 0         ◇     ▲    |
+|SF  4        ◇ ◇    3    |
+|            ● ○ ○  3-0   |
+|─────────────────────────|
+|Blade Tidwell      P:33  |
++─────────────────────────+
+atBatIndexToProcess:  20
+latestAtBatIndex:  20
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  20
+latestAtBatIndex:  20
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  20
+latestAtBatIndex:  20
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  20
+latestAtBatIndex:  20
+Is current play complete?  False
+Current playEvents[-1] index 4
+Current playEvent index 4
+Waiting for the next pitch of the at bat...
++─────────────────────────+
+|MIN 0         ◇     ▲    |
+|SF  4        ◇ ◇    3    |
+|            ● ○ ○  3-1   |
+|─────────────────────────|
+|Blade Tidwell      P:34  |
++─────────────────────────+
+atBatIndexToProcess:  20
+latestAtBatIndex:  20
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  20
+latestAtBatIndex:  20
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  20
+latestAtBatIndex:  20
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  20
+latestAtBatIndex:  20
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  20
+latestAtBatIndex:  21
+Processing at bat finished...
+At Bat score 0.08140000000000024/0.375
+probsAddedVal: 1.1000000000000085
+levIdxVal: 0.46
+dramaIdxVal: 23.0
+win prob complete? True
+win prob atBatIndex: 20
+At bat processed!
+Ryan Kreidler grounds out, second baseman Jonah Cox to first baseman Brett Harris.
+atBatIndexToProcess 21
+latestAtBatIndex 21
+New at bat. Index:  21
+Now batting: Walker Jenkins
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  21
+latestAtBatIndex:  21
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  21
+latestAtBatIndex:  21
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  21
+latestAtBatIndex:  21
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  21
+latestAtBatIndex:  21
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  21
+latestAtBatIndex:  21
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  21
+latestAtBatIndex:  21
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  21
+latestAtBatIndex:  21
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  21
+latestAtBatIndex:  21
+Is current play complete?  False
+Current playEvents[-1] index 0
+Current playEvent index 0
+Waiting for the next pitch of the at bat...
++─────────────────────────+
+|MIN 0         ◇     ▲    |
+|SF  4        ◇ ◇    3    |
+|            ● ● ○  0-0   |
+|─────────────────────────|
+|Blade Tidwell      P:35  |
++─────────────────────────+
+atBatIndexToProcess:  21
+latestAtBatIndex:  21
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  21
+latestAtBatIndex:  21
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  21
+latestAtBatIndex:  21
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  21
+latestAtBatIndex:  21
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  21
+latestAtBatIndex:  21
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  21
+latestAtBatIndex:  21
+Is current play complete?  False
++─────────────────────────+
+|MIN 0         ◇     ▲    |
+|SF  4        ◇ ◇    3    |
+|            ● ● ○  1-0   |
+|─────────────────────────|
+|Blade Tidwell      P:36  |
++─────────────────────────+Current playEvents[-1] index 1
+Current playEvent index 1
+Waiting for the next pitch of the at bat...
+
+atBatIndexToProcess:  21
+latestAtBatIndex:  21
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  21
+latestAtBatIndex:  21
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  21
+latestAtBatIndex:  21
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  21
+latestAtBatIndex:  21
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  21
+latestAtBatIndex:  21
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  21
+latestAtBatIndex:  21
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  21
+latestAtBatIndex:  21
+Is current play complete?  False
+Current playEvents[-1] index 2
+Current playEvent index 2
+Waiting for the next pitch of the at bat...
++─────────────────────────+
+|MIN 0         ◇     ▲    |
+|SF  4        ◇ ◇    3    |
+|            ● ● ○  2-0   |
+|─────────────────────────|
+|Blade Tidwell      P:37  |
++─────────────────────────+
+atBatIndexToProcess:  21
+latestAtBatIndex:  21
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  21
+latestAtBatIndex:  21
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  21
+latestAtBatIndex:  21
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  21
+latestAtBatIndex:  21
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  21
+latestAtBatIndex:  21
+Is current play complete?  False
+Current playEvents[-1] index 3
+Current playEvent index 3
+Waiting for the next pitch of the at bat...
++─────────────────────────+
+|MIN 0         ◇     ▲    |
+|SF  4        ◇ ◇    3    |
+|            ● ● ○  3-0   |
+|─────────────────────────|
+|Blade Tidwell      P:38  |
++─────────────────────────+
+atBatIndexToProcess:  21
+latestAtBatIndex:  21
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  21
+latestAtBatIndex:  21
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  21
+latestAtBatIndex:  21
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  21
+latestAtBatIndex:  21
+Is current play complete?  False
+Current playEvents[-1] index 4
+Current playEvent index 4
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  21
+latestAtBatIndex:  21
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  21
+latestAtBatIndex:  21
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  21
+latestAtBatIndex:  21
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  21
+latestAtBatIndex:  21
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  21
+latestAtBatIndex:  21
+Is current play complete?  False
+Current playEvents[-1] index 5
+Current playEvent index 5
+Waiting for the next pitch of the at bat...
++─────────────────────────+
+|MIN 0         ◇     ▲    |
+|SF  4        ◇ ◇    3    |
+|            ● ● ○  3-1   |
+|─────────────────────────|
+|Blade Tidwell      P:39  |
++─────────────────────────+
+atBatIndexToProcess:  21
+latestAtBatIndex:  21
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  21
+latestAtBatIndex:  21
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  21
+latestAtBatIndex:  21
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  21
+latestAtBatIndex:  22
+Processing at bat finished...
+At Bat score 0.05559999999999993/0.375
+probsAddedVal: 0.7999999999999972
+levIdxVal: 0.27
+dramaIdxVal: 17.0
+win prob complete? True
+win prob atBatIndex: 21
+At bat processed!
+Walker Jenkins singles on a ground ball to center fielder Drew Gilbert.
+atBatIndexToProcess 22
+latestAtBatIndex 22
+New at bat. Index:  22
+Now batting: Luke Keaschall
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  22
+latestAtBatIndex:  22
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  22
+latestAtBatIndex:  22
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  22
+latestAtBatIndex:  22
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  22
+latestAtBatIndex:  22
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  22
+latestAtBatIndex:  22
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  22
+latestAtBatIndex:  22
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  22
+latestAtBatIndex:  22
+Is current play complete?  False
++─────────────────────────+
+|MIN 0         ◇     ▲    |
+|SF  4        ◇ ◆    3    |
+|            ● ● ○  0-0   |
+|─────────────────────────|
+|Blade Tidwell      P:40  |
++─────────────────────────+
+Current playEvents[-1] index 0
+Current playEvent index 0
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  22
+latestAtBatIndex:  22
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  22
+latestAtBatIndex:  22
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  22
+latestAtBatIndex:  22
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  22
+latestAtBatIndex:  22
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  22
+latestAtBatIndex:  22
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  22
+latestAtBatIndex:  22
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  22
+latestAtBatIndex:  22
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  22
+latestAtBatIndex:  22
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  22
+latestAtBatIndex:  22
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  22
+latestAtBatIndex:  22
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  22
+latestAtBatIndex:  22
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  22
+latestAtBatIndex:  22
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  22
+latestAtBatIndex:  22
+Is current play complete?  False
+Current playEvents[-1] index 1
+Current playEvent index 1
+Waiting for the next pitch of the at bat...
++─────────────────────────+
+|MIN 0         ◇     ▲    |
+|SF  4        ◇ ◆    3    |
+|            ● ● ○  0-1   |
+|─────────────────────────|
+|Blade Tidwell      P:41  |
++─────────────────────────+
+atBatIndexToProcess:  22
+latestAtBatIndex:  22
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  22
+latestAtBatIndex:  22
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  22
+latestAtBatIndex:  22
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  22
+latestAtBatIndex:  22
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  22
+latestAtBatIndex:  22
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  22
+latestAtBatIndex:  22
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  22
+latestAtBatIndex:  22
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  22
+latestAtBatIndex:  22
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  22
+latestAtBatIndex:  22
+Is current play complete?  False
+Current playEvents[-1] index 2
+Current playEvent index 2
+Waiting for the next pitch of the at bat...
++─────────────────────────+
+|MIN 0         ◇     ▲    |
+|SF  4        ◇ ◆    3    |
+|            ● ● ○  2-0   |
+|─────────────────────────|
+|Blade Tidwell      P:42  |
++─────────────────────────+
+atBatIndexToProcess:  22
+latestAtBatIndex:  22
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  22
+latestAtBatIndex:  22
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  22
+latestAtBatIndex:  22
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  22
+latestAtBatIndex:  22
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  22
+latestAtBatIndex:  22
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  22
+latestAtBatIndex:  22
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  22
+latestAtBatIndex:  22
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  22
+latestAtBatIndex:  22
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  22
+latestAtBatIndex:  22
+Is current play complete?  False
++─────────────────────────+
+|MIN 0         ◇     ▲    |
+|SF  4        ◇ ◆    3    |
+|            ● ● ○  2-1   |
+|─────────────────────────|
+|Blade Tidwell      P:43  |
++─────────────────────────+
+Current playEvents[-1] index 3
+Current playEvent index 3
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  22
+latestAtBatIndex:  22
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  22
+latestAtBatIndex:  22
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  22
+latestAtBatIndex:  22
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  22
+latestAtBatIndex:  22
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  22
+latestAtBatIndex:  22
+Is current play complete?  False
+Current playEvents[-1] index 4
+Current playEvent index 4
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  22
+latestAtBatIndex:  22
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  22
+latestAtBatIndex:  22
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  22
+latestAtBatIndex:  22
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  22
+latestAtBatIndex:  22
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  22
+latestAtBatIndex:  22
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  22
+latestAtBatIndex:  22
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  22
+latestAtBatIndex:  22
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  22
+latestAtBatIndex:  22
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  22
+latestAtBatIndex:  22
+Is current play complete?  True
+Current playEvents[-1] index 5
+Current playEvent index 5
++─────────────────────────+
+|MIN 0         ◇     ▲    |
+|SF  4        ◇ ◆    3    |
+|            ● ● ○  2-2   |
+|─────────────────────────|
+|Blade Tidwell      P:44  |
++─────────────────────────+
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  22
+latestAtBatIndex:  22
+Processing at bat finished...
+At Bat score 0.10919999999999999/0.375
+probsAddedVal: 1.5
+levIdxVal: 0.62
+dramaIdxVal: 30.0
+win prob complete? True
+win prob atBatIndex: 22
+At bat processed!
+Luke Keaschall strikes out swinging.
+Waiting for next at bat to start...
+atBatIndexToProcess 23
+latestAtBatIndex 23
+New at bat. Index:  23
+Now batting: Marcelo Mayer
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  23
+latestAtBatIndex:  23
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  23
+latestAtBatIndex:  23
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  23
+latestAtBatIndex:  23
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  23
+latestAtBatIndex:  23
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  23
+latestAtBatIndex:  23
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  23
+latestAtBatIndex:  23
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  23
+latestAtBatIndex:  23
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  23
+latestAtBatIndex:  23
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  23
+latestAtBatIndex:  23
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  23
+latestAtBatIndex:  23
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  23
+latestAtBatIndex:  23
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  23
+latestAtBatIndex:  23
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  23
+latestAtBatIndex:  23
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  23
+latestAtBatIndex:  23
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  23
+latestAtBatIndex:  23
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  23
+latestAtBatIndex:  23
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  23
+latestAtBatIndex:  23
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  23
+latestAtBatIndex:  23
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  23
+latestAtBatIndex:  23
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  23
+latestAtBatIndex:  23
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  23
+latestAtBatIndex:  23
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  23
+latestAtBatIndex:  23
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  23
+latestAtBatIndex:  23
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  23
+latestAtBatIndex:  23
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  23
+latestAtBatIndex:  23
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  23
+latestAtBatIndex:  23
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  23
+latestAtBatIndex:  23
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  23
+latestAtBatIndex:  23
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  23
+latestAtBatIndex:  23
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  23
+latestAtBatIndex:  23
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  23
+latestAtBatIndex:  23
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  23
+latestAtBatIndex:  23
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  23
+latestAtBatIndex:  23
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  23
+latestAtBatIndex:  23
+Waiting for the next pitch of the at bat...
+atBatIndexToProcess:  23
+latestAtBatIndex:  23
+Waiting for the next pitch of the at bat...
+a

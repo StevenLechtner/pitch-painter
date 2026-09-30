@@ -251,12 +251,12 @@ def printAllPitchesFromLiveGame(gamePk, output, stop_event):
         output.emit(border)
         output.emit(recap)
         output.emit(border)
-        threadTest = 0
-        while (threadTest < 6):
-            vprint(f"Testing thread/stop_event ({threadTest + 1}/6)")
-            if stop_event.wait(1):
-                break
-            threadTest += 1
+        # threadTest = 0
+        # while (threadTest < 6):
+        #     vprint(f"Testing thread/stop_event ({threadTest + 1}/6)")
+        #     if stop_event.wait(1):
+        #         break
+        #     threadTest += 1
         return
 
 def outputVerbosePrinting(text):

@@ -3,6 +3,8 @@ Remove while True in win_probability.py and replace with a thread and stop_event
     Add additional check for mid inning updates - it won't add a new at bat for atBatIndex check until next at bat starts (~2 mins delay for last at bat to post to threads)
 Have the image url be valid every time so /threads and /threads_publish always work as expected
     Delete all images in dropbox and os on application close (make image uploading a thread and delete all images on thread close - a queue of what to add and what's added, remove from added when deleted successfully)
+        On upload, if you get an image already exists, maybe delete that image and then upload again
+            ApiError message: SharedLinkAlreadyExistsMetadata()
         maybe just delete parent images folder on close - could provide a --save flag to save images?
     Threads API long term refresh access token may be needed (look into it)
 Extra innings centered error in drawing the pitch
@@ -10,6 +12,7 @@ Do api call either more frequently or way less frequently
 Abs challenge ending the inning and then getting overturned
     This also broke with at bat ending and then being overturned (I saw HBP be overturned live and fuck shit up)
         hbp_munch_overturned_fail - the hbp was overturned, but I processed at bat finished on HBP, resulting in the rest of the at bat no being processed properly, and a "runner on first" when that actually wasn't the case
+Test this game: rangers orioles 30-3, Aug 22, 2007
 
 Additional features:
 Make thread_poster a thread of its own (this time an actual multithreading thread)
@@ -25,81 +28,41 @@ Update pitchpainter email (make my own, not stevenlech35@gmail.com)
 Add to github but make it private, idk? - copyright issue...
 
 For Threads:
-curl "https://graph.threads.net/v1.0/me?fields=id,username&access_token=THAANWViZC2T1NBYmJwQi1pTEg5NXE3ZA3ZAHOFhNMm5oekNONTRZAVm9OVEJoSlhDcjN5MmN5b2NodXRsdndCU25GNjBpZADFlLWQ4UC1rTk01ZAlFaQ1JhS2NkaWRNNUVTcmxYbWJuZAkRjY0Q2a3hPWEFzT0tZAMTZAWZA2JybEFSZAUVmSkdRUQZDZD"
-That gets our Thread user Id and user name {"id":"28665889336435626","username":"pitchpainter"}% 
-curl -X POST "https://graph.threads.net/v1.0/28665889336435626/threads" -d "media_type=TEXT" -d "text=Hello, World" -d "access_token=THAANWViZC2T1NBYmJwQi1pTEg5NXE3ZA3ZAHOFhNMm5oekNONTRZAVm9OVEJoSlhDcjN5MmN5b2NodXRsdndCU25GNjBpZADFlLWQ4UC1rTk01ZAlFaQ1JhS2NkaWRNNUVTcmxYbWJuZAkRjY0Q2a3hPWEFzT0tZAMTZAWZA2JybEFSZAUVmSkdRUQZDZD"
-This creates the tweet Hello, World using the access token and user id, and gives us the creation id for the post {"id":"18109056196915017"}
-curl -X POST "https://graph.threads.net/v1.0/28665889336435626/threads_publish" -d "creation_id=18109056196915017" -d "access_token=THAANWViZC2T1NBYmJwQi1pTEg5NXE3ZA3ZAHOFhNMm5oekNONTRZAVm9OVEJoSlhDcjN5MmN5b2NodXRsdndCU25GNjBpZADFlLWQ4UC1rTk01ZAlFaQ1JhS2NkaWRNNUVTcmxYbWJuZAkRjY0Q2a3hPWEFzT0tZAMTZAWZA2JybEFSZAUVmSkdRUQZDZD"
-This sends the actual thread post and gives us another id as a response, not sure... {"id":"18244963885310769"}
+curl "https://graph.threads.net/v1.0/me?fields=id,username&access_token=<access_token>"
+That gets our Thread user Id and user name {"id":<id>,"username":<username>}% 
+curl -X POST "https://graph.threads.net/v1.0/<id>/threads" -d "media_type=TEXT" -d "text=Hello, World" -d "access_token=<access_token>"
+This creates the tweet Hello, World using the access token and user id, and gives us the creation id for the post {"id":<post_id>}
+curl -X POST "https://graph.threads.net/v1.0/<id>/threads_publish" -d "creation_id=<creation_id>" -d "access_token=<access_token>"
+This sends the actual thread post and gives us another id as a response, not sure... {"id":<id>}
 
 Get long term access token (1 hour -> 60 days)
 short term: graph api explorer, get threads.net, pitcher painter, generate access token
-curl -i -X GET "https://graph.threads.com/access_token?grant_type=th_exchange_token&client_secret=685c1596e92d7783929587707bb6ab6e&access_token=THAANWViZC2T1NBYmJTY05FLW1ITXZACMG9xcVgtZADBJVmhTV2ZAnMXVsdFFsY3hMWEViNlZAlaFRhTUNzWVUycUtPLTBHcGZA0eFBXdi1kTC1PV1ktbWRWbmQzSTRtRHMwVmp0Nmg1dnpFdFB2d1FDVHNvVzBYanN4UFBiWnhFa29sZAHY3TG9tRjdFQUliWGQxMVFhVl9TRFhVZAUFTRHpmRm5tUktIek4ZD"
-HTTP/2 200 
-vary: Accept-Encoding
-content-security-policy: frame-ancestors 'none'
-x-frame-options: DENY
-x-content-type-options: nosniff
-content-length: 248
-content-type: application/json; charset=utf-8
-strict-transport-security: max-age=31536000; preload; includeSubDomains
-pragma: no-cache
-cache-control: private, no-cache, no-store, must-revalidate
-expires: Sat, 01 Jan 2000 00:00:00 GMT
-x-fb-request-id: Acpm47RaEqBEC8dvp8ToXx9
-x-fb-trace-id: BuS6JpN4yMT
-x-fb-rev: 1047162702
-x-stack: www
-x-fb-debug: D+yAuomUxBJHVtiiTJbxUBglkyGUQrMFv/PCxaU3sjEBoFFDLHo2EHdhRNqMWvOQPq4g5q5ZfX0Q5gVawfSgNA==
-date: Thu, 10 Sep 2026 04:16:03 GMT
-x-fb-connection-quality: EXCELLENT; q=0.9, rtt=15, rtx=0, c=15, mss=1380, tbw=3665, tp=-1, tpl=-1, uplat=597, ullat=0
-alt-svc: h3=":443"; ma=86400
-{"access_token":"THAANWViZC2T1NBYllTd1F1bExvVDFkS0lDUUNwTHRuZATRiY2tFQXNsOVdneVk4aGkyWXZAoR2JCai1KSGxPNWRKc2pINGU3MnN1ZAGd1MURTQll3Umo2MVQteklXbzAtakpvNzM4MC1uQURtRGx4MmFSRGFjUy1sLXlDdTZAldXdBMmhlZAwZDZD","token_type":"bearer","expires_in":5184000}%                     
+curl -i -X GET "https://graph.threads.com/access_token?grant_type=th_exchange_token&client_secret=<client_secret>&access_token=<access_token>"
+{"access_token":<long_term_access_token>,"token_type":"bearer","expires_in":5184000}%                     
 
 Refresh a long-lived token:
-curl -i -X GET "https://graph.threads.com/refresh_access_token?grant_type=th_refresh_token&access_token=THAANWViZC2T1NBYllTd1F1bExvVDFkS0lDUUNwTHRuZATRiY2tFQXNsOVdneVk4aGkyWXZAoR2JCai1KSGxPNWRKc2pINGU3MnN1ZAGd1MURTQll3Umo2MVQteklXbzAtakpvNzM4MC1uQURtRGx4MmFSRGFjUy1sLXlDdTZAldXdBMmhlZAwZDZD"
-HTTP/2 200 
-shadow-id: xi9lma1ofcr41ve1_AXuQHxvUogQolJ2bah1RsyD
-etag: "b7d68215d1205b67b36a8a9035c3e46aba817cbb"
-content-type: application/json; charset=UTF-8
-vary: Accept-Encoding
-vary: Accept-Encoding
-x-app-usage: {"call_count":0,"total_cputime":0}
-threads-api-version: v1.0
-access-control-allow-origin: *
-x-fb-debug: FUsVlQ/bREX+yV7MXPRYhICkl6rqOOImvTO24tWhynE=
-x-fb-server-load: 51
-strict-transport-security: max-age=31536000; preload; includeSubDomains
-pragma: no-cache
-cache-control: private, no-cache, no-store, must-revalidate
-expires: Sat, 01 Jan 2000 00:00:00 GMT
-x-fb-request-id: AGYlRxCVaEkOO4RkzqM5lsM
-x-fb-trace-id: ExV73yY7qSx
-x-fb-rev: 1047162702
-x-stack: www
-x-fb-server-load: 41
-date: Thu, 10 Sep 2026 04:20:37 GMT
-x-fb-connection-quality: EXCELLENT; q=0.9, rtt=17, rtx=0, c=15, mss=1380, tbw=3665, tp=-1, tpl=-1, uplat=1114, ullat=0
-alt-svc: h3=":443"; ma=86400
-{"access_token":"THAANWViZC2T1NBYmJwQi1pTEg5NXE3ZA3ZAHOFhNMm5oekNONTRZAVm9OVEJoSlhDcjN5MmN5b2NodXRsdndCU25GNjBpZADFlLWQ4UC1rTk01ZAlFaQ1JhS2NkaWRNNUVTcmxYbWJuZAkRjY0Q2a3hPWEFzT0tZAMTZAWZA2JybEFSZAUVmSkdRUQZDZD","token_type":"bearer","expires_in":5183726}
+curl -i -X GET "https://graph.threads.com/refresh_access_token?grant_type=th_refresh_token&access_token=<access_token>"
+{"access_token":<long_term_access_token>,"token_type":"bearer","expires_in":5183726}
 
 Get Threads API access token expiration time:
-curl -X GET "https://graph.threads.com/v1.0/debug_token?input_token=THAANWViZC2T1NBYmJwQi1pTEg5NXE3ZA3ZAHOFhNMm5oekNONTRZAVm9OVEJoSlhDcjN5MmN5b2NodXRsdndCU25GNjBpZADFlLWQ4UC1rTk01ZAlFaQ1JhS2NkaWRNNUVTcmxYbWJuZAkRjY0Q2a3hPWEFzT0tZAMTZAWZA2JybEFSZAUVmSkdRUQZDZD&access_token=THAANWViZC2T1NBYmJwQi1pTEg5NXE3ZA3ZAHOFhNMm5oekNONTRZAVm9OVEJoSlhDcjN5MmN5b2NodXRsdndCU25GNjBpZADFlLWQ4UC1rTk01ZAlFaQ1JhS2NkaWRNNUVTcmxYbWJuZAkRjY0Q2a3hPWEFzT0tZAMTZAWZA2JybEFSZAUVmSkdRUQZDZD"
-{"data":{"is_valid":true,"scopes":["threads_basic","threads_content_publish","threads_manage_replies","threads_manage_insights","threads_read_replies","threads_manage_mentions","threads_keyword_search","threads_delete","threads_location_tagging","threads_profile_discovery","threads_share_to_instagram"],"type":"USER","application":"Pitch Painter","data_access_expires_at":1796877428,"expires_at":1794285428,"issued_at":1789101428,"user_id":"28665889336435626"}}
+curl -X GET "https://graph.threads.com/v1.0/debug_token?input_token=<access_token>&access_token=<access_token>"
+{"data":{"is_valid":true,"scopes":["threads_basic","threads_content_publish","threads_manage_replies","threads_manage_insights","threads_read_replies","threads_manage_mentions","threads_keyword_search","threads_delete","threads_location_tagging","threads_profile_discovery","threads_share_to_instagram"],"type":"USER","application":"Pitch Painter","data_access_expires_at":1796877428,"expires_at":1794285428,"issued_at":1789101428,"user_id":<id>}}
 date -u -r 1794285428 to get human readable time (remove -u for local time)
+Another way from browser:
+https://developers.facebook.com/tools/debug/accesstoken/
 
 Dropbox refresh access token getter:
-curl https://api.dropbox.com/oauth2/token -d code=egJV_cQ2QZwAAAAAAAAAiTaLeyqb4gz7IWDamuDqOV4 -d grant_type=authorization_code -u c240comt7wz8sqo:uumup20acpe76wy
-{"access_token": "sl.u.AGuHW0WVPKMOENq85K-XEOwhfth5POpN48k8APVaaRVfVsABNf8SfQhXoPPiA8owd8mtEWuPqkeNb3vXqT_Q-2_98BICHOOyFJ8EFEavY4AtCuZbSKO6HXUz1u5nhKRy6HOLwul0DqT7PVj1g9NyQ2LHrSSQUPLoj0PkrJKPsbDRSD4A3erR7zuo8QNMRdd1IL0Aywm-5x0aedAlBedqI5ogmrYcNzDUNfbQ-PS1D1pHjeUl2kE0kG-47HNCK42sdt0S_ePrb0VWBg0J8VYPfshaORehVbFA9Uw5-HyJsi-38IK97z7mOWxldT_UTKIEMPPnSR6KLxWIj6SPkjaxKHzCv_b6YVZVU9-21TB8uwv_YsyJA-ueH7-_Dx5UxhrrUIrjHBV0VDNT-FjDfQv11wU4874nkcyvs09CrHZk2Y7Glzd6AgH7IC0v91Bx5wp-4fn9G-ri2gOZ3X8UpXxa5H9wRGLaZYn_OXVZ_8UUEJiXubVH7faERfY6Y5WDfpaKaJg7fvRQJOKjAEegzpD3yo2jjPJjIZwtz9J-I6T4QDmkuDuo8SAMy4c2NgxgJM7P0IbgzjbZ8R_2OJQ0OFYoh54X0JUqMVZ1WzIEESDfeaAR2fBefWmjoxqTP40A2zqLAcYa6vlQ28Izv_R360R0LtX-mRCqyspxoXguPNSwgbHVQZuP1pnR_C7oMPPL24ZPIXXMgPaCCr1P1Etka3zTmdwW3NrNu6jHAYO0_pPqQUYLtFxALcD1FxyNX4w5kZAdzJc6Y1cro8xoqfXMAqWD7mPkxA5kv8xvEHshobvNLZIevLe-XJ6euayOyS-m_O2qxO1Mj6Zdja3EJjonv5MHx2P34viZKaO-qYew1PixVoW7eZq6L35utbuGDexV1X1lL-SjFvB7Hff1jE-iD0Y4ty5-idSek0lLLrVjKUFcMJNqEzZLa3je3YXGHdo6fiYvcSYDhMG3CO4bfukevgUXe78ExZSDmthM5avSKLkx6clo2_-PJxPnX1WFEWJ1JqPkifqNsFxGs4VmduK28QA27gv1r1ehwJecP-Tfrav_1-cTAgVN6jSHexWNe9EIDCwxh65M-PnFoJYfROKwqcV0m2jecoXPk-PDPdVPqCCVa31vC7LCnG-Q_vZRLXuZPBh1qygiHq21huSsGy2cpi77dXPuS0VCaFWEKSZhYfCaam6-TIj6oIvvEWmmJEYGSWIWGnXQ6mz-LwghFfnU6sYbkIulEJmgrs-T6NW2G88Z4S7LE1YU2jySxAnYt68cqnzJjoj-mQMGgIFxVAkd8IfF_S97bU-Do09W8gVM1mtVWHV4xw", "token_type": "bearer", "expires_in": 14400, "refresh_token": "LIZk_Wjvb7MAAAAAAAAAAYO9nqhCcmdldXOmazBt-EEZzVt5biCE64wSj1KDLhM2", "scope": "account_info.read contacts.read contacts.write file_requests.read file_requests.write files.content.read files.content.write files.metadata.read files.metadata.write sharing.read sharing.write", "uid": "869794177", "account_id": "dbid:AAA1oDBzdFiEUab3iRmXDACkGXhsLdfYQzA"}%
-curl -X POST https://api.dropbox.com/oauth2/token -d grant_type=refresh_token -d refresh_token=LIZk_Wjvb7MAAAAAAAAAAYO9nqhCcmdldXOmazBt-EEZzVt5biCE64wSj1KDLhM2 -u c240comt7wz8sqo:uumup20acpe76wy
-{"access_token": "sl.u.AGuBj32gXs1IAjyJJDEcb-7HfLMxiwwCZbeN8WjOAatGV1FGIksZsXKrklodenGXfRoHZhe1HT3rx3feEARhFPnBqSLReAJXYLjydBi3l2-i0IBxfFjOgKrS26UkT16RmY86qjh71TeKXE7vIMKmKNHVv22NQZz50y88qLKotI1pg00AjWBJuIS2wYYX5inkcdx9_WVDbSG1LpbQzpmQYUbcix-1gP93zkIgEFWriCJxDCVmjjkM-G-fLD-BgeJpkT-qiN9omb2kTtN6RrAhg16JnSRBEA9iOWf7w_1Wf0NLs393EH-6PC38SK9mCjuUMDhDCiwgOKetbWdCTw58afyNbdITo5N6cy0U5cOiUxS7LanOq97KC6MG0uhfhoWob0l914Gz-Afn3AT1qkXy59E-KQBgwyNKKwhjVgzUS54sV9knbbzowv-jSmBVwbLXjkcGez1kQcyvtcfKSBFeQ2YschE_eWQsTF8EuAxoXkiR_7rLZU5byP_R7hYgDOSNYRLfgV-3i3CSdh_3lBZhN09a4ipuuyIWN7E6Qp0gOV9Xiuxy7SG6i2wcu45lDf9Wr_vuLiJqyB5vSYI1BFBZ1XW0RKaNUEJFi1Qcgk_xhanqScJJzZMW2LFi3j1l6rSGtJuffEqPJHF9Vy_gMzKf7z61GUnFRXvbZCW070UwMJ56PohqDDAstKXygdJccVC6qhceS3AJe51ACG3MTDGTcFiLV-hR-Ve1LMdMs8pj93tuNhnDF-_klQpPK3PdwfauSV68zuIUq82tvyJPTYAXs5dZQorHJLs5i55qKkC_NpnQkvBeiWXH8BnnHQpP08H_yHz9aBvHBmsEDyKGOQyKSWGyVwiBFCUZqWx8byge4cqwSbY0FR7Jif8smEjfV6V5N-fh1yG5H6qA8MdGRHJURPEKdw93WTLJGtmpQBKJiB3mIYMmNYie4DxrDcrvDCMUqAhqD_49Wu98m2XjacoIwDUzH9j02VSafobxn3CkVx3a2RFOVgW8xgzPgpucdcP6GJ6Ozd6G7lFjVwfDOkZWGKavnS1HmAGIO5AwEaNpxGScj0ndL85gwNh3j5xuv6cUnpC8Nmr_3bY50a2e8KPJMozbqcFirfFPYS4Uo0USqYqTLLYr6G04-XhsR4wa-o15MbY5lcsHRPd_LAxtxgrwA112GZn2OIbP6abI9GIcgdmzTCAitjRPk3H215ml0BbKViP3wykFUKvO_B6c-0CIEcj3jYWU8E6ZhXfL7-1tORnG8j2lZ_M-7D4OMAWmtaXg7cso84zRhEmHSv25S6L6rKAZQUecj9fJ6n27a26EvFPgUA", "token_type": "bearer", "expires_in": 14400}% 
+curl https://api.dropbox.com/oauth2/token -d code=<code> -d grant_type=authorization_code -u <app_key>:<app_secret>
+{"access_token": <access_token>, "token_type": "bearer", "expires_in": 14400, "refresh_token": <refresh_token>, "scope": "account_info.read contacts.read contacts.write file_requests.read file_requests.write files.content.read files.content.write files.metadata.read files.metadata.write sharing.read sharing.write", "uid": <uid>, "account_id": <account_id>}%
+curl -X POST https://api.dropbox.com/oauth2/token -d grant_type=refresh_token -d refresh_token=<refresh_token> -u <app_key>:<app_secret>
+{"access_token": <access_token>, "token_type": "bearer", "expires_in": 14400}% 
 
 See daily quota usage (x/250)
-curl -s -X GET "https://graph.threads.com/v1.0/28665889336435626/threads_publishing_limit?fields=quota_usage,config&access_token=THAANWViZC2T1NBYllTd1F1bExvVDFkS0lDUUNwTHRuZATRiY2tFQXNsOVdneVk4aGkyWXZAoR2JCai1KSGxPNWRKc2pINGU3MnN1ZAGd1MURTQll3Umo2MVQteklXbzAtakpvNzM4MC1uQURtRGx4MmFSRGFjUy1sLXlDdTZAldXdBMmhlZAwZDZD"
+curl -s -X GET "https://graph.threads.com/v1.0/<id>/threads_publishing_limit?fields=quota_usage,config&access_token=<access_token>"
 {"data":[{"quota_usage":66,"config":{"quota_total":250,"quota_duration":86400}}]}
-curl "https://graph.threads.net/v1.0/28665889336435626/threads_publishing_limit?access_token=THAANWViZC2T1NBYllTd1F1bExvVDFkS0lDUUNwTHRuZATRiY2tFQXNsOVdneVk4aGkyWXZAoR2JCai1KSGxPNWRKc2pINGU3MnN1ZAGd1MURTQll3Umo2MVQteklXbzAtakpvNzM4MC1uQURtRGx4MmFSRGFjUy1sLXlDdTZAldXdBMmhlZAwZDZD"
+curl "https://graph.threads.net/v1.0/<id>/threads_publishing_limit?access_token=<access_token>"
 {"data":[{"quota_usage":122}]}% 
-curl -s -X GET "https://graph.threads.com/v1.0/28665889336435626/threads_publishing_limit?fields=quota_usage,config,reply_quota_usage,reply_config,delete_quota_usage,delete_config,location_search_quota_usage,location_search_config&access_token=THAANWViZC2T1NBYllTd1F1bExvVDFkS0lDUUNwTHRuZATRiY2tFQXNsOVdneVk4aGkyWXZAoR2JCai1KSGxPNWRKc2pINGU3MnN1ZAGd1MURTQll3Umo2MVQteklXbzAtakpvNzM4MC1uQURtRGx4MmFSRGFjUy1sLXlDdTZAldXdBMmhlZAwZDZD"
+curl -s -X GET "https://graph.threads.com/v1.0/<id>/threads_publishing_limit?fields=quota_usage,config,reply_quota_usage,reply_config,delete_quota_usage,delete_config,location_search_quota_usage,location_search_config&access_token=<access_token>"
 {"data":[{"quota_usage":66,"config":{"quota_total":250,"quota_duration":86400},"reply_quota_usage":0,"reply_config":{"quota_total":1000,"quota_duration":86400},"delete_quota_usage":0,"delete_config":{"quota_total":100,"quota_duration":86400},"location_search_quota_usage":0,"location_search_config":{"quota_total":500,"quota_duration":86400}}]}
 
 The external API will not be able to access your local images even if you host them using a local webserver. Instead, you can upload the images to storage services like AWS S3 or Azure Blob storage, and then provide those image URLs to the external API. This would be the simplest to do if your images aren't many in number.
@@ -126,21 +89,6 @@ Pretty print json (works on windows vscode): Ctrl + A, Ctrl + K + F
 745369
 
 https://statsapi.mlb.com/api/v1.1/game/745369/feed/live
-
-
-
-For twitter:
-API Key: 1zgs4BdzcdQ4GdASh1MN1YLrX
-API Key Secret: WDrigEIEedvKmY56YVRRI5lwRQ8fgdE8xbaCyQHrlq6vTYGCyV
-Bearer Token: AAAAAAAAAAAAAAAAAAAAAHxr4QEAAAAAa3f4Poyxl6tiAahYfczWUvIb2BM%3D1qjsfcexjueJJECUyoiM0caE5MoIpewkWqbeRKMagIV9AxELM0
-
-OAuth 1.0:
-Access Token: 1970860626563239936-oee1HdnDKx45FVPT9pDfbuRaGsLSA8
-Access Token Secret: aTre5O09neKGGQuhdXt1PKnf6JsRwULS0dmzpJfSjNmNM
-
-OAuth 2.0:
-Client ID: NzdCRG44ZTlOTHNlNU55MVpzRW46MTpjaQ
-Client Secret: jpNYdzcIvpkjGQo2wz20ujesGPIgrnFtPbNEON3Ji_q1xnYNsa
 
 virtualenv:
 https://stackoverflow.com/questions/34503686/virtualenv-does-not-include-pip
@@ -240,165 +188,6 @@ Now I’m trying things:
 |─────────────|
 
 
-
-
-
-
-
-
-
-
-import statsapi
-import tweepy
-
-import json
-import pitchbypitch
-import sys
-import time
-
-# Twitter bot developer credentials
-api_key = "1zgs4BdzcdQ4GdASh1MN1YLrX"
-api_secret = "WDrigEIEedvKmY56YVRRI5lwRQ8fgdE8xbaCyQHrlq6vTYGCyV"
-bearer_token="AAAAAAAAAAAAAAAAAAAAAHxr4QEAAAAAa3f4Poyxl6tiAahYfczWUvIb2BM%3D1qjsfcexjueJJECUyoiM0caE5MoIpewkWqbeRKMagIV9AxELM0"
-consumer_key="NzdCRG44ZTlOTHNlNU55MVpzRW46MTpjaQ"
-consumer_secret="jpNYdzcIvpkjGQo2wz20ujesGPIgrnFtPbNEON3Ji_q1xnYNsa"
-access_token = "1970860626563239936-oee1HdnDKx45FVPT9pDfbuRaGsLSA8"
-access_secret = "aTre5O09neKGGQuhdXt1PKnf6JsRwULS0dmzpJfSjNmNM"
-
-# Determines if tweet gets sent out or not
-isTweeting = False
-
-def createClient():
-    # v2 authentication
-    client = tweepy.Client(bearer_token=bearer_token,
-                           consumer_key=api_key,
-                           consumer_secret=api_secret,
-                           access_token=access_token,
-                           access_token_secret=access_secret)
-    return client
-
-def sendTweet(client: tweepy.Client, text: str, isTweeting=False):
-    if not isTweeting:
-        return "We are not tweeting right now. Set isTweeting to True to tweet."
-    response = client.create_tweet(text=text)
-    return response
-
-# def to_fullwidth(s):
-#     return ''.join(
-#         chr(0xFF00 + ord(c) - 0x20) if '!' <= c <= '~' else c
-#         for c in s
-#     )
-
-def format_scoreboard(team1, score1, spaces1a, icons1a, spaces1b, icons1b, misc1,
-                      team2, score2, spaces2a, icons2ai, spaces2ai, icons2aii, spaces2b, icons2b, misc2,
-                      pitcher, pitch_count):
-    line1 = f"| {team1.ljust(4)}{score1:<3}{spaces1a:<18}{icons1a:<2}{spaces1b:<9}{icons1b:<2}{misc1:<8}|"
-    line2 = f"| {team2.ljust(4)}{score2:<2}{spaces2a:<13}{icons2ai:<2}{spaces2ai:<2}{icons2aii:<2}{spaces2b:<6}{icons2b:<2}{misc2:<8}|"
-    line3 = f"|                          ● ● ○    3-2       |"
-    line4 = f"|─────────────|"
-    line5 = f"| {pitcher.ljust(24)}P: {str(pitch_count).ljust(10)}|"
-    line6 = f"|─────────────|"
-
-    return "\n".join(["|─────────────|", line1, line2, line3, line4, line5, line6])
-
-
-def main():
-    client = createClient()
-
-    # Post a tweet
-    response = sendTweet(client, "This is a test automatic tweet using Python woot woot")
-    print(response)
-
-    with open("meadows.json", "r") as f:
-        game = json.load(f)
-    text = pitchbypitch.printAllPitchesFromGame(game)
-    print("\n\n\n")
-    # text = "```\n" + text
-    # text = text + "\n```"
-    # text = text.replace(" ", "\u2003")
-    # text = text.replace("─", "\u2014")
-    print(text)
-    # rows = text.split('\n')
-    # print('\n')
-    # newText = ""
-    # for i in range(len(rows)):
-    #     print(rows[i])
-    #     if i == 0:
-    #         newRow = rows[i][:]
-    """
-                +─────────────────────────+
-                |DET 0         ◆     ▲    |
-                |SD  3        ◆ ◆    9    |
-                |            ● ● ○  3-2   |
-                |─────────────────────────|
-                |Robert Suarez      P:25  |
-                +─────────────────────────+
-    """
-    testText =  ("|─────────────|\n"
-                "| DET 0               ◆          ▲           |\n"
-                "| SD   3            ◆   ◆       9            |\n"
-                "|                        ● ● ○    3-2          |\n"
-                "|─────────────|\n"
-                "| Robert Suarez             P: 25      |\n"
-                "|─────────────|\n")
-
-    print(testText)
-    
-    # tweet_text = format_scoreboard(
-    #     team1="KC", score1="0", spaces1a="", icons1a="◆", spaces1b="", icons1b="▲", misc1="",
-    #     team2="NYY", score2="3", spaces2a="", icons2ai="◆", spaces2ai="", icons2aii="◆", spaces2b="", icons2b="9", misc2="",
-    #     pitcher="Joe List", pitch_count=108
-    # )
-    response = sendTweet(client, testText, isTweeting)
-    print(response)
-
-    # tweet = to_fullwidth(tweet_text)
-    # print(tweet)
-    # print("\n")
-    # print(repr(tweet))
-
-    # from PIL import ImageFont, ImageDraw, Image
-
-    # # Example string
-    # text = "| Robert Suarez             P: 25      |"
-
-    # # Load a font (monospace or any TTF)
-    # font_path = "/System/Library/Fonts/SFNSMono.ttf"  # adjust path
-    # font_size = 24
-    # font = ImageFont.truetype(font_path, font_size)
-
-    # # Dummy image for measurement
-    # img = Image.new("RGB", (1,1))
-    # draw = ImageDraw.Draw(img)
-
-    # # Get bounding box
-    # bbox = draw.textbbox((0,0), text, font)  # (x0, y0, x1, y1)
-    # width_px = bbox[2] - bbox[0]
-    # height_px = bbox[3] - bbox[1]
-
-    # print(f"Width: {width_px}px, Height: {height_px}px")
-    # tweet_text = format_scoreboard(
-    #     team1="KC", score1="0", icons1="◆          ▲", misc1="",
-    #     team2="NYY", score2="3", icons2="◆   ◆       9", misc2="",
-    #     pitcher="Joe List", pitch_count=108
-    # )
-
-    # print(tweet_text)
-
-    # print(ord('─'))
-    # from monospace import monospace
-    # monoText = monospace(text)
-    # print(monoText)
-    # from rich.console import Console
-    # console = Console()
-    # console.print(text)
-    # escaped = text.encode('unicode_escape').decode('utf-8')
-    # print(escaped)
-
-if __name__ == "__main__":
-    main()
-
-
  Full Status Code Mapping Reference
  Abstract Game State    Coded Game State    Status Code     Detailed / Common State Description
  Preview                S                   S               Scheduled (Normal upcoming game)
@@ -418,9 +207,6 @@ if __name__ == "__main__":
  Final                  R                   R               Rained Out
 
  Preview                P
-
-
-
 
 
 # for runner in currentPlay.get("runners", []):
@@ -472,7 +258,5 @@ dropbox api for python:
 https://dropbox-sdk-python.readthedocs.io/en/latest/index.html
 
 
-
-
-
-https://graph.threads.com/v1.0/17936083089369828?fields=id,media_product_type,media_type,media_url,permalink,owner,username,text,topic_tag,timestamp,shortcode,thumbnail_url,children,is_quote_post&access_token=THAANWViZC2T1NBYmJwQi1pTEg5NXE3ZA3ZAHOFhNMm5oekNONTRZAVm9OVEJoSlhDcjN5MmN5b2NodXRsdndCU25GNjBpZADFlLWQ4UC1rTk01ZAlFaQ1JhS2NkaWRNNUVTcmxYbWJuZAkRjY0Q2a3hPWEFzT0tZAMTZAWZA2JybEFSZAUVmSkdRUQZDZD 
+Get threads post info:
+https://graph.threads.com/v1.0/<post_id>?fields=id,media_product_type,media_type,media_url,permalink,owner,username,text,topic_tag,timestamp,shortcode,thumbnail_url,children,is_quote_post&access_token=<access_token> 

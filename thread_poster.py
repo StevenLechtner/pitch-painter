@@ -7,18 +7,25 @@ import time
 from dropbox.exceptions import ApiError
 from PIL import Image, ImageDraw, ImageFont
 from print_util import dprint, vprint
+try:
+    import passwords
+except ImportError:
+    raise SystemExit(
+        "Error: 'passwords.py' file not found.\n"
+        "Please read 'passwords_template.py', copy contents to 'passwords.py', and add your API keys."
+    )
 
 # Threads bot developer credentials
-THREADS_APP_ID = "939353101979475"
-THREADS_APP_SECRET = "685c1596e92d7783929587707bb6ab6e"
-THREADS_ACCESS_TOKEN = "THAANWViZC2T1NBYmJwQi1pTEg5NXE3ZA3ZAHOFhNMm5oekNONTRZAVm9OVEJoSlhDcjN5MmN5b2NodXRsdndCU25GNjBpZADFlLWQ4UC1rTk01ZAlFaQ1JhS2NkaWRNNUVTcmxYbWJuZAkRjY0Q2a3hPWEFzT0tZAMTZAWZA2JybEFSZAUVmSkdRUQZDZD"
-THREADS_USER_ID = "28665889336435626"
+THREADS_APP_ID = passwords.THREADS_APP_ID
+THREADS_APP_SECRET = passwords.THREADS_APP_SECRET
+THREADS_ACCESS_TOKEN = passwords.THREADS_ACCESS_TOKEN
+THREADS_USER_ID = passwords.THREADS_USER_ID
 BASE_URL = f"https://graph.threads.net/v1.0/{THREADS_USER_ID}"
 
 # Dropbox image hosting credentials
-DROPBOX_APP_KEY = "c240comt7wz8sqo"
-DROPBOX_APP_SECRET = "uumup20acpe76wy"
-DROPBOX_REFRESH_TOKEN = "LIZk_Wjvb7MAAAAAAAAAAYO9nqhCcmdldXOmazBt-EEZzVt5biCE64wSj1KDLhM2"
+DROPBOX_APP_KEY = passwords.DROPBOX_APP_KEY
+DROPBOX_APP_SECRET = passwords.DROPBOX_APP_SECRET
+DROPBOX_REFRESH_TOKEN = passwords.DROPBOX_REFRESH_TOKEN
 dbx = dropbox.Dropbox(app_key=DROPBOX_APP_KEY, app_secret=DROPBOX_APP_SECRET, oauth2_refresh_token=DROPBOX_REFRESH_TOKEN)
 
 def postThreadTextAsImage(situationText, descriptionText=None, altText=None, filepath="images/miscPk/temp.png"):

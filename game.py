@@ -2,6 +2,7 @@ import cli
 import copy
 import datetime
 import json
+import pitch_posting_processor
 import requests
 import statsapi
 import time
@@ -148,7 +149,7 @@ class Game():
         self.setPitcher()
 
     def setLastPitch(self, situation: Situation):
-        self.lastPitch = copy.copy(situation)
+        self.lastPitch = copy.deepcopy(situation)
 
     def processAtBatFinished(self, atBatToProcess, output=None):
         vprint("Processing at bat finished...")
@@ -179,28 +180,18 @@ class Game():
                 else:
                     output.emit(f"End {ordinal(self.situation.inning)}.")
 
-        # Post last pitch of at bat to threads if it's a big play
+        # Post last pitch of at bat to threads if it's a big play or scoring play
         if cli.threading:
             # Uncomment to skip posting until at or beyond a specific at bat (debugging purposes)
             # if (atBatToProcess.get("atBatIndex", -1) < 65):
             #     vprint("At bat processed!")
             #     return
-            now = datetime.datetime.now()
-            curTime = f"{now.strftime('%Y-%m-%d_%H-%M-%S')}.{now.microsecond // 1000:03d}"
-            filepath = f"images/{self.gamePk}/play_id_{self.lastPitch.playEventId}_created_{curTime}.png"
-            pitchToPost = copy.copy(self.lastPitch)
 
             # Uncomment below to post all big plays of a game, even if the game is live - retroactively post big pitches form earlier in the game
             # TODO: make this a flag
-            winProb = win_probability.WinProbability(self.gamePk)
-            if winProb.isABigPlay(atBatToProcess.get("about", {}).get("atBatIndex", -1)):
-                description = atBatToProcess.get("result", {}).get("description", "")
-                scoringPlay = atBatToProcess.get("about", {}).get("isScoringPlay", False)
-                # TODO: make sure lastPitch is not updated between at bat ending at win probability waiting to be done (pitch count fucked up, make a deep copy right away and use that instead?)
-                postPitchToThreads(pitchToPost, filepath, description=description, scoringPlay=scoringPlay, awayScore=self.situation.awayScore, homeScore=self.situation.homeScore)
-
-            # # Uncomment below to post live game pitches when actually live - don't retroactively post big pitches from earlier in the game
-            # # TODO: make this a flag
+            pitch_posting_processor.enqueueAtBatForProcessing(self.gamePk, atBatToProcess, self.lastPitch, self.situation.awayScore, self.situation.homeScore)
+            # Uncomment below to post live game pitches when actually live - don't retroactively post big pitches from earlier in the game
+            # TODO: make this a flag
             # curIdx = -1
             # thisBatIdx = -1
             # if self.isLive():
@@ -210,18 +201,12 @@ class Game():
             #     # thisBatIdx = 40
             #     # curIdx = index of numAtBats (40, 41)
             #     # during a live game, len of numAtBats is either thisBatIdx +1 or thisBatIdx +2
-
-
             #     curIdx = self.game.get("liveData", {}).get("plays", {}).get("currentPlay", {}).get("about", {}).get("atBatIndex", -1) - 1 # -1 because currentPlay atBatIndex is the NEXT at bat to process, but this can be wrong because next at bat might not have started yet. we want live_game's atBatIndexToProcess val check...
             #     thisBatIdx = atBatToProcess.get("about", {}).get("atBatIndex", -1)
             #     dprint(f"curIdx: {curIdx}")
             #     dprint(f"thisBatIdx: {thisBatIdx}")
             # if not self.isLive() or (self.isLive() and curIdx == thisBatIdx and curIdx != -1):
-            #     winProb = win_probability.WinProbability(self.gamePk)
-            #     if winProb.isABigPlay(atBatToProcess.get("about", {}).get("atBatIndex", -1)):
-            #         description = atBatToProcess.get("result", {}).get("description", "")
-            #         scoringPlay = atBatToProcess.get("about", {}).get("isScoringPlay", False)
-            #         postPitchToThreads(self.lastPitch, filepath, description=description, scoringPlay=scoringPlay, awayScore=self.situation.awayScore, homeScore=self.situation.homeScore)
+            #     pitch_posting_processor.enqueueAtBatForProcessing(self.gamePk, atBatToProcess, self.lastPitch, self.situation.awayScore, self.situation.homeScore)
         else:
             vprint("We are not posting a thread right now. -t or --thread to post a thread. -h or --help for other command line options")
 

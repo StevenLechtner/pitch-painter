@@ -1,6 +1,7 @@
 import cli
 import datetime
 import json
+import pitch_posting_processor
 import statsapi
 import sys
 import threading
@@ -76,10 +77,10 @@ def processPlayEvent(playEvent, situation, atBatToProcess, game, output):
     # curTime = f"{now.strftime('%Y-%m-%d_%H-%M-%S')}.{now.microsecond // 1000:03d}"
     playEndTime = playEvent.get("endTime", -1).replace(":", "-").replace("T", "_").replace("Z", "")
     situation.setPlayEventId(playEvent.get("playId", f"play_end_time_{playEndTime}"))
-    game.setLastPitch(situation)
 
     if playEvent.get("isPitch", False):
         output.emit(drawPitch(situation))
+        game.setLastPitch(situation)
     output.emit(playEvent.get("details", {}).get("description", ""))
 
         # TODO: implement this as another flag - printing every pitch in the game (remove big play stuff...)
@@ -113,11 +114,12 @@ def processPlayEvent(playEvent, situation, atBatToProcess, game, output):
     if homeScore > -1:
         situation.setHomeScore(homeScore)
     if scoringPlay:
-        now = datetime.datetime.now()
-        curTime = f"{now.strftime('%Y-%m-%d_%H-%M-%S')}.{now.microsecond // 1000:03d}"
-        filepath = f"images/{game.gamePk}/play_id_{game.lastPitch.playEventId}_created_{curTime}.png"
+        # now = datetime.datetime.now()
+        # curTime = f"{now.strftime('%Y-%m-%d_%H-%M-%S')}.{now.microsecond // 1000:03d}"
+        # filepath = f"images/{game.gamePk}/play_id_{game.lastPitch.playEventId}_created_{curTime}.png"
         description = playEvent.get("details", {}).get("description", "")
-        postPitchToThreads(game.lastPitch, filepath, description=description, scoringPlay=True, awayScore=situation.awayScore, homeScore=situation.homeScore)
+        pitch_posting_processor.enqueuePitchForProcessing(game.gamePk, game.lastPitch, description=description, scoringPlay=True, awayScore=situation.awayScore, homeScore=situation.homeScore)
+        # postPitchToThreads(game.lastPitch, filepath, description=description, scoringPlay=True, awayScore=situation.awayScore, homeScore=situation.homeScore)
     # set pitcher for every play event and update pitcher if play event type is a pitching_substitution
     game.setPitcher(playEvent)
 

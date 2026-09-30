@@ -64,6 +64,12 @@ In either app, navigate to Settings -> Accounts Center -> Profiles and personal 
 *   See daily quota usage (x/250)  
     curl -s -X GET "https://graph.threads.com/v1.0/<id>/threads_publishing_limit?fields=quota_usage,config,reply_quota_usage,reply_config,delete_quota_usage,delete_config,location_search_quota_usage,location_search_config&access_token=<access_token>"
 
+*   Threads API Publishing endpoint
+    https://developers.facebook.com/documentation/threads/reference/publishing#post---threads-user-id--threads
+
+*   Threads API Documentation
+    https://developers.facebook.com/documentation/threads
+
 
 ## Dropbox
 

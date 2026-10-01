@@ -3,8 +3,18 @@ import heapq
 import requests
 import statsapi
 import sys
-import time
+import threading
 from print_util import dprint
+
+stop_event = threading.Event()
+
+def stop():
+    print("win_probability stop_event is True")
+    stop_event.set()
+
+def start():
+    print("win_probability stop_event is False")
+    stop_event.clear()
 
 class WinProbability():
     # score weights
@@ -26,9 +36,14 @@ class WinProbability():
         self.topTenScores = []
 
     def getGameWinProbabilities(self):
+        if stop_event.is_set():
+            return []
+
         winProbabilityList = []
         # Try HTTP GET request up to three times before failing
         for attempt in range(3):
+            if stop_event.is_set():
+                return []
             try:
                 winProbabilityList = statsapi.get('game_winProbability', {'gamePk': self.gamePk})
                 if winProbabilityList:
@@ -36,7 +51,8 @@ class WinProbability():
             except requests.exceptions.RequestException as e:
                 print(f"https://statsapi.mlb.com/api/v1.1/game/{self.gamePk}/winProbability request failed (attempt {attempt + 1}/3): {e}")
                 if attempt < 2:
-                    time.sleep(1)
+                    if stop_event.wait(1):
+                        return []
                 else:
                     print(f"Failed to retrieve win probability (game_pk={self.gamePk}) GET request after 3 attempts.")
                     winProbabilityList.clear()
@@ -47,8 +63,17 @@ class WinProbability():
         # wait for at bat at given atBatIndex to be complete with win probability numbers
         # just check if the next atBatIndex is present
         # if not, check if a win probability is 100% (indicates game over)
-        while True:
+        winProbabilityList = []
+        # TODO: don't make this an "infinite" loop. Check for a max of 5(ish) minutes? Determine how long it takes to be 100% sure that the values are updated
+        # TODO: Additional check - see if any values are different (win prob, drama, lev) - different indicates they're updated, but they could be updated to the same...
+        while not stop_event.is_set():
             winProbabilityList = self.getGameWinProbabilities()
+            if not winProbabilityList:
+                # win probabilities list is empty!
+                if stop_event.wait(5):
+                    return None
+                else:
+                    continue
             latestAtBat = winProbabilityList[-1]
             latestAtBatIndex = latestAtBat.get("atBatIndex", -1)
             if latestAtBatIndex > atBatIndex:
@@ -63,25 +88,13 @@ class WinProbability():
                 break
             else:
                 # at bat is not yet complete
-                time.sleep(5)
+                if stop_event.wait(5):
+                    return
 
         for atBat in winProbabilityList:
             if atBat.get("atBatIndex", -1) == atBatIndex:
                 return atBat
         return None
-
-        # time.sleep(30)
-        # for attempt in range(10):
-        #     winProbabilityList = self.getGameWinProbabilities()
-        #     for atBat in winProbabilityList:
-        #         if atBat.get("atBatIndex", -1) == atBatIndex:
-        #             # TODO: Fix this. The at bat technically could be a 0.0 win prob added probably?
-        #             if atBat.get("about", {}).get("isComplete", False) and abs(atBat.get("homeTeamWinProbabilityAdded", 0.0)) > 0.0:
-        #                 return atBat
-        #             else:
-        #                 time.sleep(5)
-        # print(f"Win probability for at bat index {atBatIndex} complete failed after 10 attempts.")
-        # return None
 
     def getWinProbabilityInfo(self, atBat):
         homeProb = atBat.get("homeTeamWinProbability", 0.0)
@@ -113,43 +126,15 @@ class WinProbability():
         dprint(f"win prob complete? {atBat.get("about", {}).get("isComplete", False)}")
         dprint(f"win prob atBatIndex: {atBat.get("atBatIndex", -1)}")
         return score > self.THRESHOLD
-        
-        # winProbabilityList = self.getGameWinProbabilities()
-        # for atBat in winProbabilityList:
-        #     if atBat.get("atBatIndex", -1) == atBatIndex:
-
-        #         if not atBat.get("about", {}).get("isComplete", False):
-
-        #         winProb = self.getWinProbabilityInfo(atBat)
-        #         probsAddedVal = abs(winProb.homeTeamWinProbabilityAdded)
-        #         levIdxVal = winProb.leverageIndex
-        #         dramaIdxVal = winProb.dramaIndex
-        #         score = (
-        #             self.PROBS_ADDED_WEIGHT * (probsAddedVal / self.NORM_PROBS_ADDED) 
-        #             + self.LEV_IDX_WEIGHT * (levIdxVal / self.NORM_LEV_IDX) 
-        #             + self.DRAMA_IDX_WEIGHT * (dramaIdxVal / self.NORM_DRAMA_IDX)
-        #         )
-        #         dprint(f"At Bat score {score}/{self.THRESHOLD}")
-        #         dprint(f"probsAddedVal: {probsAddedVal}")
-        #         dprint(f"levIdxVal: {levIdxVal}")
-        #         dprint(f"dramaIdxVal: {dramaIdxVal}")
-        #         dprint(f"win prob complete? {atBat.get("about", {}).get("isComplete", False)}")
-        #         dprint(f"win prob atBatIndex: {atBat.get("atBatIndex", -1)}")
-        #         return score > self.THRESHOLD
-        # return False
 
     def isABigPlay(self, atBatIndex):
+        if stop_event.is_set():
+            return
+
         # TODO: make this smarter. we want to wait for at bat to be done before checking isScoringPlay and isAboveThreshold, but this currently checks at bat finish twice (here + isAboveThreshold())
         atBat = self.getFinishedAtBat(atBatIndex)
         scoringPlay = atBat.get("about", {}).get("isScoringPlay", False)
         return self.isAboveThreshold(atBatIndex) or scoringPlay
-
-        # winProbabilityList = self.getGameWinProbabilities()
-        # scoringPlay = False
-        # if len(winProbabilityList) > atBatIndex:
-        #     # TODO: Don't assume that the at bat index for self.getGameWinProbabilities()[atBatIndex] == atBatIndex
-        #     scoringPlay = self.getGameWinProbabilities()[atBatIndex].get("about", {}).get("isScoringPlay", False)
-        # return self.isAboveThreshold(atBatIndex) or scoringPlay
 
     def setWinProbabilities(self):
         winProbabilityList = self.getGameWinProbabilities()

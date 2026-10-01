@@ -3,7 +3,7 @@ import dropbox
 import os
 import requests
 import sys
-import time
+import threading
 from dropbox.exceptions import ApiError
 from PIL import Image, ImageDraw, ImageFont
 from print_util import dprint, vprint
@@ -28,7 +28,19 @@ DROPBOX_APP_SECRET = passwords.DROPBOX_APP_SECRET
 DROPBOX_REFRESH_TOKEN = passwords.DROPBOX_REFRESH_TOKEN
 dbx = dropbox.Dropbox(app_key=DROPBOX_APP_KEY, app_secret=DROPBOX_APP_SECRET, oauth2_refresh_token=DROPBOX_REFRESH_TOKEN)
 
+stop_event = threading.Event()
+
+def stop():
+    print("thread_poster stop_event is True")
+    stop_event.set()
+
+def start():
+    print("thread_poster stop_event is False")
+    stop_event.clear()
+
 def postThreadTextAsImage(situationText, descriptionText=None, altText=None, filepath="images/miscPk/temp.png"):
+    if stop_event.is_set():
+        return
     if not cli.threading:
         vprint("We are not posting a thread right now. -t or --thread to post a thread. -h or --help for other command line options")
         return
@@ -37,14 +49,25 @@ def postThreadTextAsImage(situationText, descriptionText=None, altText=None, fil
     imageUrl = uploadImageToDropbox(filepath)
     contents = {"media_type": "IMAGE", "image_url": imageUrl, "text": descriptionText, "alt_text": altText if altText else situationText, "access_token": THREADS_ACCESS_TOKEN} # thread an image
     postThread(contents)
-    os.remove(filepath)
-    dbx.files_delete_v2(f"/{filepath}")
+    try:
+        os.remove(filepath)
+    except FileNotFoundError:
+        pass
+    try:
+        dbx.files_delete_v2(f"/{filepath}")
+    except ApiError:
+        pass
 
 def uploadImageToDropbox(filepath):
+    if stop_event.is_set():
+        return None
+
     with open(filepath, "rb") as fp:
         contents = fp.read()
-
     uploadResp = dbx.files_upload(contents, f"/{filepath}", dropbox.files.WriteMode.overwrite, mute=True, autorename=True)
+    if stop_event.is_set():
+        return None
+
     try:
         sharedLinkMetadata = dbx.sharing_create_shared_link_with_settings(uploadResp.path_lower)
         previewUrl = sharedLinkMetadata.url
@@ -61,13 +84,20 @@ def uploadImageToDropbox(filepath):
     return directImageUrl
 
 def postThread(contents):
+    if stop_event.is_set():
+        return
     if not cli.threading:
         vprint("We are not posting a thread right now. -t or --thread to post a thread. -h or --help for other command line options")
         return
 
     # Try to post the thread to threads up to three times before failing
     for attempt in range(3):
+        if stop_event.is_set():
+            return
+
         creationId = createThreadToPost(contents)
+        if stop_event.is_set():
+            return
         # Uncomment to test thread creation without posting and adding to daily quota
         # if creationId == -1:
         #     continue
@@ -84,17 +114,24 @@ def postThread(contents):
             vprint(f"{BASE_URL}/threads_publish attempt failed (attempt {attempt + 1}/3)")
             dprint(f"endpoint /threads_publish details: \n\tStatus code: {threadPublish.status_code}\n\tJSON: {threadPublish.json()}\n\tRaw: {threadPublish}")
             if attempt < 2:
-                time.sleep(5)
+                if stop_event.wait(5):
+                    return
             else:
                 vprint(f"Failed to create thread to post after 3 attempts.")
 
 def createThreadToPost(contents):
+    if stop_event.is_set():
+        return -1
     # Try to create thread to post up to three times before failing
     for attempt in range(3):
+        if stop_event.is_set():
+            return -1
         # Optional check: verify url status ok
         try:
             vprint("Checking url status...")
             urlCheck = requests.get(contents.get("image_url", None), timeout=10)
+            if stop_event.is_set():
+                return -1
             dprint(f"URL Check Response: \n\tStatus code: {urlCheck.status_code}\n\tContent-Type: {urlCheck.headers.get("Content-Type")}\n\tURL: {urlCheck.url}")
         except Exception as e:
             vprint(f"URL Check exception: {e}")
@@ -102,6 +139,8 @@ def createThreadToPost(contents):
         # Thread creation endpoint
         vprint(f"POST endpoint /threads with image url {contents.get("image_url", None)}...")
         thread = requests.post(f"{BASE_URL}/threads", json=contents)
+        if stop_event.is_set():
+            return -1
         creationId = thread.json().get("id", -1)
         if creationId != -1:
             vprint(f"Thread drafted successfully! (id={creationId})")
@@ -110,7 +149,8 @@ def createThreadToPost(contents):
             vprint(f"{BASE_URL}/threads attempt failed (attempt {attempt + 1}/3)")
             dprint(f"endpoint /threads details: \n\tStatus code: {thread.status_code}\n\tJSON: {thread.json()}\n\tRaw: {thread}")
             if attempt < 2:
-                time.sleep(30)
+                if stop_event.wait(30):
+                    return -1
             else:
                 vprint(f"Failed to create thread to post after 3 attempts.")
     return -1

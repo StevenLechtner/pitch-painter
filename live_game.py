@@ -1,11 +1,9 @@
 import cli
-import datetime
 import json
 import pitch_posting_processor
 import statsapi
 import sys
 import threading
-import time
 import win_probability
 from game import Game, Status
 from pitchbypitch import drawPitch, postPitchToThreads
@@ -22,6 +20,7 @@ class LiveGameWorker(QtCore.QObject):
         super().__init__()
         self.gamePk = gamePk
         self.stop_event = threading.Event()
+        pitch_posting_processor.start()
 
     @QtCore.Slot()
     def run(self):
@@ -30,6 +29,7 @@ class LiveGameWorker(QtCore.QObject):
 
     def stop(self):
         self.stop_event.set()
+        pitch_posting_processor.stop()
 
 def getGamePk():
     schedule = statsapi.get('schedule', {'sportId': 1})
@@ -73,8 +73,6 @@ def isABigPlay(playEvent, atBatToProcess, game):
     return False
 
 def processPlayEvent(playEvent, situation, atBatToProcess, game, output):
-    # now = datetime.datetime.now()
-    # curTime = f"{now.strftime('%Y-%m-%d_%H-%M-%S')}.{now.microsecond // 1000:03d}"
     playEndTime = playEvent.get("endTime", -1).replace(":", "-").replace("T", "_").replace("Z", "")
     situation.setPlayEventId(playEvent.get("playId", f"play_end_time_{playEndTime}"))
 
@@ -114,12 +112,8 @@ def processPlayEvent(playEvent, situation, atBatToProcess, game, output):
     if homeScore > -1:
         situation.setHomeScore(homeScore)
     if scoringPlay:
-        # now = datetime.datetime.now()
-        # curTime = f"{now.strftime('%Y-%m-%d_%H-%M-%S')}.{now.microsecond // 1000:03d}"
-        # filepath = f"images/{game.gamePk}/play_id_{game.lastPitch.playEventId}_created_{curTime}.png"
         description = playEvent.get("details", {}).get("description", "")
         pitch_posting_processor.enqueuePitchForProcessing(game.gamePk, game.lastPitch, description=description, scoringPlay=True, awayScore=situation.awayScore, homeScore=situation.homeScore)
-        # postPitchToThreads(game.lastPitch, filepath, description=description, scoringPlay=True, awayScore=situation.awayScore, homeScore=situation.homeScore)
     # set pitcher for every play event and update pitcher if play event type is a pitching_substitution
     game.setPitcher(playEvent)
 
@@ -148,10 +142,6 @@ def processPlayEvent(playEvent, situation, atBatToProcess, game, output):
         pitchCount += 1
         game.pitchCountDict[situation.pitcher] = pitchCount
         situation.setPitchCount(pitchCount)
-    # ANOTHER WAY - issue with this is that the pitch count only works if this pitch to process is the latest pitch (live):
-    # ["liveData"]["plays"]["currentPlay"]["matchup"]["pitcher"]["id"]
-    # ["liveData"]["boxscore"]["teams"]["away"]["players"]["ID676282"]["person"]["id"]
-    # ["liveData"]["boxscore"]["teams"]["away"]["players"]["ID676282"]["stats"]["numberOfPitches"]
 
 # TODO: Pitching change during an inning does not update until the second at bat happens - should check pitcher every pitch honestly
 def processAtBat(game, atBatIndexToProcess, output, gamePk, stop_event):
@@ -253,12 +243,6 @@ def printAllPitchesFromLiveGame(gamePk, output, stop_event):
         output.emit(border)
         output.emit(recap)
         output.emit(border)
-        # threadTest = 0
-        # while (threadTest < 6):
-        #     vprint(f"Testing thread/stop_event ({threadTest + 1}/6)")
-        #     if stop_event.wait(1):
-        #         break
-        #     threadTest += 1
         return
 
 def outputVerbosePrinting(text):

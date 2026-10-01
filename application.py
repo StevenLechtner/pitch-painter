@@ -4,9 +4,9 @@ import sys
 from live_game import LiveGameWorker
 from print_util import vprint, dprint
 from PySide6 import QtCore, QtWidgets, QtGui
+from shiboken6 import isValid
 
 class ApplicationWidget(QtWidgets.QWidget):
-    #scheduleDateChanged = QtCore.Signal(QtCore.QDate)
 
     def __init__(self):
         super().__init__()
@@ -43,8 +43,9 @@ class ApplicationWidget(QtWidgets.QWidget):
     def toggleGame(self):
         if self.showingGame:
             self.hideGame()
-            if self.liveGameThread is not None and self.liveGameThread.isRunning():
-                self.showGameBtn.setEnabled(False)
+            if self.liveGameThread is not None and isValid(self.liveGameThread):
+                if self.liveGameThread.isRunning():
+                    self.showGameBtn.setEnabled(False)
         else:
             self.showGame()
 
@@ -85,8 +86,9 @@ class ApplicationWidget(QtWidgets.QWidget):
         self.startLiveGameThread(gamePk)
 
     def startLiveGameThread(self, gamePk):
-        if self.liveGameThread is not None and self.liveGameThread.isRunning():
-            self.stopLiveGameThread()
+        if self.liveGameThread is not None and isValid(self.liveGameThread):
+            if self.liveGameThread.isRunning():
+                self.stopLiveGameThread()
         self.liveGameThread = QtCore.QThread()
         self.liveGameWorker = LiveGameWorker(gamePk)
         self.liveGameWorker.moveToThread(self.liveGameThread)
@@ -99,8 +101,9 @@ class ApplicationWidget(QtWidgets.QWidget):
         self.liveGameThread.start()
 
     def startScheduleThread(self):
-        if self.scheduleThread is not None and self.scheduleThread.isRunning():
-            self.stopScheduleThread()
+        if self.scheduleThread is not None and isValid(self.scheduleThread):
+            if self.scheduleThread.isRunning():
+                self.stopScheduleThread()
         self.scheduleThread = QtCore.QThread()
         self.scheduleWorker = schedule.ScheduleWorker()
         self.scheduleWorker.moveToThread(self.scheduleThread)
@@ -142,29 +145,34 @@ class ApplicationWidget(QtWidgets.QWidget):
         dprint("All threads stopped")
 
     def stopLiveGameThread(self):
-        if self.liveGameThread is not None and self.liveGameThread.isRunning():
-            dprint("Stopping live game worker")
+        if self.liveGameThread is not None:
+            dprint("Stopping live game worker and child threads")
             self.liveGameWorker.stop()
-            dprint("Quitting live game thread")
-            self.liveGameThread.quit()
-            dprint("Waiting for live game thread")
-            self.liveGameThread.wait()
-            dprint("Live game thread stopped")
+            dprint("Live game thread and child threads stopped")
+
+        if self.liveGameThread is not None and isValid(self.liveGameThread):
+            if self.liveGameThread.isRunning():
+                dprint("Quitting live game thread")
+                self.liveGameThread.quit()
+                dprint("Waiting for live game thread")
+                self.liveGameThread.wait()
+                dprint("Live game thread stopped")
+            else:
+                dprint("Live game thread was not running")
 
     def stopScheduleThread(self):
-        if self.scheduleThread is not None and self.scheduleThread.isRunning():
-            dprint("Stopping schedule worker")
-            self.scheduleWorker.stop()
-            dprint("Quitting schedule thread")
-            self.scheduleThread.quit()
-            dprint("Waiting for schedule thread")
-            self.scheduleThread.wait()
-            dprint("Schedule thread stopped")
+        if self.scheduleThread is not None and isValid(self.scheduleThread):
+            if self.scheduleThread.isRunning():
+                dprint("Stopping schedule worker")
+                self.scheduleWorker.stop()
+                dprint("Quitting schedule thread")
+                self.scheduleThread.quit()
+                dprint("Waiting for schedule thread")
+                self.scheduleThread.wait()
+                dprint("Schedule thread stopped")
 
     def liveGameThreadFinished(self):
-        dprint("Live game thread finished")
-        self.liveGameThread = None
-        self.liveGameWorker = None
+        dprint("Live game output finished")
         self.showGameBtn.setEnabled(True)
 
     def scheduleThreadFinished(self):

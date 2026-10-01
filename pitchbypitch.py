@@ -66,15 +66,6 @@ def drawPitchForTweeting(situation: Situation):
               f"{pitcherRow}\n"
               "+─────────────+"
     )
-    # print("+─────────────────────────+")
-    # print(awayRow)
-    # print(homeRow)
-    # print(countRow)
-    # print("|─────────────────────────|")
-    # print(pitcherRow)
-    # print("+─────────────────────────+\n")
-    # print(f"{output}\n")
-    #print("│") # TODO: maybe use in the future?
     return output
 
 def drawPitchWithScoreAltText(_awayScore, _homeScore, situation):
@@ -167,15 +158,6 @@ def drawPitch(situation: Situation):
               f"{pitcherRow}\n"
               "+─────────────────────────+"
     )
-    # print("+─────────────────────────+")
-    # print(awayRow)
-    # print(homeRow)
-    # print(countRow)
-    # print("|─────────────────────────|")
-    # print(pitcherRow)
-    # print("+─────────────────────────+\n")
-    # print(f"{output}\n")
-    #print("│") # TODO: maybe use in the future?
     return output
 
 def drawPitchWithScoreUpdate(_awayScore, _homeScore, situation):

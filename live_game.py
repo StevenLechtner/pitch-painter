@@ -143,7 +143,6 @@ def processPlayEvent(playEvent, situation, atBatToProcess, game, output):
         game.pitchCountDict[situation.pitcher] = pitchCount
         situation.setPitchCount(pitchCount)
 
-# TODO: Pitching change during an inning does not update until the second at bat happens - should check pitcher every pitch honestly
 def processAtBat(game, atBatIndexToProcess, output, gamePk, stop_event):
     situation = game.situation
     atBatToProcess = game.atBats[atBatIndexToProcess]

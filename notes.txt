@@ -1,11 +1,9 @@
 Bug fixes:
-Remove while True in win_probability.py and replace with a thread and stop_event
-    Add additional check for mid inning updates - it won't add a new at bat for atBatIndex check until next at bat starts (~2 mins delay for last at bat to post to threads)
-Have the image url be valid every time so /threads and /threads_publish always work as expected
-    Delete all images in dropbox and os on application close (make image uploading a thread and delete all images on thread close - a queue of what to add and what's added, remove from added when deleted successfully)
-        On upload, if you get an image already exists, maybe delete that image and then upload again
-            ApiError message: SharedLinkAlreadyExistsMetadata()
-        maybe just delete parent images folder on close - could provide a --save flag to save images?
+Add additional check for mid inning updates - it won't add a new at bat for atBatIndex check until next at bat starts (~2 mins delay for last at bat to post to threads)
+Delete all images in dropbox and os on application close (make image uploading a thread and delete all images on thread close - a queue of what to add and what's added, remove from added when deleted successfully)
+    On upload, if you get an image already exists, maybe delete that image and then upload again
+        ApiError message: SharedLinkAlreadyExistsMetadata()
+    maybe just delete parent images folder on close - could provide a --save flag to save images?
     Threads API long term refresh access token may be needed (look into it)
 Extra innings centered error in drawing the pitch
 Do api call either more frequently or way less frequently
@@ -260,3 +258,9 @@ https://dropbox-sdk-python.readthedocs.io/en/latest/index.html
 
 Get threads post info:
 https://graph.threads.com/v1.0/<post_id>?fields=id,media_product_type,media_type,media_url,permalink,owner,username,text,topic_tag,timestamp,shortcode,thumbnail_url,children,is_quote_post&access_token=<access_token> 
+
+How to run the venv:
+Set vscode env to 3.14.3 venv and click play in the file.
+source .venv/bin/activate
+which python3
+which pip

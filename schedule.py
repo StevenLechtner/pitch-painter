@@ -34,7 +34,6 @@ class ScheduleWorker(QtCore.QObject):
         self.date = date
         self.update_event.set()
 
-    # statsapi.schedule(date=None, start_date=None, end_date=None, team="", opponent="", sportId=1, game_id=None, season=None, include_series_status=True)
     def setScheduleStr(self):
         if self.date is None:
             self.gamePks.clear()

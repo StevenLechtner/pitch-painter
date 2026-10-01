@@ -1,4 +1,0 @@
-allPlays
-currentPlay
-scoringPlays
-playsByInning

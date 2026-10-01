@@ -58,7 +58,6 @@ class WinProbability():
                     winProbabilityList.clear()
         return []
 
-    # TODO: Test this in a live game
     def getFinishedAtBat(self, atBatIndex):
         # wait for at bat at given atBatIndex to be complete with win probability numbers
         # just check if the next atBatIndex is present

@@ -1,7 +1,0 @@
-How to run the venv:
-
-Set vscode env to 3.14.3 venv and click play in the file.
-
-source .venv/bin/activate
-which python3
-which pip

@@ -1,26 +1,27 @@
 import cli
 import json
+import passwords
 import pitchbypitch
 import sys
 import tweepy
 from print_util import dprint, vprint
 
 # Twitter bot developer credentials
-api_key = "1zgs4BdzcdQ4GdASh1MN1YLrX"
-api_secret = "WDrigEIEedvKmY56YVRRI5lwRQ8fgdE8xbaCyQHrlq6vTYGCyV"
-bearer_token="AAAAAAAAAAAAAAAAAAAAAHxr4QEAAAAAa3f4Poyxl6tiAahYfczWUvIb2BM%3D1qjsfcexjueJJECUyoiM0caE5MoIpewkWqbeRKMagIV9AxELM0"
-consumer_key="NzdCRG44ZTlOTHNlNU55MVpzRW46MTpjaQ"
-consumer_secret="jpNYdzcIvpkjGQo2wz20ujesGPIgrnFtPbNEON3Ji_q1xnYNsa"
-access_token = "1970860626563239936-oee1HdnDKx45FVPT9pDfbuRaGsLSA8"
-access_secret = "aTre5O09neKGGQuhdXt1PKnf6JsRwULS0dmzpJfSjNmNM"
+TWITTER_API_KEY = passwords.TWITTER_API_KEY
+TWITTER_API_SECRET = passwords.TWITTER_API_SECRET
+TWITTER_BEARER_TOKEN= passwords.TWITTER_BEARER_TOKEN
+TWITTER_CONSUMER_KEY= passwords.TWITTER_CONSUMER_KEY
+TWITTER_CONSUMER_SECRET= passwords.TWITTER_CONSUMER_SECRET
+TWITTER_ACCESS_TOKEN = passwords.TWITTER_ACCESS_TOKEN
+TWITTER_ACCESS_SECRET = passwords.TWITTER_ACCESS_SECRET
 
 def createClient():
     # v2 authentication
-    client = tweepy.Client(bearer_token=bearer_token,
-                           consumer_key=api_key,
-                           consumer_secret=api_secret,
-                           access_token=access_token,
-                           access_token_secret=access_secret)
+    client = tweepy.Client(bearer_token=TWITTER_BEARER_TOKEN,
+                           consumer_key=TWITTER_API_KEY,
+                           consumer_secret=TWITTER_API_SECRET,
+                           access_token=TWITTER_ACCESS_TOKEN,
+                           access_token_secret=TWITTER_ACCESS_SECRET)
     return client
 
 def sendTweet(client: tweepy.Client, text: str, isTweeting=False):
@@ -32,10 +33,10 @@ def sendTweet(client: tweepy.Client, text: str, isTweeting=False):
 
     # tweet png
     auth = tweepy.OAuth1UserHandler(
-        api_key,
-        api_secret,
-        access_token,
-        access_secret
+        TWITTER_API_KEY,
+        TWITTER_API_SECRET,
+        TWITTER_ACCESS_TOKEN,
+        TWITTER_ACCESS_SECRET
     )
     api = tweepy.API(auth)
     media = api.media_upload("pitch.png")

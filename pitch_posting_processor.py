@@ -4,6 +4,7 @@ import threading
 import pitchbypitch
 import thread_poster
 import win_probability
+from print_util import dprint
 from PySide6.QtCore import QRunnable, QThreadPool
 
 pitchPool = QThreadPool()
@@ -11,14 +12,14 @@ pitchPool.setMaxThreadCount(1)
 stop_event = threading.Event()
 
 def stop():
-    print("pitch_posting_processor stop_event is True")
+    dprint("pitch_posting_processor stop_event is True")
     stop_event.set()
     pitchPool.clear()
     win_probability.stop()
     thread_poster.stop()
 
 def start():
-    print("pitch_posting_processor stop_event is False")
+    dprint("pitch_posting_processor stop_event is False")
     stop_event.clear()
     win_probability.start()
     thread_poster.start()

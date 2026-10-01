@@ -11,7 +11,7 @@ def usage():
     print("  -h, --help          Show this help message and exit")
     print("  -v, --verbose       Enable verbose mode")
     print("  -d, --debug         Enable debug logs")
-    print("  -t, --threading     Posting threads to meta threads")
+    print("  -t, --threading     Posting Threads to Meta Threads")
 
 def getOptions(args):
     options = "hvdt::o:"

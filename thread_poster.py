@@ -31,11 +31,11 @@ dbx = dropbox.Dropbox(app_key=DROPBOX_APP_KEY, app_secret=DROPBOX_APP_SECRET, oa
 stop_event = threading.Event()
 
 def stop():
-    print("thread_poster stop_event is True")
+    dprint("thread_poster stop_event is True")
     stop_event.set()
 
 def start():
-    print("thread_poster stop_event is False")
+    dprint("thread_poster stop_event is False")
     stop_event.clear()
 
 def postThreadTextAsImage(situationText, descriptionText=None, altText=None, filepath="images/miscPk/temp.png"):
@@ -218,7 +218,6 @@ def main(args):
     # print(f"Image URL: {imageUrl}")
     # # contents = {"media_type": "TEXT", "text": "Hello, World!", "access_token": THREADS_ACCESS_TOKEN} # thread a text box
     # contents = {"media_type": "IMAGE", "image_url": imageUrl, "access_token": THREADS_ACCESS_TOKEN} # thread an image
-    # # deleteImageFromImgbb("https://ibb.co/LDnVKRJB/0e1797976c3c19c9c509aa712854d7f3")
     # postThread(contents)
     postThreadTextAsImage(testAndScoreText, descriptionText=descriptionTextOneLine, altText=altText)
 

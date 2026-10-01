@@ -9,11 +9,11 @@ from print_util import dprint
 stop_event = threading.Event()
 
 def stop():
-    print("win_probability stop_event is True")
+    dprint("win_probability stop_event is True")
     stop_event.set()
 
 def start():
-    print("win_probability stop_event is False")
+    dprint("win_probability stop_event is False")
     stop_event.clear()
 
 class WinProbability():

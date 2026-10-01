@@ -13,17 +13,13 @@ Abs challenge ending the inning and then getting overturned
 Test this game: rangers orioles 30-3, Aug 22, 2007
 
 Additional features:
-Make thread_poster a thread of its own (this time an actual multithreading thread)
 Live game that updates pitch by pitch with descriptions of each pitch and at bat
     along with additional info like mid 5th after the top ends, for example
     Pitch info - type, speed, break, etc.
 Add a settings menu in the app to toggle on tweeting, descriptions, debug logs, specific game from json, etc.
 Get game diff instead of whole new game for live game updating
 Make the app look pretty
-Remove imgbb account
-Remove cloudinary account
-Update pitchpainter email (make my own, not stevenlech35@gmail.com)
-Add to github but make it private, idk? - copyright issue...
+Update pitchpainter email (make my own, not ****35@gmail.com)
 
 For Threads:
 curl "https://graph.threads.net/v1.0/me?fields=id,username&access_token=<access_token>"

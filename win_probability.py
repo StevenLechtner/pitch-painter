@@ -88,7 +88,7 @@ class WinProbability():
             else:
                 # at bat is not yet complete
                 if stop_event.wait(5):
-                    return
+                    return None
 
         for atBat in winProbabilityList:
             if atBat.get("atBatIndex", -1) == atBatIndex:
@@ -128,10 +128,12 @@ class WinProbability():
 
     def isABigPlay(self, atBatIndex):
         if stop_event.is_set():
-            return
+            return False
 
         # TODO: make this smarter. we want to wait for at bat to be done before checking isScoringPlay and isAboveThreshold, but this currently checks at bat finish twice (here + isAboveThreshold())
         atBat = self.getFinishedAtBat(atBatIndex)
+        if atBat is None:
+            return False
         scoringPlay = atBat.get("about", {}).get("isScoringPlay", False)
         return self.isAboveThreshold(atBatIndex) or scoringPlay
 

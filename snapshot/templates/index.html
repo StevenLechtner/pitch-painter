@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html lang="en">
+<body>
+  <h1>Game Snapshot Server!</h1>
+  Hello {{ context.name }}! </br>
+  {% for snapshot_id in context.snapshot_ids %}
+  <a href="{{ url_for('show_snapshot', snapshot_id=snapshot_id) }}"> {{snapshot_id}} </a>
+  </br>
+  {% endfor %}
+</body>
+</html>

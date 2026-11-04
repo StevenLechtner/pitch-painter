@@ -3,3 +3,4 @@ __pycache__/
 images/
 passwords.py
 password_notes.txt
+tests/snapshots/

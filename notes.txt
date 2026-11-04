@@ -13,6 +13,16 @@ Abs challenge ending the inning and then getting overturned
 Test this game: rangers orioles 30-3, Aug 22, 2007
 
 Additional features:
+Replay debugger - HELPFUL FOR THE OFFSEASON WHEN THE API IS NOT GETTING UPDATED BY MLB
+    1. GET https://statsapi.mlb.com/api/v1.1/game/745369/feed/live/timestamps to get the timestamps of a finished game
+    2. GET https://statsapi.mlb.com/api/v1.1/game/745369/feed/live?timecode=TIMESTAMP to get the live feed from a timestamp
+    3. Create a test folder for that gamePk with all raw timestamps as such:
+    --- gamePk
+        |--- manifest
+        |--- snapshot-0000.json
+        |--- snapshot-0001.json
+        |--- snapshot-0002.json
+    4. 
 Live game that updates pitch by pitch with descriptions of each pitch and at bat
     along with additional info like mid 5th after the top ends, for example
     Pitch info - type, speed, break, etc.
@@ -20,6 +30,12 @@ Add a settings menu in the app to toggle on tweeting, descriptions, debug logs, 
 Get game diff instead of whole new game for live game updating
 Make the app look pretty
 Update pitchpainter email (make my own, not ****35@gmail.com)
+https://github.com/trevor-viljoen/mlbapi/blob/master/docs/endpoints/live.md
+https://github.com/toddrob99/MLB-StatsAPI/wiki/Endpoints#note-3
+https://github.com/toddrob99/MLB-StatsAPI/wiki/Function:-notes
+https://statsapi.mlb.com/api/v1/schedule?sportId=1&date=2026-09-29
+https://statsapi.mlb.com/api/v1.1/game/849843/feed/live
+https://statsapi.mlb.com/api/v1/game/823169/winProbability
 
 For Threads:
 curl "https://graph.threads.net/v1.0/me?fields=id,username&access_token=<access_token>"
@@ -80,7 +96,7 @@ https://statsapi.mlb.com/api/v1/game/776368/content
 
 Pretty print json (works on windows vscode): Ctrl + A, Ctrl + K + F
 
-745369
+meadows gamePk: 745369
 
 https://statsapi.mlb.com/api/v1.1/game/745369/feed/live
 

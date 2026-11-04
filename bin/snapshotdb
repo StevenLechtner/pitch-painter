@@ -1,0 +1,127 @@
+#!/bin/bash
+# snapshotdb
+
+# Stop on errors
+# See https://vaneyckt.io/posts/safer_bash_scripts_with_set_euxo_pipefail/
+set -Eeuo pipefail
+
+# Sanity check command line options
+usage() {
+  echo "Usage: $0 gamePk (create|destroy|reset|dump|random)"
+  echo "Example: $0 745369 create"
+}
+
+if [ $# -ne 2 ]; then
+  usage
+  exit 1
+fi
+
+GAMEPK=$1
+cd "$(dirname "${BASH_SOURCE[0]}")/.."
+echo cd $(pwd)
+
+# Parse argument.  $1 is the first argument
+case $2 in
+  "create")
+    if ! [[ "$GAMEPK" =~ ^[0-9]{6}$ ]]; then
+      echo "gamePk $GAMEPK INVALID. Make sure it is exactly six digits long"
+      exit 1
+    fi
+    TIMESTAMPS=()
+    while IFS= read -r timestamp; do
+      TIMESTAMPS+=("$timestamp")
+    done < <(
+      curl https://statsapi.mlb.com/api/v1.1/game/$GAMEPK/feed/live/timestamps --silent | jq -r '.[]')
+    if [ ${#TIMESTAMPS[@]} -eq 0 ]; then
+      echo "curl https://statsapi.mlb.com/api/v1.1/game/$GAMEPK/feed/live/timestamps provided no timestamps (gamePk $GAMEPK)"
+      exit 1
+    fi
+    mkdir -p tests/snapshots/$GAMEPK
+    echo mkdir -p tests/snapshots/$GAMEPK
+    index=0
+    dirPath="tests/snapshots/$GAMEPK"
+    echo $dirPath
+    METADATA_FILE="tests/snapshots/metadata.json"
+    if [ ! -f "$METADATA_FILE" ]; then
+      echo "{}" > "$METADATA_FILE"
+    fi
+    for timestamp in "${TIMESTAMPS[@]}"; do
+      printf -v filename '%s/snapshot-%04d.json' "$dirPath" "$index"
+      #echo "$index: $timestamp $filename"
+      if [ -e "$filename" ]; then
+        echo "$index/${#TIMESTAMPS[@]}: Skipping existing file: $filename"
+      else
+        echo "$index/${#TIMESTAMPS[@]}: Downloading $timestamp -> $filename"
+        contents=$(curl --fail --silent --show-error --get --data-urlencode "timecode=$timestamp" "https://statsapi.mlb.com/api/v1.1/game/${GAMEPK}/feed/live") || exit 1
+        jq --indent 4 --arg timestamp "$timestamp" '{timestamp: $timestamp, content: .}' <<< "$contents" > "$filename" || exit 1
+      fi
+      TEMP_METADATA="${METADATA_FILE}.tmp"
+      jq --arg k "$timestamp" --arg v "$filename" '. + {($k): $v}' "$METADATA_FILE" > "$TEMP_METADATA"
+      mv "$TEMP_METADATA" "$METADATA_FILE"
+      index=$((index + 1))
+    done
+    ;;
+
+  "destroy")
+		rm -rf tests/snapshots/$GAMEPK
+    echo rm -rf tests/snapshots/$GAMEPK
+    ;;
+
+  "reset")
+		rm -rf var/insta485.sqlite3 var/uplaods
+		mkdir -p var/uploads
+		sqlite3 var/insta485.sqlite3 < sql/schema.sql
+		sqlite3 var/insta485.sqlite3 < sql/data.sql
+		cp sql/uploads/* var/uploads/
+
+        echo rm -rf var/insta485.sqlite3 var/uplaods
+		echo mkdir -p var/uploads
+		echo sqlite3 var/insta485.sqlite3 < sql/schema.sql
+		echo sqlite3 var/insta485.sqlite3 < sql/data.sql
+		echo cp sql/uploads/* var/uploads/
+    ;;
+
+  "dump")
+    echo
+    echo sqlite3 -batch -line var/insta485.sqlite3 'SELECT * FROM comments'
+    sqlite3 -batch -line var/insta485.sqlite3 'SELECT * FROM comments'
+    echo
+    echo sqlite3 -batch -line var/insta485.sqlite3 'SELECT * FROM following'
+    sqlite3 -batch -line var/insta485.sqlite3 'SELECT * FROM following'
+    echo
+    echo sqlite3 -batch -line var/insta485.sqlite3 'SELECT * FROM likes'
+    sqlite3 -batch -line var/insta485.sqlite3 'SELECT * FROM likes'
+    echo
+    echo sqlite3 -batch -line var/insta485.sqlite3 'SELECT * FROM posts'
+    sqlite3 -batch -line var/insta485.sqlite3 'SELECT * FROM posts'
+    echo
+    echo sqlite3 -batch -line var/insta485.sqlite3 'SELECT * FROM users'
+    sqlite3 -batch -line var/insta485.sqlite3 'SELECT * FROM users'
+    ;;
+
+    "random")
+    # rm -rf var/insta485.sqlite3
+    # rm -rf var/insta485.sqlite3 var/uplaods
+    # mkdir -p var/uploads
+		# sqlite3 var/insta485.sqlite3 < sql/schema.sql
+    DB_FILENAME=var/insta485.sqlite3
+    # PASSWORD='sha512$a45ffdcc71884853a2cba9e6bc55e812$c739cef1aec45c6e345c8463136dc1ae2fe19963106cf748baf87c7102937aa96928aa1db7fe1d8da6bd343428ff3167f4500c8a61095fb771957b4367868fb8';
+    # sqlite3 -echo -batch ${DB_FILENAME} "INSERT INTO users(username, fullname, email, filename, password) VALUES ('awdeorio', 'Andrew DeOrio', 'awdeorio@umich.edu', 'e1a7c5c32973862ee15173b0259e3efdb6a391af.jpg', '${PASSWORD}');"
+    for i in `seq 1 100`; do
+      FILENAME="$(uuidgen).png"
+      NUMS=()
+      for j in `seq 1 6`; do
+          NUMS+=($(($RANDOM % 255)))
+      done
+      convert -size 360x360 \
+              radial-gradient:"rgb(${NUMS[0]},${NUMS[1]},${NUMS[2]})-rgb(${NUMS[3]},${NUMS[4]},${NUMS[5]})" \
+              -pointsize 64 -fill black -gravity center -annotate 0 "image $i" "var/uploads/$FILENAME"
+      OWNER="awdeorio"
+      sqlite3 -echo -batch ${DB_FILENAME} "INSERT INTO posts(filename, owner) VALUES('${FILENAME}','${OWNER}');"
+    done
+    ;;
+  *)
+    usage
+    exit 1
+    ;;
+esac

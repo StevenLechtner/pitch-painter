@@ -1,0 +1,17 @@
+#!/bin/bash
+# snapshotrun
+
+# Stop on errors
+# See https://vaneyckt.io/posts/safer_bash_scripts_with_set_euxo_pipefail/
+set -Eeuo pipefail
+
+if ! test -d tests/snapshots/745369; then
+  echo "Error: can't find snapshot dir tests/snapshots/745369
+        Try: ./bin/snapshotdb <gamePk> create"
+  exit 1
+fi
+
+echo "npx webpack --watch &
+flask --app snapshot --debug run --host 0.0.0.0 --port 8000"
+# npx webpack --watch &
+flask --app snapshot --debug run --host 0.0.0.0 --port 8000

@@ -11,6 +11,7 @@ pitchPool = QThreadPool()
 pitchPool.setMaxThreadCount(1)
 stop_event = threading.Event()
 
+
 def stop():
     dprint("pitch_posting_processor stop_event is True")
     stop_event.set()
@@ -18,11 +19,13 @@ def stop():
     win_probability.stop()
     thread_poster.stop()
 
+
 def start():
     dprint("pitch_posting_processor stop_event is False")
     stop_event.clear()
     win_probability.start()
     thread_poster.start()
+
 
 def postToThreads(gamePk, playEventId, pitchToPost, awayScore, homeScore, scoringPlay, description):
     now = datetime.datetime.now()
@@ -34,7 +37,8 @@ def postToThreads(gamePk, playEventId, pitchToPost, awayScore, homeScore, scorin
     else:
         text = pitchbypitch.drawPitch(pitchToPost)
         altText = pitchbypitch.drawPitchForTweeting(pitchToPost)
-    thread_poster.postThreadTextAsImage(text, descriptionText=description, altText=altText, filepath=filepath)  
+    thread_poster.postThreadTextAsImage(text, descriptionText=description, altText=altText, filepath=filepath)
+
 
 def processAndPostPitch(gamePk, atBatToProcess, playEventId, pitchToPost, awayScore, homeScore):
     winProb = win_probability.WinProbability(gamePk)
@@ -42,6 +46,7 @@ def processAndPostPitch(gamePk, atBatToProcess, playEventId, pitchToPost, awaySc
         description = atBatToProcess.get("result", {}).get("description", "")
         scoringPlay = atBatToProcess.get("about", {}).get("isScoringPlay", False)
         postToThreads(gamePk, playEventId, pitchToPost, awayScore, homeScore, scoringPlay, description)
+
 
 class AtBatQueue(QRunnable):
 
@@ -55,7 +60,15 @@ class AtBatQueue(QRunnable):
         self.homeScore = homeScore
 
     def run(self):
-        processAndPostPitch(self.gamePk, self.atBatToProcess, self.playEventId, self.pitchToPost, self.awayScore, self.homeScore)
+        processAndPostPitch(
+            self.gamePk,
+            self.atBatToProcess,
+            self.playEventId,
+            self.pitchToPost,
+            self.awayScore,
+            self.homeScore
+        )
+
 
 class PitchQueue(QRunnable):
 
@@ -70,11 +83,21 @@ class PitchQueue(QRunnable):
         self.scoringPlay = scoringPlay
 
     def run(self):
-        postToThreads(self.gamePk, self.playEventId, self.pitchToPost, self.awayScore, self.homeScore, self.scoringPlay, self.description)
+        postToThreads(
+            self.gamePk,
+            self.playEventId,
+            self.pitchToPost,
+            self.awayScore,
+            self.homeScore,
+            self.scoringPlay,
+            self.description
+        )
+
 
 def enqueueAtBatForProcessing(gamePk, atBatToProcess, lastPitch, awayScore, homeScore):
     abQueue = AtBatQueue(gamePk, atBatToProcess, lastPitch, awayScore, homeScore)
     pitchPool.start(abQueue)
+
 
 def enqueuePitchForProcessing(gamePk, lastPitch, description, scoringPlay, awayScore, homeScore):
     pQueue = PitchQueue(gamePk, lastPitch, description, scoringPlay, awayScore, homeScore)

@@ -5,6 +5,7 @@ import sys
 threading = False
 postingMode = "catch-up"
 
+
 def usage():
     print(f"Usage: python {sys.argv[0]} [options] arguments")
     print("Options:")
@@ -12,6 +13,7 @@ def usage():
     print("  -v, --verbose       Enable verbose mode")
     print("  -d, --debug         Enable debug logs")
     print("  -t, --threading     Posting Threads to Meta Threads")
+
 
 def getOptions(args):
     options = "hvdt::o:"

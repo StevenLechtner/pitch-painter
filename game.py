@@ -12,11 +12,13 @@ from pitchbypitch import postPitchToThreads
 from print_util import dprint, vprint
 from situation import Situation
 
+
 class Status(Enum):
     PREVIEW = 1
     LIVE = 2
     FINAL = 3
     UNKNOWN = 4
+
 
 class Game():
     def __init__(self):
@@ -48,12 +50,16 @@ class Game():
             dprint("Game is nothing for some reason")
             self.gameInfo = "Game is None"
             return False
-        self.atBats = self.game.get("liveData", {}).get("plays", {}).get("allPlays", []) # a play is an at bat from this game
+        self.atBats = (
+            self.game.get("liveData", {})
+            .get("plays", {})
+            .get("allPlays", [])
+        )  # a play is an at bat from this game
         if (len(self.atBats) == 0):
             dprint("Game has not started yet!")
             return False
         return True
-    
+
     def setStatus(self):
         if self.game is not None:
             status = self.game.get("gameData", {}).get("status", {}).get("codedGameState", "")
@@ -82,8 +88,17 @@ class Game():
             return
         awayAbbr = self.game.get("gameData", {}).get("teams", {}).get("away", {}).get("abbreviation", "[away_team]")
         homeAbbr = self.game.get("gameData", {}).get("teams", {}).get("home", {}).get("abbreviation", "[home_team]")
-        self.curAwayPitcher = self.game.get("gameData", {}).get("probablePitchers", {}).get("away", {}).get("fullName", "[away_pitcher]")
-        self.atBats = self.game.get("liveData", {}).get("plays", {}).get("allPlays", []) # a play is an at bat from this game
+        self.curAwayPitcher = (
+            self.game.get("gameData", {})
+            .get("probablePitchers", {})
+            .get("away", {})
+            .get("fullName", "[away_pitcher]")
+        )
+        self.atBats = (
+            self.game.get("liveData", {})
+            .get("plays", {})
+            .get("allPlays", [])
+        )  # a play is an at bat from this game
         self.curHomePitcher = self.atBats[0].get("matchup", {}).get("pitcher", {}).get("fullName", "[home_pitcher]")
         self.curPitcher = self.curHomePitcher
         self.situation = Situation()
@@ -96,19 +111,22 @@ class Game():
             try:
                 self.game = statsapi.get('game', {'gamePk': _gamePk})
                 if not self.isValid():
-                    continue # game we got was not valid, try again...
+                    continue  # game we got was not valid, try again...
                 if self.gamePk != _gamePk:
                     self.startNewGame()
                     self.gamePk = _gamePk
                 return self.game
             except requests.exceptions.RequestException as e:
-                print(f"https://statsapi.mlb.com/api/v1.1/game/{_gamePk}/feed/live request failed (attempt {attempt + 1}/3): {e}")
+                print(
+                    f"https://statsapi.mlb.com/api/v1.1/game/{_gamePk}/feed/live "
+                    f"request failed (attempt {attempt + 1}/3): {e}"
+                )
                 if attempt < 2:
                     time.sleep(1)
                 else:
                     print(f"Failed to retrieve game (game_pk={_gamePk}) GET request after 3 attempts.")
         return None
-    
+
     def getGameByFilePath(self, _filePath):
         with open(_filePath, "r") as f:
             self.game = json.load(f)
@@ -118,16 +136,21 @@ class Game():
 
     def getRecap(self):
         if self.situation.awayScore > self.situation.homeScore:
-            return f"|  Final score: {self.situation.awayScore}-{self.situation.homeScore}, {self.situation.awayTeam} over {self.situation.homeTeam}  |"
+            return (
+                f"|  Final score: {self.situation.awayScore}-{self.situation.homeScore}, "
+                f"{self.situation.awayTeam} over {self.situation.homeTeam}  |"
+            )
         else:
-            return f"|  Final score: {self.situation.homeScore}-{self.situation.awayScore}, {self.situation.homeTeam} over {self.situation.awayTeam}  |"
-        
+            return (
+                f"|  Final score: {self.situation.homeScore}-{self.situation.awayScore}, "
+                f"{self.situation.homeTeam} over {self.situation.awayTeam}  |"
+            )
 
     # sets current pitcher. Updates pitcher if play event type is a pitching_substitution
     def setPitcher(self, playEvent=None):
         if not self.isValid():
             return
-        
+
         if playEvent is None:
             if self.situation.top:
                 self.curPitcher = self.curHomePitcher
@@ -136,7 +159,7 @@ class Game():
             self.situation.setPitcher(self.curPitcher)
             self.situation.setPitchCount(self.pitchCountDict.get(self.situation.pitcher, 0))
             return
-        
+
         default = "[home_pitcher]" if self.situation.top else "[away_pitcher]"
         pitcher = default
         if playEvent.get("details", {}).get("eventType", "") == "pitching_substitution":
@@ -187,33 +210,60 @@ class Game():
             #     vprint("At bat processed!")
             #     return
 
-            # Uncomment below to post all big plays of a game, even if the game is live - retroactively post big pitches form earlier in the game
+            # Uncomment below to post all big plays of a game, even if the game is live
+            # And retroactively post big pitches form earlier in the game
             # TODO: make this a flag
-            pitch_posting_processor.enqueueAtBatForProcessing(self.gamePk, atBatToProcess, self.lastPitch, self.situation.awayScore, self.situation.homeScore)
-            # Uncomment below to post live game pitches when actually live - don't retroactively post big pitches from earlier in the game
+            pitch_posting_processor.enqueueAtBatForProcessing(
+                self.gamePk, atBatToProcess,
+                self.lastPitch,
+                self.situation.awayScore,
+                self.situation.homeScore
+            )
+            # Uncomment below to post live game pitches when actually live
+            # And don't retroactively post big pitches from earlier in the game
             # TODO: make this a flag
             # curIdx = -1
             # thisBatIdx = -1
             # if self.isLive():
-            #     # TODO: make this work properly to catch up to live and then check win probs from live till end of game.
+            #     # TODO: make this work to catch up to live and then check win probs from live till end of game.
             #     dprint("game is live")
             #     # numAtBats = len(self.atBats) # 41, 42
             #     # thisBatIdx = 40
             #     # curIdx = index of numAtBats (40, 41)
             #     # during a live game, len of numAtBats is either thisBatIdx +1 or thisBatIdx +2
-            #     curIdx = self.game.get("liveData", {}).get("plays", {}).get("currentPlay", {}).get("about", {}).get("atBatIndex", -1) - 1 # -1 because currentPlay atBatIndex is the NEXT at bat to process, but this can be wrong because next at bat might not have started yet. we want live_game's atBatIndexToProcess val check...
+            #     curIdx = (
+            #         self.game.get("liveData", {})
+            #         .get("plays", {})
+            #         .get("currentPlay", {})
+            #         .get("about", {})
+            #         .get("atBatIndex", -1)
+            #         - 1
+            #     )
+            #     # -1 because currentPlay atBatIndex is the NEXT at bat to process,
+            #     # but this can be wrong because next at bat might not have started yet.
+            #     # we want live_game's atBatIndexToProcess val check...
             #     thisBatIdx = atBatToProcess.get("about", {}).get("atBatIndex", -1)
             #     dprint(f"curIdx: {curIdx}")
             #     dprint(f"thisBatIdx: {thisBatIdx}")
             # if not self.isLive() or (self.isLive() and curIdx == thisBatIdx and curIdx != -1):
-            #     pitch_posting_processor.enqueueAtBatForProcessing(self.gamePk, atBatToProcess, self.lastPitch, self.situation.awayScore, self.situation.homeScore)
+            #     pitch_posting_processor.enqueueAtBatForProcessing(
+            #         self.gamePk,
+            #         atBatToProcess,
+            #         self.lastPitch,
+            #         self.situation.awayScore,
+            #         self.situation.homeScore
+            #     )
         else:
-            vprint("We are not posting a thread right now. -t or --thread to post a thread. -h or --help for other command line options")
+            vprint(
+                "We are not posting a thread right now. "
+                "-t or --thread to post a thread. -h or --help for other command line options"
+            )
 
         vprint("At bat processed!")
 
     def __str__(self):
         return f"{self.game}\ngamePK: {self.gamePk}\nsituation: {self.situation}"
+
 
 def ordinal(n: int):
     if 11 <= (n % 100) <= 13:

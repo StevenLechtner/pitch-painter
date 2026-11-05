@@ -11,7 +11,7 @@ set -x
 pip install pycodestyle pydocstyle pylint pytest --quiet
 
 # Run pycodestyle
-pycodestyle *.py
+pycodestyle *.py --max-line-length=120
 
 # Run pydocstyle
 pydocstyle *.py

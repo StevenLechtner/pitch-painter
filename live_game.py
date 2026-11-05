@@ -12,6 +12,7 @@ from PySide6 import QtCore
 
 desiredTeam = 'Detroit Tigers'
 
+
 class LiveGameWorker(QtCore.QObject):
     output = QtCore.Signal(str)
     finished = QtCore.Signal()
@@ -31,6 +32,7 @@ class LiveGameWorker(QtCore.QObject):
         self.stop_event.set()
         pitch_posting_processor.stop()
 
+
 def getGamePk():
     schedule = statsapi.get('schedule', {'sportId': 1})
     today = '2026-05-18'
@@ -48,6 +50,7 @@ def getGamePk():
                     return gamePk
     return -1
 
+
 def getTeamsByGame(gamePk):
     game = statsapi.get('game', {'gamePk': gamePk})
     homeId = game["gameData"]["teams"]["home"]["id"]
@@ -55,6 +58,7 @@ def getTeamsByGame(gamePk):
     homeTeam = getTeamName(homeId)
     awayTeam = getTeamName(awayId)
     return [homeTeam, awayTeam]
+
 
 def getTeamName(teamId):
     team = statsapi.get('team', {'teamId': teamId})
@@ -65,12 +69,16 @@ def getTeamName(teamId):
             teamName = teamInfo['name']
     return teamName
 
+
 def isABigPlay(playEvent, atBatToProcess, game):
-    if atBatToProcess.get("about", {}).get("isComplete", False) and \
-        (atBatToProcess.get("playEvents", {})[-1].get("index", -1) == playEvent.get("index", -1)):
+    if (
+        atBatToProcess.get("about", {}).get("isComplete", False)
+        and (atBatToProcess.get("playEvents", {})[-1].get("index", -1) == playEvent.get("index", -1))
+    ):
         winProb = win_probability.WinProbability(game.gamePk)
         return winProb.isAboveThreshold(atBatToProcess.get("about", {}).get("atBatIndex", -1))
     return False
+
 
 def processPlayEvent(playEvent, situation, atBatToProcess, game, output):
     playEndTime = playEvent.get("endTime", -1).replace(":", "-").replace("T", "_").replace("Z", "")
@@ -81,27 +89,36 @@ def processPlayEvent(playEvent, situation, atBatToProcess, game, output):
         game.setLastPitch(situation)
     output.emit(playEvent.get("details", {}).get("description", ""))
 
-        # TODO: implement this as another flag - printing every pitch in the game (remove big play stuff...)
-        # playId = playEvent.get("playId", -1)
-        # filepath = f"images/{game.gamePk}/{playId}.png"
-        # #if (atBatToProcess.get("atBatIndex", -1) >= 65):
-        # if cli.threading:
-        #     if game.isLive():
-        #         print("game is live")
-        #         curIdx = game.game.get("liveData", {}).get("plays", {}).get("currentPlay", {}).get("about", {}).get("atBatIndex", -1)
-        #         thisBatIdx = atBatToProcess.get("about", {}).get("atBatIndex", -1)
-        #         print(curIdx)
-        #         print(thisBatIdx)
-        #         if curIdx == thisBatIdx and curIdx != -1:
-        #             if isABigPlay(playEvent, atBatToProcess, game):
-        #                 description = atBatToProcess.get("result", {}).get("description", "")
-        #                 postPitchToThreads(situation, filepath, description=description)
-        #     else:
-        #         if isABigPlay(playEvent, atBatToProcess, game):
-        #             description = atBatToProcess.get("result", {}).get("description", "")
-        #             postPitchToThreads(situation, filepath, description=description)
-        # else:
-        #     vprint("We are not posting a thread right now. -t or --thread to post a thread. -h or --help for other command line options")
+    # TODO: implement this as another flag - printing every pitch in the game (remove big play stuff...)
+    # playId = playEvent.get("playId", -1)
+    # filepath = f"images/{game.gamePk}/{playId}.png"
+    # #if (atBatToProcess.get("atBatIndex", -1) >= 65):
+    # if cli.threading:
+    #     if game.isLive():
+    #         print("game is live")
+    #         curIdx = (
+    #             game.game.get("liveData", {})
+    #             .get("plays", {})
+    #             .get("currentPlay", {})
+    #             .get("about", {})
+    #             .get("atBatIndex", -1)
+    #         )
+    #         thisBatIdx = atBatToProcess.get("about", {}).get("atBatIndex", -1)
+    #         print(curIdx)
+    #         print(thisBatIdx)
+    #         if curIdx == thisBatIdx and curIdx != -1:
+    #             if isABigPlay(playEvent, atBatToProcess, game):
+    #                 description = atBatToProcess.get("result", {}).get("description", "")
+    #                 postPitchToThreads(situation, filepath, description=description)
+    #     else:
+    #         if isABigPlay(playEvent, atBatToProcess, game):
+    #             description = atBatToProcess.get("result", {}).get("description", "")
+    #             postPitchToThreads(situation, filepath, description=description)
+    # else:
+    #     vprint(
+    #         "We are not posting a thread right now. "
+    #         "-t or --thread to post a thread. -h or --help for other command line options"
+    #     )
 
     # update if a run scored mid at bat - wild pitch, stolen home, error on pick off, etc
     scoringPlay = playEvent.get("details", {}).get("isScoringPlay", False)
@@ -113,15 +130,24 @@ def processPlayEvent(playEvent, situation, atBatToProcess, game, output):
         situation.setHomeScore(homeScore)
     if scoringPlay:
         description = playEvent.get("details", {}).get("description", "")
-        pitch_posting_processor.enqueuePitchForProcessing(game.gamePk, game.lastPitch, description=description, scoringPlay=True, awayScore=situation.awayScore, homeScore=situation.homeScore)
+        pitch_posting_processor.enqueuePitchForProcessing(
+            game.gamePk,
+            game.lastPitch,
+            description=description,
+            scoringPlay=True,
+            awayScore=situation.awayScore,
+            homeScore=situation.homeScore
+        )
     # set pitcher for every play event and update pitcher if play event type is a pitching_substitution
     game.setPitcher(playEvent)
 
     dprint("Is current play complete? ", atBatToProcess.get("about", {}).get("isComplete", False))
     dprint("Current playEvents[-1] index", atBatToProcess.get("playEvents", {})[-1].get("index", -1))
     dprint("Current playEvent index", playEvent.get("index", -1))
-    if atBatToProcess.get("about", {}).get("isComplete", False) and \
-        (atBatToProcess.get("playEvents", {})[-1].get("index", -1) == playEvent.get("index", -1)):
+    if (
+        atBatToProcess.get("about", {}).get("isComplete", False)
+        and (atBatToProcess.get("playEvents", {})[-1].get("index", -1) == playEvent.get("index", -1))
+    ):
         # The at bat is complete - set score, baserunners, and outs, and set balls and strikes to 0
         situation.setAwayScore(atBatToProcess.get("result", {}).get("awayScore", -1))
         situation.setHomeScore(atBatToProcess.get("result", {}).get("homeScore", -1))
@@ -143,6 +169,7 @@ def processPlayEvent(playEvent, situation, atBatToProcess, game, output):
         game.pitchCountDict[situation.pitcher] = pitchCount
         situation.setPitchCount(pitchCount)
 
+
 def processAtBat(game, atBatIndexToProcess, output, gamePk, stop_event):
     situation = game.situation
     atBatToProcess = game.atBats[atBatIndexToProcess]
@@ -150,7 +177,7 @@ def processAtBat(game, atBatIndexToProcess, output, gamePk, stop_event):
     dprint(f"Now batting: {atBatToProcess.get("matchup", {}).get("batter", {}).get("fullName", "")}")
     situation.setInning(atBatToProcess.get("about", {}).get("inning", -1))
     situation.setTop(atBatToProcess.get("about", {}).get("isTopInning", False))
-    game.setPitcher() # set pitcher when new at bat starts to account for inning change
+    game.setPitcher()  # set pitcher when new at bat starts to account for inning change
     situation.setBaserunnersAtStartOfAtBat(atBatToProcess)
 
     # Loop through all play events of current play - print when a pitch is thrown
@@ -166,7 +193,11 @@ def processAtBat(game, atBatIndexToProcess, output, gamePk, stop_event):
     # Then check if the at bat is complete
     if not atBatToProcess.get("about", {}).get("isComplete", False):
         # If it's not, then wait for it to be complete
-        while not atBatToProcess.get("about", {}).get("isComplete", False) or currentPlayEventToProcess <= latestPlayEventIndex:
+        while not (
+            atBatToProcess.get("about", {})
+            .get("isComplete", False)
+            or currentPlayEventToProcess <= latestPlayEventIndex
+        ):
             while currentPlayEventToProcess <= latestPlayEventIndex:
                 processPlayEvent(playEvents[currentPlayEventToProcess], situation, atBatToProcess, game, output)
                 currentPlayEventToProcess += 1
@@ -192,6 +223,7 @@ def processAtBat(game, atBatIndexToProcess, output, gamePk, stop_event):
     output.emit(atBatToProcess.get("result", {}).get("description", ""))
     game.processAtBatFinished(atBatToProcess, output)
 
+
 def printAllPitchesFromLiveGame(gamePk, output, stop_event):
     while not stop_event.is_set():
         game = Game()
@@ -209,10 +241,10 @@ def printAllPitchesFromLiveGame(gamePk, output, stop_event):
             else:
                 latestAtBatIndex = -1
             while atBatIndexToProcess > latestAtBatIndex:
-                # All at bats have been processed but the game is not over - ping and wait for next at bat from the server
+                # All at bats have been processed but the game is not over - ping + wait for next at bat from the server
                 dprint("Waiting for next at bat to start...")
                 if stop_event.wait(2):
-                    return # stop_event was sent, return
+                    return  # stop_event was sent, return
                 game.getGameByGamePk(gamePk)
                 if game.atBats:
                     latestAtBatIndex = game.atBats[-1].get("atBatIndex", -1)
@@ -226,7 +258,11 @@ def printAllPitchesFromLiveGame(gamePk, output, stop_event):
             dprint("atBatIndexToProcess", atBatIndexToProcess)
             dprint("latestAtBatIndex", latestAtBatIndex)
             processAtBat(game, atBatIndexToProcess, output, gamePk, stop_event)
-            vprint(game.atBats[atBatIndexToProcess].get("result", {}).get("description", "")) # print at bat description
+            vprint(
+                game.atBats[atBatIndexToProcess]
+                .get("result", {})
+                .get("description", "")
+            )  # print at bat description
             atBatIndexToProcess += 1
 
         # additional check - stop_event got set within processAtBat()
@@ -244,8 +280,10 @@ def printAllPitchesFromLiveGame(gamePk, output, stop_event):
         output.emit(border)
         return
 
+
 def outputVerbosePrinting(text):
     vprint(text)
+
 
 def main(args):
     '''
@@ -260,9 +298,9 @@ def main(args):
     # # # with open("tests/example_out.json", "r") as f:
     # #     game = json.load(f)
     # pitchbypitch.printLiveGame(game)
-    #printTeamName(116)
+    # printTeamName(116)
 
-    #getTeamsByGame(776189)
+    # getTeamsByGame(776189)
     # gamePk = getGamePk()
     # if (gamePk == -1):
     #     print(f"The {desiredTeam} do not play today!")
@@ -276,6 +314,7 @@ def main(args):
     testThread.output.connect(outputVerbosePrinting)
     printAllPitchesFromLiveGame(gamePk, testThread.output, testThread.stop_event)
     return 0
+
 
 if __name__ == "__main__":
     main(sys.argv[1:])

@@ -9,11 +9,12 @@ from print_util import dprint, vprint
 # Twitter bot developer credentials
 TWITTER_API_KEY = passwords.TWITTER_API_KEY
 TWITTER_API_SECRET = passwords.TWITTER_API_SECRET
-TWITTER_BEARER_TOKEN= passwords.TWITTER_BEARER_TOKEN
-TWITTER_CONSUMER_KEY= passwords.TWITTER_CONSUMER_KEY
-TWITTER_CONSUMER_SECRET= passwords.TWITTER_CONSUMER_SECRET
+TWITTER_BEARER_TOKEN = passwords.TWITTER_BEARER_TOKEN
+TWITTER_CONSUMER_KEY = passwords.TWITTER_CONSUMER_KEY
+TWITTER_CONSUMER_SECRET = passwords.TWITTER_CONSUMER_SECRET
 TWITTER_ACCESS_TOKEN = passwords.TWITTER_ACCESS_TOKEN
 TWITTER_ACCESS_SECRET = passwords.TWITTER_ACCESS_SECRET
+
 
 def createClient():
     # v2 authentication
@@ -23,6 +24,7 @@ def createClient():
                            access_token=TWITTER_ACCESS_TOKEN,
                            access_token_secret=TWITTER_ACCESS_SECRET)
     return client
+
 
 def sendTweet(client: tweepy.Client, text: str, isTweeting=False):
     if not isTweeting:
@@ -44,6 +46,7 @@ def sendTweet(client: tweepy.Client, text: str, isTweeting=False):
 
     return response
 
+
 def main(args):
     cli.getOptions(args)
     client = createClient()
@@ -63,7 +66,7 @@ def main(args):
               "|─────────────────────────|\n"
               "|Robert Suarez      P:25  |\n"
               "+─────────────────────────+\n")
-    testText =  ("|─────────────|\n"
+    testText = ("|─────────────|\n"
                 "| DET 0               ◆          ▲            |\n"
                 "| SD   3            ◆   ◆       9            |\n"
                 "|                        ● ● ○    3-2         |\n"
@@ -77,6 +80,7 @@ def main(args):
     # tweet the result
     # response = sendTweet(client, testText, cli.threading)
     # print(response)
+
 
 if __name__ == "__main__":
     main(sys.argv[1:])

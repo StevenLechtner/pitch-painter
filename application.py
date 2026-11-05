@@ -6,6 +6,7 @@ from print_util import vprint, dprint
 from PySide6 import QtCore, QtWidgets, QtGui
 from shiboken6 import isValid
 
+
 class ApplicationWidget(QtWidgets.QWidget):
 
     def __init__(self):
@@ -69,20 +70,30 @@ class ApplicationWidget(QtWidgets.QWidget):
         self.gamesWidget.show()
         game = self.gamesWidget.currentItem()
         if game is not None and game.flags() & QtCore.Qt.ItemFlag.ItemIsSelectable:
-            self.showGameBtn.setText("View " + game.text() + " on " + self.calendar.selectedDate().toString("MMMM d, yyyy"))
+            self.showGameBtn.setText(
+                "View "
+                + game.text()
+                + " on "
+                + self.calendar.selectedDate().toString("MMMM d, yyyy"))
         else:
             self.showGameBtn.setText("Select desired game...")
 
     def getPitches(self, gamePk):
-        ##### Preset JSON file #####
+        # ================
+        # Preset JSON file
+        # ================
         # with open("tests/meadows.json", "r") as f:
         #     game = json.load(f)
 
-        ##### Assumes game is completed (no threading needed) #####
+        # ===============================================
+        # Assumes game is completed (no threading needed)
+        # ===============================================
         # game = statsapi.get('game', {'gamePk': gamePk})
         # return pitchbypitch.listAllPitchesFromGame(game)
 
-        ##### Print pitches for live game (threading required) #####
+        # ================================================
+        # Print pitches for live game (threading required)
+        # ================================================
         self.startLiveGameThread(gamePk)
 
     def startLiveGameThread(self, gamePk):
@@ -118,7 +129,7 @@ class ApplicationWidget(QtWidgets.QWidget):
     def updateGameOutput(self, text):
         # update text_widget with text
         self.text_widget.append(text)
-        
+
         # verbose print text to console
         vprint(text)
 
@@ -179,14 +190,14 @@ class ApplicationWidget(QtWidgets.QWidget):
         dprint("Schedule thread finished")
         self.scheduleThread = None
         self.scheduleWorker = None
-    
+
     def initCalander(self):
         self.calendar = QtWidgets.QCalendarWidget()
         self.calendar.setGridVisible(True)
         self.calendar.show()
         self.calendar.selectionChanged.connect(self.updateDateSelected)
         self.updateDateSelected()
-    
+
     def updateDateSelected(self):
         date = self.calendar.selectedDate()
         self.scheduleWorker.date = date
@@ -200,14 +211,19 @@ class ApplicationWidget(QtWidgets.QWidget):
     def updateGameSelected(self):
         game = self.gamesWidget.currentItem()
         if game is not None and game.flags() & QtCore.Qt.ItemFlag.ItemIsSelectable:
-            self.showGameBtn.setText("View " + game.text() + " on " + self.calendar.selectedDate().toString("MMMM d, yyyy"))
-            #print(game.text())
+            self.showGameBtn.setText(
+                "View "
+                + game.text()
+                + " on "
+                + self.calendar.selectedDate().toString("MMMM d, yyyy"))
+            # print(game.text())
 
     def closeEvent(self, event):
         print("Application shutdown...")
         self.stopAllThreads()
         print("Done!")
         event.accept()
+
 
 def main(args):
     cli.getOptions(args)
@@ -216,11 +232,12 @@ def main(args):
 
     widget = ApplicationWidget()
     widget.resize(800, 600)
-    #widget.resize(1000, 1000)
+    # widget.resize(1000, 1000)
     widget.setWindowTitle("Pitcher Painter")
     widget.show()
 
     sys.exit(app.exec())
+
 
 if __name__ == '__main__':
     main(sys.argv[1:])

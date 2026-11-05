@@ -6,6 +6,7 @@ URLs include:
 /uploads/<path:filename>
 """
 # import arrow
+import os
 import flask
 import snapshot
 
@@ -15,7 +16,7 @@ def show_index():
     """Display / route."""
     input_context = {}
     input_context["name"] = "Steven"
-    input_context["snapshot_ids"] = ["20240905_232547", "20240906_001553", "20240906_004238", "20240906_004306"]
+    input_context["gamePks"] = [d for d in os.listdir("tests/snapshots/") if os.path.isdir(os.path.join("tests/snapshots/", d))]
     context = {"context": input_context}
     return flask.render_template("index.html", **context)
 

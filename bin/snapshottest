@@ -1,0 +1,25 @@
+#!/bin/bash
+#
+# snapshottest
+#
+# Clean, build and start server
+
+
+# Stop on errors, print commands
+# See https://vaneyckt.io/posts/safer_bash_scripts_with_set_euxo_pipefail/
+set -Eeuo pipefail
+set -x
+
+pip install pycodestyle pydocstyle pylint pytest --quiet
+
+# # Run pycodestyle
+# pycodestyle *.py snapshot
+
+# # Run pydocstyle
+# pydocstyle *.py snapshot
+
+# # Run pylint
+# pylint *.py snapshot
+
+# Run all unit tests
+pytest -v tests

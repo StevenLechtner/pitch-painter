@@ -1,0 +1,23 @@
+#!/bin/bash
+#
+# pitchpaintertest
+
+
+# Stop on errors, print commands
+# See https://vaneyckt.io/posts/safer_bash_scripts_with_set_euxo_pipefail/
+set -Eeuo pipefail
+set -x
+
+pip install pycodestyle pydocstyle pylint pytest --quiet
+
+# Run pycodestyle
+pycodestyle *.py
+
+# Run pydocstyle
+pydocstyle *.py
+
+# Run pylint
+pylint *.py
+
+# Run all unit tests
+pytest -v tests/pitch_painter

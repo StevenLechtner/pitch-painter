@@ -1,6 +1,7 @@
 """Views, one for each Snapshot page."""
 from snapshot.views.index import show_index
 from snapshot.views.snapshot import show_snapshot
+from snapshot.views.snapshot import show_game_snapshots
 # from snapshot.views.users import show_user
 # from snapshot.views.users import show_followers
 # from snapshot.views.users import show_following

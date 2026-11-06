@@ -209,8 +209,8 @@ class ApplicationWidget(QtWidgets.QWidget):
         print("Done!")
         event.accept()
 
-def main(args):
-    cli.getOptions(args)
+def main():
+    cli.getOptions(sys.argv[1:])
     app = QtWidgets.QApplication(sys.argv)
     app.setApplicationName("Pitcher Painter")
 
@@ -223,4 +223,4 @@ def main(args):
     sys.exit(app.exec())
 
 if __name__ == '__main__':
-    main(sys.argv[1:])
+    main()

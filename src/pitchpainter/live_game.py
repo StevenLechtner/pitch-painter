@@ -247,13 +247,13 @@ def printAllPitchesFromLiveGame(gamePk, output, stop_event):
 def outputVerbosePrinting(text):
     vprint(text)
 
-def main(args):
+def main():
     '''
     +======================+
     |   Live Play Output   |
     +======================+
     '''
-    cli.getOptions(args)
+    cli.getOptions(sys.argv[1:])
 
     # game = statsapi.get('game', {'gamePk': 776189})
     # # with open("tests/meadows.json", "r") as f:
@@ -278,4 +278,4 @@ def main(args):
     return 0
 
 if __name__ == "__main__":
-    main(sys.argv[1:])
+    main()

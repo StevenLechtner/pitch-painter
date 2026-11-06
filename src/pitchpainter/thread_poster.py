@@ -179,8 +179,8 @@ def textToPNG(text, filepath="images/miscPk/temp.png"):
     image.save(filepath)
     return filepath
 
-def main(args):
-    cli.getOptions(args)
+def main():
+    cli.getOptions(sys.argv[1:])
 
     testText = ("+─────────────────────────+\n"
                 "|DET 0         ◆     ▲    |\n"
@@ -231,4 +231,4 @@ def main(args):
     # dprint(textToPNG(pitchbypitch.drawPitch(situation)))
 
 if __name__ == "__main__":
-    main(sys.argv[1:])
+    main()

@@ -44,8 +44,8 @@ def sendTweet(client: tweepy.Client, text: str, isTweeting=False):
 
     return response
 
-def main(args):
-    cli.getOptions(args)
+def main():
+    cli.getOptions(sys.argv[1:])
     client = createClient()
 
     # Post a tweet
@@ -79,4 +79,4 @@ def main(args):
     # print(response)
 
 if __name__ == "__main__":
-    main(sys.argv[1:])
+    main()

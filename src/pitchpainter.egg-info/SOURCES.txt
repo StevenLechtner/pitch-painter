@@ -19,6 +19,7 @@ src/pitchpainter/win_probability.py
 src/pitchpainter.egg-info/PKG-INFO
 src/pitchpainter.egg-info/SOURCES.txt
 src/pitchpainter.egg-info/dependency_links.txt
+src/pitchpainter.egg-info/entry_points.txt
 src/pitchpainter.egg-info/top_level.txt
 src/snapshot/__init__.py
 src/snapshot/config.py

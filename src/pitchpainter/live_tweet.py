@@ -1,10 +1,10 @@
-import cli
+import pitchpainter.cli as cli
 import json
-import passwords
-import pitchbypitch
+import pitchpainter.passwords as passwords
+import pitchpainter.pitchbypitch as pitchbypitch
 import sys
 import tweepy
-from print_util import dprint, vprint
+from pitchpainter.print_util import dprint, vprint
 
 # Twitter bot developer credentials
 TWITTER_API_KEY = passwords.TWITTER_API_KEY

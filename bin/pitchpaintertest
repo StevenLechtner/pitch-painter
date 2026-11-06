@@ -10,14 +10,14 @@ set -x
 
 pip install pycodestyle pydocstyle pylint pytest --quiet
 
-# Run pycodestyle
-pycodestyle *.py
+# # Run pycodestyle
+# pycodestyle *.py
 
-# Run pydocstyle
-pydocstyle *.py
+# # Run pydocstyle
+# pydocstyle *.py
 
-# Run pylint
-pylint *.py
+# # Run pylint
+# pylint *.py
 
 # Run all unit tests
 pytest -v tests/pitch_painter

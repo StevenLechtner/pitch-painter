@@ -1,0 +1,20 @@
+[build-system]
+requires = ["setuptools>=61.0.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pitchpainter"
+version = "3.0"
+description = "A live and accurate pitch-by-pitch scorebug of the current situation in any MLB game with Python, with the ability to live post the generated scorebug to Meta Threads."
+readme = "README.md"
+requires-python = ">=3.14.3"
+dependencies = [
+    # Keep your core dependencies here, or leave empty if relying on requirements.txt
+]
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["pitchpainter*", "snapshot*"]

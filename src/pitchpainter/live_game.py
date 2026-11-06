@@ -1,13 +1,13 @@
-import cli
+import pitchpainter.cli as cli
 import json
-import pitch_posting_processor
+import pitchpainter.pitch_posting_processor as pitch_posting_processor
 import statsapi
 import sys
 import threading
-import win_probability
-from game import Game, Status
-from pitchbypitch import drawPitch, postPitchToThreads
-from print_util import vprint, dprint
+import pitchpainter.win_probability as win_probability
+from pitchpainter.game import Game, Status
+from pitchpainter.pitchbypitch import drawPitch, postPitchToThreads
+from pitchpainter.print_util import vprint, dprint
 from PySide6 import QtCore
 
 desiredTeam = 'Detroit Tigers'

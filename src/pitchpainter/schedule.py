@@ -1,7 +1,7 @@
 import re
 import statsapi
 import threading
-from print_util import dprint
+from pitchpainter.print_util import dprint
 from PySide6 import QtCore
 
 class ScheduleWorker(QtCore.QObject):

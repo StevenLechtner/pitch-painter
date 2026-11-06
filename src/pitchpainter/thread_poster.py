@@ -1,4 +1,4 @@
-import cli
+import pitchpainter.cli as cli
 import dropbox
 import os
 import requests
@@ -6,9 +6,9 @@ import sys
 import threading
 from dropbox.exceptions import ApiError
 from PIL import Image, ImageDraw, ImageFont
-from print_util import dprint, vprint
+from pitchpainter.print_util import dprint, vprint
 try:
-    import passwords
+    import pitchpainter.passwords as passwords
 except ImportError:
     raise SystemExit(
         "Error: 'passwords.py' file not found.\n"

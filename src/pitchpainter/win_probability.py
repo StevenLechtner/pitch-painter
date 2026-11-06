@@ -1,10 +1,10 @@
-import cli
+import pitchpainter.cli as cli
 import heapq
 import requests
 import statsapi
 import sys
 import threading
-from print_util import dprint
+from pitchpainter.print_util import dprint
 
 stop_event = threading.Event()
 

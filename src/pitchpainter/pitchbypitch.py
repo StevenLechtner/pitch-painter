@@ -3,6 +3,7 @@ import json
 from pitchpainter.situation import Situation
 from pitchpainter.thread_poster import postThreadTextAsImage
 
+
 def drawPitchForTweeting(situation: Situation):
 
     # Away team row logic
@@ -12,8 +13,8 @@ def drawPitchForTweeting(situation: Situation):
     awayScore = str(situation.awayScore)[:9]
     while len(awayScore) < 9:
         awayScore += " "
-    secondBase = '\u25C6    ' if situation.baserunners[2] else '\u25C7    ' # Diamond
-    inningHalf = '\u25B2    ' if situation.top else '\u25BC    ' # Triangle
+    secondBase = '\u25C6    ' if situation.baserunners[2] else '\u25C7    '  # Diamond
+    inningHalf = '\u25B2    ' if situation.top else '\u25BC    '  # Triangle
     inning = str(situation.inning)[:5]
     while len(inning) < 5:
         inning += " "
@@ -29,17 +30,17 @@ def drawPitchForTweeting(situation: Situation):
     homeScore = str(situation.homeScore)[:8]
     while len(homeScore) < 8:
         homeScore += " "
-    thirdBase = '\u25C6' if situation.baserunners[3] else '\u25C7' # Diamond
-    firstBase = '\u25C6   ' if situation.baserunners[1] else '\u25C7   ' # Diamond
+    thirdBase = '\u25C6' if situation.baserunners[3] else '\u25C7'  # Diamond
+    firstBase = '\u25C6   ' if situation.baserunners[1] else '\u25C7   '  # Diamond
     if situation.top:
         homeRow = f"| {homeTeam}  {homeScore}     {thirdBase}   {firstBase}    {inning}        |"
     else:
         homeRow = f"| {homeTeam}  {homeScore}     {thirdBase}   {firstBase}    {inningHalf}        |"
 
     # Count row logic
-    oneOut = '            \u25CF' if situation.outs >= 1 else '            \u25CB' # Circle
-    twoOuts =  '\u25CF' if situation.outs >= 2 else '\u25CB' # Circle
-    threeOuts = '\u25CF ' if situation.outs >= 3 else '\u25CB ' # Circle
+    oneOut = '            \u25CF' if situation.outs >= 1 else '            \u25CB'  # Circle
+    twoOuts = '\u25CF' if situation.outs >= 2 else '\u25CB'  # Circle
+    threeOuts = '\u25CF ' if situation.outs >= 3 else '\u25CB '  # Circle
     balls = str(situation.balls)[:1]
     strikes = str(situation.strikes)[:1]
     while len(strikes) < 4:
@@ -58,15 +59,17 @@ def drawPitchForTweeting(situation: Situation):
     pitcherRow = f"| {pitcher}        P: {pitchCount}       |"
 
     # Pretty print all rows into a nice grid of 27 chars per row
-    output = ("+─────────────+\n"
-              f"{awayRow}\n"
-              f"{homeRow}\n"
-              f"{countRow}\n"
-              "|─────────────|\n"
-              f"{pitcherRow}\n"
-              "+─────────────+"
+    output = (
+        "+─────────────+\n"
+        f"{awayRow}\n"
+        f"{homeRow}\n"
+        f"{countRow}\n"
+        "|─────────────|\n"
+        f"{pitcherRow}\n"
+        "+─────────────+"
     )
     return output
+
 
 def drawPitchWithScoreAltText(_awayScore, _homeScore, situation):
     awayTeam = situation.awayTeam[:3]
@@ -86,13 +89,15 @@ def drawPitchWithScoreAltText(_awayScore, _homeScore, situation):
     homeRow = f"| {homeTeam}  {homeScore}|"
 
     # Pretty print all rows into a nice grid of 14 chars per row
-    output = ("+──────+\n"
-              "|Score update|\n"
-              f"{awayRow}\n"
-              f"{homeRow}\n"
-              "+──────+"
+    output = (
+        "+──────+\n"
+        "|Score update|\n"
+        f"{awayRow}\n"
+        f"{homeRow}\n"
+        "+──────+"
     )
     return drawPitchForTweeting(situation) + "\n" + output
+
 
 # FIXME: extra innings look off centered
 def drawPitch(situation: Situation):
@@ -104,8 +109,8 @@ def drawPitch(situation: Situation):
     awayScore = str(situation.awayScore)[:9]
     while len(awayScore) < 9:
         awayScore += " "
-    secondBase = '\u25C6    ' if situation.baserunners[2] else '\u25C7    ' # Diamond
-    inningHalf = '\u25B2    ' if situation.top else '\u25BC    ' # Triangle
+    secondBase = '\u25C6    ' if situation.baserunners[2] else '\u25C7    '  # Diamond
+    inningHalf = '\u25B2    ' if situation.top else '\u25BC    '  # Triangle
     inning = str(situation.inning)[:5]
     while len(inning) < 5:
         inning += " "
@@ -121,17 +126,17 @@ def drawPitch(situation: Situation):
     homeScore = str(situation.homeScore)[:8]
     while len(homeScore) < 8:
         homeScore += " "
-    thirdBase = '\u25C6' if situation.baserunners[3] else '\u25C7' # Diamond
-    firstBase = '\u25C6   ' if situation.baserunners[1] else '\u25C7   ' # Diamond
+    thirdBase = '\u25C6' if situation.baserunners[3] else '\u25C7'  # Diamond
+    firstBase = '\u25C6   ' if situation.baserunners[1] else '\u25C7   '  # Diamond
     if situation.top:
         homeRow = f"|{homeTeam} {homeScore} {thirdBase} {firstBase} {inning}|"
     else:
         homeRow = f"|{homeTeam} {homeScore} {thirdBase} {firstBase} {inningHalf}|"
 
     # Count row logic
-    oneOut = '            \u25CF' if situation.outs >= 1 else '            \u25CB' # Circle
-    twoOuts =  '\u25CF' if situation.outs >= 2 else '\u25CB' # Circle
-    threeOuts = '\u25CF ' if situation.outs >= 3 else '\u25CB ' # Circle
+    oneOut = '            \u25CF' if situation.outs >= 1 else '            \u25CB'  # Circle
+    twoOuts = '\u25CF' if situation.outs >= 2 else '\u25CB'  # Circle
+    threeOuts = '\u25CF ' if situation.outs >= 3 else '\u25CB '  # Circle
     balls = str(situation.balls)[:1]
     strikes = str(situation.strikes)[:1]
     while len(strikes) < 4:
@@ -150,15 +155,17 @@ def drawPitch(situation: Situation):
     pitcherRow = f"|{pitcher} P:{pitchCount}|"
 
     # Pretty print all rows into a nice grid of 27 chars per row
-    output = ("+─────────────────────────+\n"
-              f"{awayRow}\n"
-              f"{homeRow}\n"
-              f"{countRow}\n"
-              "|─────────────────────────|\n"
-              f"{pitcherRow}\n"
-              "+─────────────────────────+"
+    output = (
+        "+─────────────────────────+\n"
+        f"{awayRow}\n"
+        f"{homeRow}\n"
+        f"{countRow}\n"
+        "|─────────────────────────|\n"
+        f"{pitcherRow}\n"
+        "+─────────────────────────+"
     )
     return output
+
 
 def drawPitchWithScoreUpdate(_awayScore, _homeScore, situation):
     awayTeam = situation.awayTeam[:3]
@@ -178,13 +185,15 @@ def drawPitchWithScoreUpdate(_awayScore, _homeScore, situation):
     homeRow = f"|{homeTeam} {homeScore}|"
 
     # Pretty print all rows into a nice grid of 14 chars per row
-    output = ("+────────────+\n"
-              "|Score update|\n"
-              f"{awayRow}\n"
-              f"{homeRow}\n"
-              "+────────────+"
+    output = (
+        "+────────────+\n"
+        "|Score update|\n"
+        f"{awayRow}\n"
+        f"{homeRow}\n"
+        "+────────────+"
     )
     return drawPitch(situation) + "\n" + output
+
 
 def postPitchToThreads(situation: Situation, filepath, description="", awayScore=-1, homeScore=-1, scoringPlay=False):
     if scoringPlay and awayScore > -1 and homeScore > -1:
@@ -195,11 +204,13 @@ def postPitchToThreads(situation: Situation, filepath, description="", awayScore
         altText = drawPitchForTweeting(situation)
     postThreadTextAsImage(text, descriptionText=description, altText=altText, filepath=filepath)
 
+
+# TODO: remove testOut
 def printAllPitchesFromGame(game):
     testOut = ""
-    awayAbbr = game["gameData"]["teams"]["away"]["abbreviation"] # LAA
-    homeAbbr = game["gameData"]["teams"]["home"]["abbreviation"] # HOU
-    currentPitcher = game["liveData"]["plays"]["currentPlay"]["matchup"]["pitcher"]["fullName"] # José Quijada
+    awayAbbr = game["gameData"]["teams"]["away"]["abbreviation"]  # LAA
+    homeAbbr = game["gameData"]["teams"]["home"]["abbreviation"]  # HOU
+    currentPitcher = game["liveData"]["plays"]["currentPlay"]["matchup"]["pitcher"]["fullName"]  # José Quijada
     situation = Situation()
     situation.startNewGame(homeAbbr, awayAbbr, currentPitcher)
     lastDescription = ""
@@ -216,7 +227,7 @@ def printAllPitchesFromGame(game):
             situation.setInning(currentPlay["about"]["inning"])
             situation.setTop(currentPlay["about"]["isTopInning"])
             # situation.setOuts(currentPlay["count"]["outs"])
-            situation.setPitcher(currentPlay["matchup"]["pitcher"]["fullName"]) # José Quijada
+            situation.setPitcher(currentPlay["matchup"]["pitcher"]["fullName"])  # José Quijada
 
             # Loop through all play events of current play - print when a pitch is thrown
             for index, playEvent in enumerate(currentPlay["playEvents"]):
@@ -224,14 +235,15 @@ def printAllPitchesFromGame(game):
                 if not playEvent["isPitch"]:
                     continue
 
-                # If this is the last pitch of the at bat, then set score, baserunners, and outs, and set balls and strikes to 0
+                # If this is the last pitch of the at bat
                 if index == len(currentPlay["playEvents"]) - 1:
+                    # set score, baserunners, and outs
                     situation.setAwayScore(currentPlay["result"]["awayScore"])
                     situation.setHomeScore(currentPlay["result"]["homeScore"])
                     situation.setOuts(currentPlay["count"]["outs"])
+                    # set balls and strikes to 0
                     situation.setBalls(0)
                     situation.setStrikes(0)
-                    # situation.setBaserunnersFromPlay(currentPlay)
                     situation.setBaserunnersAtEndOfAtBat(currentPlay)
 
                 else:
@@ -253,7 +265,14 @@ def printAllPitchesFromGame(game):
                 curTime = f"{now.strftime('%Y-%m-%d_%H-%M-%S')}.{now.microsecond // 1000:03d}"
                 filepath = f"images/{gamePk}/play_id_{playId}_created_{curTime}.png"
                 postPitchToThreads(situation, filepath)
-                if (situation.balls == 3 and situation.strikes == 2 and situation.outs == 2 and situation.awayScore == 0 and situation.homeScore == 3 and situation.inning == 9):
+                if (
+                    situation.balls == 3
+                    and situation.strikes == 2
+                    and situation.outs == 2
+                    and situation.awayScore == 0
+                    and situation.homeScore == 3
+                    and situation.inning == 9
+                ):
                     testOut = drawPitch(situation)
                 i += 1
 
@@ -274,9 +293,15 @@ def printAllPitchesFromGame(game):
     border = ""
     recap = ""
     if situation.awayScore > situation.homeScore:
-        recap = f"|  Final score: {situation.awayScore}-{situation.homeScore}, {situation.awayTeam} over {situation.homeTeam}  |"
+        recap = (
+            f"|  Final score: {situation.awayScore}-{situation.homeScore}, "
+            f"{situation.awayTeam} over {situation.homeTeam}  |"
+        )
     else:
-        recap = f"|  Final score: {situation.homeScore}-{situation.awayScore}, {situation.homeTeam} over {situation.awayTeam}  |"
+        recap = (
+            f"|  Final score: {situation.homeScore}-{situation.awayScore}, "
+            f"{situation.homeTeam} over {situation.awayTeam}  |"
+        )
     while len(border) < len(recap):
         border += "─"
     border = "+" + border[1:-1] + "+"
@@ -286,11 +311,12 @@ def printAllPitchesFromGame(game):
     print(border)
     return testOut
 
+
 def listAllPitchesFromGame(game):
     out = []
-    awayAbbr = game["gameData"]["teams"]["away"]["abbreviation"] # LAA
-    homeAbbr = game["gameData"]["teams"]["home"]["abbreviation"] # HOU
-    currentPitcher = game["liveData"]["plays"]["currentPlay"]["matchup"]["pitcher"]["fullName"] # José Quijada
+    awayAbbr = game["gameData"]["teams"]["away"]["abbreviation"]  # LAA
+    homeAbbr = game["gameData"]["teams"]["home"]["abbreviation"]  # HOU
+    currentPitcher = game["liveData"]["plays"]["currentPlay"]["matchup"]["pitcher"]["fullName"]  # José Quijada
     situation = Situation(homeAbbr, awayAbbr, currentPitcher)
     lastDescription = ""
     currentPlay = game["liveData"]["plays"]["currentPlay"]
@@ -306,7 +332,7 @@ def listAllPitchesFromGame(game):
             situation.setInning(currentPlay["about"]["inning"])
             situation.setTop(currentPlay["about"]["isTopInning"])
             # situation.setOuts(currentPlay["count"]["outs"])
-            situation.setPitcher(currentPlay["matchup"]["pitcher"]["fullName"]) # José Quijada
+            situation.setPitcher(currentPlay["matchup"]["pitcher"]["fullName"])  # José Quijada
 
             # Loop through all play events of current play - print when a pitch is thrown
             for index, playEvent in enumerate(currentPlay["playEvents"]):
@@ -314,11 +340,13 @@ def listAllPitchesFromGame(game):
                 if not playEvent["isPitch"]:
                     continue
 
-                # If this is the last pitch of the at bat, then set score, baserunners, and outs, and set balls and strikes to 0
+                # If this is the last pitch of the at bat
                 if index == len(currentPlay["playEvents"]) - 1:
+                    # set score, baserunners, and outs
                     situation.setAwayScore(currentPlay["result"]["awayScore"])
                     situation.setHomeScore(currentPlay["result"]["homeScore"])
                     situation.setOuts(currentPlay["count"]["outs"])
+                    # set balls and strikes to 0
                     situation.setBalls(0)
                     situation.setStrikes(0)
                     situation.setBaserunnersFromPlay(currentPlay)
@@ -354,9 +382,15 @@ def listAllPitchesFromGame(game):
     border = ""
     recap = ""
     if situation.awayScore > situation.homeScore:
-        recap = f"|  Final score: {situation.awayScore}-{situation.homeScore}, {situation.awayTeam} over {situation.homeTeam}  |"
+        recap = (
+            f"|  Final score: {situation.awayScore}-{situation.homeScore}, "
+            f"{situation.awayTeam} over {situation.homeTeam}  |"
+        )
     else:
-        recap = f"|  Final score: {situation.homeScore}-{situation.awayScore}, {situation.homeTeam} over {situation.awayTeam}  |"
+        recap = (
+            f"|  Final score: {situation.homeScore}-{situation.awayScore}, "
+            f"{situation.homeTeam} over {situation.awayTeam}  |"
+        )
     while len(border) < len(recap):
         border += "─"
     border = "+" + border[1:-1] + "+"
@@ -366,10 +400,11 @@ def listAllPitchesFromGame(game):
     out.append(border)
     return out
 
+
 def printLiveGame(game):
-    awayAbbr = game["gameData"]["teams"]["away"]["abbreviation"] # LAA
-    homeAbbr = game["gameData"]["teams"]["home"]["abbreviation"] # HOU
-    currentPitcher = game["liveData"]["plays"]["currentPlay"]["matchup"]["pitcher"]["fullName"] # José Quijada
+    awayAbbr = game["gameData"]["teams"]["away"]["abbreviation"]  # LAA
+    homeAbbr = game["gameData"]["teams"]["home"]["abbreviation"]  # HOU
+    currentPitcher = game["liveData"]["plays"]["currentPlay"]["matchup"]["pitcher"]["fullName"]  # José Quijada
     situation = Situation(homeAbbr, awayAbbr, currentPitcher)
     lastDescription = ""
     currentPlay = game["liveData"]["plays"]["currentPlay"]
@@ -380,7 +415,7 @@ def printLiveGame(game):
             lastDescription = liveDescription
             situation.setInning(currentPlay["about"]["inning"])
             situation.setTop(currentPlay["about"]["isTopInning"])
-            situation.setPitcher(currentPlay["matchup"]["pitcher"]["fullName"]) # José Quijada
+            situation.setPitcher(currentPlay["matchup"]["pitcher"]["fullName"])  # José Quijada
 
             print(f"{currentPlay["matchup"]["batter"]["fullName"]} now batting.")
 
@@ -390,11 +425,13 @@ def printLiveGame(game):
                 if not playEvent["isPitch"]:
                     continue
 
-                # If this is the last pitch of the at bat, then set score, baserunners, and outs, and set balls and strikes to 0
+                # If this is the last pitch of the at bat
                 if index == len(currentPlay["playEvents"]) - 1:
+                    # set score, baserunners, and outs
                     situation.setAwayScore(currentPlay["result"]["awayScore"])
                     situation.setHomeScore(currentPlay["result"]["homeScore"])
                     situation.setOuts(currentPlay["count"]["outs"])
+                    # set balls and strikes to 0
                     situation.setBalls(0)
                     situation.setStrikes(0)
                     situation.setBaserunnersFromPlay(currentPlay)
@@ -428,9 +465,15 @@ def printLiveGame(game):
     border = ""
     recap = ""
     if situation.awayScore > situation.homeScore:
-        recap = f"|  Final score: {situation.awayScore}-{situation.homeScore}, {situation.awayTeam} over {situation.homeTeam}  |"
+        recap = (
+            f"|  Final score: {situation.awayScore}-{situation.homeScore}, "
+            f"{situation.awayTeam} over {situation.homeTeam}  |"
+        )
     else:
-        recap = f"|  Final score: {situation.homeScore}-{situation.awayScore}, {situation.homeTeam} over {situation.awayTeam}  |"
+        recap = (
+            f"|  Final score: {situation.homeScore}-{situation.awayScore}, "
+            f"{situation.homeTeam} over {situation.awayTeam}  |"
+        )
     while len(border) < len(recap):
         border += "─"
     border = "+" + border[1:-1] + "+"
@@ -439,6 +482,8 @@ def printLiveGame(game):
     print(recap)
     print(border)
 
+
+# TODO: move these tests to actual pytest test functions in tests/pitch_painter/test_*.py
 def main():
     '''
     Runs the code.
@@ -473,8 +518,6 @@ def main():
     # print("Batter:", currentBatter)
     # print("Pitcher:", currentPitcher)
 
-
-
     '''
     +=======================================+
     |   Testing on custom situation input   |
@@ -492,8 +535,6 @@ def main():
     #     situation.setInning(i + 1)
     #     drawPitch(situation)
     #     time.sleep(random.randint(1, 2))
-
-
 
     '''
     +============================================================================================================+
@@ -526,7 +567,6 @@ def main():
     '''
     # game = statsapi.get('game', {'gamePk': 776368})
     with open("meadows.json", "r") as f:
-    # with open("example_out.json", "r") as f:
         game = json.load(f)
     printAllPitchesFromGame(game)
 
@@ -540,6 +580,7 @@ def main():
     # # # with open("example_out.json", "r") as f:
     # #     game = json.load(f)
     # printLiveGame(game)
+
 
 if __name__ == '__main__':
     main()

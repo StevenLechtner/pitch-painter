@@ -4,6 +4,7 @@ import threading
 from pitchpainter.print_util import dprint
 from PySide6 import QtCore
 
+
 class ScheduleWorker(QtCore.QObject):
     output = QtCore.Signal(str)
     finished = QtCore.Signal()
@@ -53,7 +54,7 @@ class ScheduleWorker(QtCore.QObject):
                 self.scheduleStr += f"{dateRemoved}\n"
             self.scheduleStr = self.scheduleStr.rstrip()
             self.output.emit(self.scheduleStr)
-        except:
+        except Exception as e:
             self.gamePks.clear()
             if self.schedule is None:
                 self.scheduleStr = "No games played on " + self.date.toString("MMMM d, yyyy")

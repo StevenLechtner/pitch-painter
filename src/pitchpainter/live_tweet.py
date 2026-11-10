@@ -46,6 +46,7 @@ def sendTweet(client: tweepy.Client, text: str, isTweeting=False):
 
     return response
 
+
 def main():
     cli.getOptions(sys.argv[1:])
     client = createClient()

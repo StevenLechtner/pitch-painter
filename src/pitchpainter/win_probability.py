@@ -8,13 +8,16 @@ from pitchpainter.print_util import dprint
 
 stop_event = threading.Event()
 
+
 def stop():
     dprint("win_probability stop_event is True")
     stop_event.set()
 
+
 def start():
     dprint("win_probability stop_event is False")
     stop_event.clear()
+
 
 class WinProbability():
     # score weights
@@ -25,9 +28,10 @@ class WinProbability():
     LEV_IDX_WEIGHT = 0.15
     DRAMA_IDX_WEIGHT = 0.15
     THRESHOLD = 0.375
+
     def __init__(self, gamePk=None):
         self.gamePk = -1 if gamePk is None else gamePk
-        self.winProbabilities: list[WinProbabilityInfo] = self.setWinProbabilities() # List of WinProbabilityInfo
+        self.winProbabilities: list[WinProbabilityInfo] = self.setWinProbabilities()  # List of WinProbabilityInfo
         # Top ten: List of tuples (x, y) where x is the metric and y is the at bat index
         self.topTenProbsAdded = []
         self.topTenLevIdx = []
@@ -49,7 +53,10 @@ class WinProbability():
                 if winProbabilityList:
                     return winProbabilityList
             except requests.exceptions.RequestException as e:
-                print(f"https://statsapi.mlb.com/api/v1.1/game/{self.gamePk}/winProbability request failed (attempt {attempt + 1}/3): {e}")
+                print(
+                    f"https://statsapi.mlb.com/api/v1.1/game/{self.gamePk}/winProbability "
+                    f"request failed (attempt {attempt + 1}/3): {e}"
+                )
                 if attempt < 2:
                     if stop_event.wait(1):
                         return []
@@ -63,8 +70,10 @@ class WinProbability():
         # just check if the next atBatIndex is present
         # if not, check if a win probability is 100% (indicates game over)
         winProbabilityList = []
-        # TODO: don't make this an "infinite" loop. Check for a max of 5(ish) minutes? Determine how long it takes to be 100% sure that the values are updated
-        # TODO: Additional check - see if any values are different (win prob, drama, lev) - different indicates they're updated, but they could be updated to the same...
+        # TODO: don't make this an "infinite" loop. Check for a max of 5(ish) minutes?
+        # Determine how long it takes to be 100% sure that the values are updated
+        # TODO: Additional check - see if any values are different (win prob, drama, lev) - different indicates
+        # they're updated, but they could be updated to the same...
         while not stop_event.is_set():
             winProbabilityList = self.getGameWinProbabilities()
             if not winProbabilityList:
@@ -82,7 +91,10 @@ class WinProbability():
                 # error check: this at bat has not even happened yet
                 dprint(f"Win probability at bat has not happened yet! {atBatIndex} < {latestAtBatIndex}")
                 break
-            elif latestAtBat.get("homeTeamWinProbability", -1) >= 100 or latestAtBat.get("awayTeamWinProbability", -1) >= 100:
+            elif (
+                latestAtBat.get("homeTeamWinProbability", -1) >= 100
+                or latestAtBat.get("awayTeamWinProbability", -1) >= 100
+            ):
                 # no new at bat because the game is over, this at bat is complete
                 break
             else:
@@ -114,8 +126,8 @@ class WinProbability():
         levIdxVal = winProb.leverageIndex
         dramaIdxVal = winProb.dramaIndex
         score = (
-            self.PROBS_ADDED_WEIGHT * (probsAddedVal / self.NORM_PROBS_ADDED) 
-            + self.LEV_IDX_WEIGHT * (levIdxVal / self.NORM_LEV_IDX) 
+            self.PROBS_ADDED_WEIGHT * (probsAddedVal / self.NORM_PROBS_ADDED)
+            + self.LEV_IDX_WEIGHT * (levIdxVal / self.NORM_LEV_IDX)
             + self.DRAMA_IDX_WEIGHT * (dramaIdxVal / self.NORM_DRAMA_IDX)
         )
         dprint(f"At Bat score {score}/{self.THRESHOLD}")
@@ -130,7 +142,8 @@ class WinProbability():
         if stop_event.is_set():
             return False
 
-        # TODO: make this smarter. we want to wait for at bat to be done before checking isScoringPlay and isAboveThreshold, but this currently checks at bat finish twice (here + isAboveThreshold())
+        # TODO: make this smarter. we want to wait for at bat to be done before checking isScoringPlay and
+        # isAboveThreshold, but this currently checks at bat finish twice (here + isAboveThreshold())
         atBat = self.getFinishedAtBat(atBatIndex)
         if atBat is None:
             return False
@@ -186,8 +199,8 @@ class WinProbability():
             levIdx.append((levIdxVal, winProb.atBatIndex))
             dramaIdx.append((dramaIdxVal, winProb.atBatIndex))
             score = (
-                self.PROBS_ADDED_WEIGHT * (probsAddedVal / self.NORM_PROBS_ADDED) 
-                + self.LEV_IDX_WEIGHT * (levIdxVal / self.NORM_LEV_IDX) 
+                self.PROBS_ADDED_WEIGHT * (probsAddedVal / self.NORM_PROBS_ADDED)
+                + self.LEV_IDX_WEIGHT * (levIdxVal / self.NORM_LEV_IDX)
                 + self.DRAMA_IDX_WEIGHT * (dramaIdxVal / self.NORM_DRAMA_IDX)
             )
             self.scores.append((score, winProb.atBatIndex))
@@ -220,7 +233,8 @@ class WinProbability():
             if (score[0] > self.THRESHOLD):
                 inRange.append(score)
         print(f"Plays above the {self.THRESHOLD} threshold: {len(inRange)}")
-        
+
+
 class WinProbabilityInfo():
     def __init__(self, homeProb=0.0, awayProb=0.0, homeProbAdded=0.0, levIdx=0.0, dramaIdx=0.0, atBatIdx=-1):
         self.homeTeamWinProbability = homeProb
@@ -229,6 +243,7 @@ class WinProbabilityInfo():
         self.leverageIndex = levIdx
         self.dramaIndex = dramaIdx
         self.atBatIndex = atBatIdx
+
 
 def main():
     cli.getOptions(sys.argv[1:])
@@ -252,6 +267,7 @@ def main():
     #     winProbTest.findAverages()
     #     winProbTest.findTopTens()
     return 0
+
 
 if __name__ == "__main__":
     main()

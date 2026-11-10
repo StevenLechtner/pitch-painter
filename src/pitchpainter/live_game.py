@@ -288,6 +288,7 @@ def printAllPitchesFromLiveGame(gamePk, output, stop_event):
 def outputVerbosePrinting(text):
     vprint(text)
 
+
 def main():
     '''
     +======================+

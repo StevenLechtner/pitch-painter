@@ -26,28 +26,42 @@ BASE_URL = f"https://graph.threads.net/v1.0/{THREADS_USER_ID}"
 DROPBOX_APP_KEY = passwords.DROPBOX_APP_KEY
 DROPBOX_APP_SECRET = passwords.DROPBOX_APP_SECRET
 DROPBOX_REFRESH_TOKEN = passwords.DROPBOX_REFRESH_TOKEN
-dbx = dropbox.Dropbox(app_key=DROPBOX_APP_KEY, app_secret=DROPBOX_APP_SECRET, oauth2_refresh_token=DROPBOX_REFRESH_TOKEN)
+dbx = dropbox.Dropbox(app_key=DROPBOX_APP_KEY,
+                      app_secret=DROPBOX_APP_SECRET,
+                      oauth2_refresh_token=DROPBOX_REFRESH_TOKEN)
 
 stop_event = threading.Event()
+
 
 def stop():
     dprint("thread_poster stop_event is True")
     stop_event.set()
 
+
 def start():
     dprint("thread_poster stop_event is False")
     stop_event.clear()
+
 
 def postThreadTextAsImage(situationText, descriptionText=None, altText=None, filepath="images/miscPk/temp.png"):
     if stop_event.is_set():
         return
     if not cli.threading:
-        vprint("We are not posting a thread right now. -t or --thread to post a thread. -h or --help for other command line options")
+        vprint(
+            "We are not posting a thread right now. "
+            "-t or --thread to post a thread. -h or --help for other command line options"
+        )
         return
 
     filepath = textToPNG(situationText, filepath)
     imageUrl = uploadImageToDropbox(filepath)
-    contents = {"media_type": "IMAGE", "image_url": imageUrl, "text": descriptionText, "alt_text": altText if altText else situationText, "access_token": THREADS_ACCESS_TOKEN} # thread an image
+    contents = {
+        "media_type": "IMAGE",
+        "image_url": imageUrl,
+        "text": descriptionText,
+        "alt_text": altText if altText else situationText,
+        "access_token": THREADS_ACCESS_TOKEN
+    }  # thread an image
     postThread(contents)
     try:
         os.remove(filepath)
@@ -58,13 +72,18 @@ def postThreadTextAsImage(situationText, descriptionText=None, altText=None, fil
     except ApiError:
         pass
 
+
 def uploadImageToDropbox(filepath):
     if stop_event.is_set():
         return None
 
     with open(filepath, "rb") as fp:
         contents = fp.read()
-    uploadResp = dbx.files_upload(contents, f"/{filepath}", dropbox.files.WriteMode.overwrite, mute=True, autorename=True)
+    uploadResp = dbx.files_upload(contents,
+                                  f"/{filepath}",
+                                  dropbox.files.WriteMode.overwrite,
+                                  mute=True,
+                                  autorename=True)
     if stop_event.is_set():
         return None
 
@@ -83,11 +102,15 @@ def uploadImageToDropbox(filepath):
     dprint(f"Direct image URL: {directImageUrl}")
     return directImageUrl
 
+
 def postThread(contents):
     if stop_event.is_set():
         return
     if not cli.threading:
-        vprint("We are not posting a thread right now. -t or --thread to post a thread. -h or --help for other command line options")
+        vprint(
+            "We are not posting a thread right now. "
+            "-t or --thread to post a thread. -h or --help for other command line options"
+        )
         return
 
     # Try to post the thread to threads up to three times before failing
@@ -112,12 +135,17 @@ def postThread(contents):
             break
         else:
             vprint(f"{BASE_URL}/threads_publish attempt failed (attempt {attempt + 1}/3)")
-            dprint(f"endpoint /threads_publish details: \n\tStatus code: {threadPublish.status_code}\n\tJSON: {threadPublish.json()}\n\tRaw: {threadPublish}")
+            dprint(
+                f"endpoint /threads_publish details: \n\t"
+                f"Status code: {threadPublish.status_code}\n\t"
+                f"JSON: {threadPublish.json()}\n\tRaw: {threadPublish}"
+            )
             if attempt < 2:
                 if stop_event.wait(5):
                     return
             else:
                 vprint(f"Failed to create thread to post after 3 attempts.")
+
 
 def createThreadToPost(contents):
     if stop_event.is_set():
@@ -132,7 +160,10 @@ def createThreadToPost(contents):
             urlCheck = requests.get(contents.get("image_url", None), timeout=10)
             if stop_event.is_set():
                 return -1
-            dprint(f"URL Check Response: \n\tStatus code: {urlCheck.status_code}\n\tContent-Type: {urlCheck.headers.get("Content-Type")}\n\tURL: {urlCheck.url}")
+            dprint(
+                f"URL Check Response: \n\tStatus code: {urlCheck.status_code}\n\t"
+                f"Content-Type: {urlCheck.headers.get("Content-Type")}\n\tURL: {urlCheck.url}"
+            )
         except Exception as e:
             vprint(f"URL Check exception: {e}")
 
@@ -147,7 +178,10 @@ def createThreadToPost(contents):
             return creationId
         else:
             vprint(f"{BASE_URL}/threads attempt failed (attempt {attempt + 1}/3)")
-            dprint(f"endpoint /threads details: \n\tStatus code: {thread.status_code}\n\tJSON: {thread.json()}\n\tRaw: {thread}")
+            dprint(
+                f"endpoint /threads details: \n\tStatus code: {thread.status_code}\n\t"
+                f"JSON: {thread.json()}\n\tRaw: {thread}"
+            )
             if attempt < 2:
                 if stop_event.wait(30):
                     return -1
@@ -155,22 +189,23 @@ def createThreadToPost(contents):
                 vprint(f"Failed to create thread to post after 3 attempts.")
     return -1
 
+
 def textToPNG(text, filepath="images/miscPk/temp.png"):
     lines = text.split("\n")
     font = ImageFont.truetype("/System/Library/Fonts/Menlo.ttc", 24)
 
     # Determine dimensions
     border = 40
-    width = max(font.getlength(line) for line in lines) + border # width of longest line + border
+    width = max(font.getlength(line) for line in lines) + border  # width of longest line + border
     line_height = 30
-    height = line_height * len(lines) + border # line height * lines + border
+    height = line_height * len(lines) + border  # line height * lines + border
 
     image = Image.new("RGB", (int(width), height), "white")
     draw = ImageDraw.Draw(image)
 
     y = border / 2
     for line in lines:
-        draw.text((border / 2, y), line, font=font, fill="black") # xy, text, text font, text color
+        draw.text((border / 2, y), line, font=font, fill="black")  # xy, text, text font, text color
         y += line_height
 
     dir_name = os.path.dirname(filepath)
@@ -179,36 +214,49 @@ def textToPNG(text, filepath="images/miscPk/temp.png"):
     image.save(filepath)
     return filepath
 
+
+# TODO: move these tests to actual pytest test functions in tests/pitch_painter/test_*.py
 def main():
     cli.getOptions(sys.argv[1:])
 
-    testText = ("+─────────────────────────+\n"
-                "|DET 0         ◆     ▲    |\n"
-                "|SD  3        ◆ ◆    9    |\n"
-                "|            ● ● ○  3-2   |\n"
-                "|─────────────────────────|\n"
-                "|Robert Suarez      P:25  |\n"
-                "+─────────────────────────+")
-    scoreUpdateText =  ("+────────────+\n"
-                        "|Score update|\n"
-                        "|DET 4       |\n"
-                        "|SD  3       |\n"
-                        "+────────────+")
-    descriptionTextFotmatted = ("Parker Meadows hits a\n"
-                        "grand slam (6) to left\n"
-                        "field. Justyn-Henry Malloy\n"
-                        "scores. Jace Jung scores.\n"
-                        "Colt Keith scores.")
+    testText = (
+        "+─────────────────────────+\n"
+        "|DET 0         ◆     ▲    |\n"
+        "|SD  3        ◆ ◆    9    |\n"
+        "|            ● ● ○  3-2   |\n"
+        "|─────────────────────────|\n"
+        "|Robert Suarez      P:25  |\n"
+        "+─────────────────────────+"
+    )
+    scoreUpdateText = (
+        "+────────────+\n"
+        "|Score update|\n"
+        "|DET 4       |\n"
+        "|SD  3       |\n"
+        "+────────────+"
+    )
+    descriptionTextFotmatted = (
+        "Parker Meadows hits a\n"
+        "grand slam (6) to left\n"
+        "field. Justyn-Henry Malloy\n"
+        "scores. Jace Jung scores.\n"
+        "Colt Keith scores."
+    )
     testAndScoreText = testText + "\n" + scoreUpdateText
-    descriptionTextOneLine = ("Parker Meadows hits a grand slam (6) to left field. Justyn-Henry Malloy scores. Jace Jung scores. Colt Keith scores.")
+    descriptionTextOneLine = (
+        "Parker Meadows hits a grand slam (6) to left field. "
+        "Justyn-Henry Malloy scores. Jace Jung scores. Colt Keith scores."
+    )
     combined = testText + "\n" + descriptionTextFotmatted
-    altText =  ("|─────────────|\n"
-                "| DET 0               ◆          ▲            |\n"
-                "| SD   3            ◆   ◆       9            |\n"
-                "|                        ● ● ○    3-2         |\n"
-                "|─────────────|\n"
-                "| Robert Suarez             P: 25     |\n"
-                "|─────────────|\n")
+    altText = (
+        "|─────────────|\n"
+        "| DET 0               ◆          ▲            |\n"
+        "| SD   3            ◆   ◆       9            |\n"
+        "|                        ● ● ○    3-2         |\n"
+        "|─────────────|\n"
+        "| Robert Suarez             P: 25     |\n"
+        "|─────────────|\n"
+    )
 
     # TODO: Move everything below to unit_tests.py; main() is not needed at all here.
 
@@ -216,19 +264,20 @@ def main():
     # filepath = textToPNG(descriptionText)
     # imageUrl = uploadImageToDropbox(filepath)
     # print(f"Image URL: {imageUrl}")
-    # # contents = {"media_type": "TEXT", "text": "Hello, World!", "access_token": THREADS_ACCESS_TOKEN} # thread a text box
-    # contents = {"media_type": "IMAGE", "image_url": imageUrl, "access_token": THREADS_ACCESS_TOKEN} # thread an image
+    # # contents = {"media_type": "TEXT", "text": "Hello, World!", "access_token": THREADS_ACCESS_TOKEN}  # thread a txt
+    # contents = {"media_type": "IMAGE", "image_url": imageUrl, "access_token": THREADS_ACCESS_TOKEN}  # thread an image
     # postThread(contents)
     postThreadTextAsImage(testAndScoreText, descriptionText=descriptionTextOneLine, altText=altText)
 
     # # debug testing
-    # awayAbbr = game["gameData"]["teams"]["away"]["abbreviation"] # LAA
-    # homeAbbr = game["gameData"]["teams"]["home"]["abbreviation"] # HOU
-    # currentPitcher = game["liveData"]["plays"]["currentPlay"]["matchup"]["pitcher"]["fullName"] # José Quijada
+    # awayAbbr = game["gameData"]["teams"]["away"]["abbreviation"]  # LAA
+    # homeAbbr = game["gameData"]["teams"]["home"]["abbreviation"]  # HOU
+    # currentPitcher = game["liveData"]["plays"]["currentPlay"]["matchup"]["pitcher"]["fullName"]  # José Quijada
     # situation = Situation()
     # situation.startNewGame(homeAbbr, awayAbbr, currentPitcher)
     # dprint(pitchbypitch.drawPitchForTweeting(situation))
     # dprint(textToPNG(pitchbypitch.drawPitch(situation)))
+
 
 if __name__ == "__main__":
     main()

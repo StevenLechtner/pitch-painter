@@ -8,6 +8,8 @@ import sys
 import time
 import unittest
 
+
+# TODO: Remove this file - replaced with tests/ dir
 class TestPrint(unittest.TestCase):
     def save_prints(self, situation):
         # output = StringIO()
@@ -21,9 +23,9 @@ class TestPrint(unittest.TestCase):
     def test_out_row_len(self):
         with open("example_out.json", "r") as f:
             game = json.load(f)
-        awayAbbr = game["gameData"]["teams"]["away"]["abbreviation"] # LAA
-        homeAbbr = game["gameData"]["teams"]["home"]["abbreviation"] # HOU
-        currentPitcher = game["liveData"]["plays"]["currentPlay"]["matchup"]["pitcher"]["fullName"] # José Quijada
+        awayAbbr = game["gameData"]["teams"]["away"]["abbreviation"]  # LAA
+        homeAbbr = game["gameData"]["teams"]["home"]["abbreviation"]  # HOU
+        currentPitcher = game["liveData"]["plays"]["currentPlay"]["matchup"]["pitcher"]["fullName"]  # José Quijada
         situation = pitchbypitch.Situation(homeAbbr, awayAbbr, currentPitcher)
         self.save_prints(situation)
         situation.setPitcher("")
@@ -35,6 +37,7 @@ class TestPrint(unittest.TestCase):
         self.save_prints(situation)
         situation.setAwayScore(10000000099345678991213213123231)
         self.save_prints(situation)
+
 
 if __name__ == '__main__':
     unittest.main()

@@ -34,7 +34,7 @@ class Situation():
 
     def setHomeTeam(self, team: str):
         self.homeTeam = team
-        
+
     def setAwayTeam(self, team: str):
         self.awayTeam = team
 
@@ -71,12 +71,12 @@ class Situation():
         self.pitchCount = pitchCount
 
     def setBaserunners(self, baserunners: dict):
-            self.baserunners = baserunners
+        self.baserunners = baserunners
 
     def setBaserunnersAtStartOfAtBat(self, currentPlay: dict):
         '''
         1) Start with the end state - hard save the base and id for all baserunners that aren't the batter at the end
-        2) Loop through the runners and add a dict if not batter: key = runner id, value = list of movements in reverse order
+        2) Loop through the runners and add a dict if not batter: key=runner_id, val=list of movements in reverse order
         3) For each entry, find the corresponding and correct starting position for that runner, then hard save it
         '''
         if self.outs < 3:
@@ -179,4 +179,17 @@ class Situation():
         self.baserunners = basesOccupied
 
     def __str__(self):
-        return f"Home Team: {self.homeTeam}\nAway Team: {self.awayTeam}\nHome Score: {self.homeScore}\nAway Score: {self.awayScore}\nInning: {self.inning}\nTop: {self.top}\nBalls: {self.balls}\nStrikes: {self.strikes}\nOuts: {self.outs}\nPitcher: {self.pitcher}\nPitch Count: {self.pitchCount}\nBaserunners: {self.baserunners}"
+        return (
+            f"Home Team: {self.homeTeam}\n"
+            f"Away Team: {self.awayTeam}\n"
+            f"Home Score: {self.homeScore}\n"
+            f"Away Score: {self.awayScore}\n"
+            f"Inning: {self.inning}\n"
+            f"Top: {self.top}\n"
+            f"Balls: {self.balls}\n"
+            f"Strikes: {self.strikes}\n"
+            f"Outs: {self.outs}\n"
+            f"Pitcher: {self.pitcher}\n"
+            f"Pitch Count: {self.pitchCount}\n"
+            f"Baserunners: {self.baserunners}"
+        )

@@ -1,4 +1,4 @@
-import cli
+import pitchpainter.cli as cli
 import dropbox
 import os
 import requests
@@ -6,9 +6,9 @@ import sys
 import threading
 from dropbox.exceptions import ApiError
 from PIL import Image, ImageDraw, ImageFont
-from print_util import dprint, vprint
+from pitchpainter.print_util import dprint, vprint
 try:
-    import passwords
+    import pitchpainter.passwords as passwords
 except ImportError:
     raise SystemExit(
         "Error: 'passwords.py' file not found.\n"
@@ -179,8 +179,8 @@ def textToPNG(text, filepath="images/miscPk/temp.png"):
     image.save(filepath)
     return filepath
 
-def main(args):
-    cli.getOptions(args)
+def main():
+    cli.getOptions(sys.argv[1:])
 
     testText = ("+─────────────────────────+\n"
                 "|DET 0         ◆     ▲    |\n"
@@ -231,4 +231,4 @@ def main(args):
     # dprint(textToPNG(pitchbypitch.drawPitch(situation)))
 
 if __name__ == "__main__":
-    main(sys.argv[1:])
+    main()

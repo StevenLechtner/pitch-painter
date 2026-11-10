@@ -1,7 +1,7 @@
 from io import StringIO
 
 import json
-import pitchbypitch
+import pitchpainter.pitchbypitch as pitchbypitch
 import random
 import statsapi
 import sys

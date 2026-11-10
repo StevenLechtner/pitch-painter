@@ -1,10 +1,10 @@
-import cli
+import pitchpainter.cli as cli
 import heapq
 import requests
 import statsapi
 import sys
 import threading
-from print_util import dprint
+from pitchpainter.print_util import dprint
 
 stop_event = threading.Event()
 
@@ -230,8 +230,8 @@ class WinProbabilityInfo():
         self.dramaIndex = dramaIdx
         self.atBatIndex = atBatIdx
 
-def main(args):
-    cli.getOptions(args)
+def main():
+    cli.getOptions(sys.argv[1:])
 
     # gamePk = 745369
     # gamePk = 823660
@@ -254,4 +254,4 @@ def main(args):
     return 0
 
 if __name__ == "__main__":
-    main(sys.argv[1:])
+    main()

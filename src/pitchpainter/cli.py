@@ -1,5 +1,5 @@
 import getopt
-import print_util
+import pitchpainter.print_util as print_util
 import sys
 
 threading = False

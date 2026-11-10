@@ -1,7 +1,7 @@
 import datetime
 import json
-from situation import Situation
-from thread_poster import postThreadTextAsImage
+from pitchpainter.situation import Situation
+from pitchpainter.thread_poster import postThreadTextAsImage
 
 def drawPitchForTweeting(situation: Situation):
 

@@ -9,7 +9,7 @@ URLs include:
 import json
 import os
 import flask
-import snapshot
+import snapshot as snapshot
 
 
 @snapshot.app.route('/snapshots/<gamePk>/<snapshot_id>/')

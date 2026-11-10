@@ -1,8 +1,8 @@
-import cli
-import schedule
+import pitchpainter.cli as cli
+import pitchpainter.schedule as schedule
 import sys
-from live_game import LiveGameWorker
-from print_util import vprint, dprint
+from pitchpainter.live_game import LiveGameWorker
+from pitchpainter.print_util import vprint, dprint
 from PySide6 import QtCore, QtWidgets, QtGui
 from shiboken6 import isValid
 
@@ -209,8 +209,8 @@ class ApplicationWidget(QtWidgets.QWidget):
         print("Done!")
         event.accept()
 
-def main(args):
-    cli.getOptions(args)
+def main():
+    cli.getOptions(sys.argv[1:])
     app = QtWidgets.QApplication(sys.argv)
     app.setApplicationName("Pitcher Painter")
 
@@ -223,4 +223,4 @@ def main(args):
     sys.exit(app.exec())
 
 if __name__ == '__main__':
-    main(sys.argv[1:])
+    main()

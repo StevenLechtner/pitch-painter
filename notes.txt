@@ -276,3 +276,35 @@ Set vscode env to 3.14.3 venv and click play in the file.
 source .venv/bin/activate
 which python3
 which pip
+
+
+TO STILL WRITE TESTS FOR:
+current_play_mod
+current_play
+example_game
+example_out
+game_from_1912
+live_wild_pitch_double_steal
+live_in_play_runs
+live_play
+live_win_prob
+meadows_highlist
+meadows_win_prob
+meadows
+play_by_play
+playbyplay
+schedule_out
+
+TESTS WRITTEN FOR:
+abs_challenge
+delayed_start
+example_game_end
+extra_innings_away_wins
+ghost_runner_added_live
+ghost_runner_worked_somehow
+live_pitching_change_mid_inning
+live_wild_pitch
+pitch_clock_violation
+pitching_change_mid_at_bat
+steal_second_third_and_home
+wild_pitch

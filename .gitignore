@@ -4,3 +4,4 @@ images/
 passwords.py
 password_notes.txt
 tests/snapshots/
+.vscode

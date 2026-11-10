@@ -1,16 +1,16 @@
-import cli
+import pitchpainter.cli as cli
 import copy
 import datetime
 import json
-import pitch_posting_processor
+import pitchpainter.pitch_posting_processor as pitch_posting_processor
 import requests
 import statsapi
 import time
-import win_probability
+import pitchpainter.win_probability as win_probability
 from enum import Enum
-from pitchbypitch import postPitchToThreads
-from print_util import dprint, vprint
-from situation import Situation
+from pitchpainter.pitchbypitch import postPitchToThreads
+from pitchpainter.print_util import dprint, vprint
+from pitchpainter.situation import Situation
 
 
 class Status(Enum):

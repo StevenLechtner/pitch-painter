@@ -8,7 +8,7 @@ URLs include:
 # import arrow
 import os
 import flask
-import snapshot
+import snapshot as snapshot
 
 
 @snapshot.app.route('/')

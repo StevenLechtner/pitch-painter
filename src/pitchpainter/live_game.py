@@ -1,13 +1,13 @@
-import cli
+import pitchpainter.cli as cli
 import json
-import pitch_posting_processor
+import pitchpainter.pitch_posting_processor as pitch_posting_processor
 import statsapi
 import sys
 import threading
-import win_probability
-from game import Game, Status
-from pitchbypitch import drawPitch, postPitchToThreads
-from print_util import vprint, dprint
+import pitchpainter.win_probability as win_probability
+from pitchpainter.game import Game, Status
+from pitchpainter.pitchbypitch import drawPitch, postPitchToThreads
+from pitchpainter.print_util import vprint, dprint
 from PySide6 import QtCore
 
 desiredTeam = 'Detroit Tigers'
@@ -85,9 +85,11 @@ def processPlayEvent(playEvent, situation, atBatToProcess, game, output):
     situation.setPlayEventId(playEvent.get("playId", f"play_end_time_{playEndTime}"))
 
     if playEvent.get("isPitch", False):
-        output.emit(drawPitch(situation))
+        if output:
+            output.emit(drawPitch(situation))
         game.setLastPitch(situation)
-    output.emit(playEvent.get("details", {}).get("description", ""))
+    if output:
+        output.emit(playEvent.get("details", {}).get("description", ""))
 
     # TODO: implement this as another flag - printing every pitch in the game (remove big play stuff...)
     # playId = playEvent.get("playId", -1)
@@ -184,7 +186,8 @@ def processAtBat(game, atBatIndexToProcess, output, gamePk, stop_event):
     latestPlayEventIndex = -1
     currentPlayEventToProcess = 0
     playEvents = atBatToProcess.get("playEvents", [])
-    output.emit(f"{atBatToProcess["matchup"]["batter"]["fullName"]} now batting.")
+    if output:
+        output.emit(f"{atBatToProcess["matchup"]["batter"]["fullName"]} now batting.")
 
     # First process all pitches from currentPlay
     for playEvent in playEvents:
@@ -220,7 +223,8 @@ def processAtBat(game, atBatIndexToProcess, output, gamePk, stop_event):
                 playEvents = atBatToProcess.get("playEvents", [])
                 latestPlayEventIndex = playEvents[-1].get("index", -1) if playEvents else -1
 
-    output.emit(atBatToProcess.get("result", {}).get("description", ""))
+    if output:
+        output.emit(atBatToProcess.get("result", {}).get("description", ""))
     game.processAtBatFinished(atBatToProcess, output)
 
 
@@ -284,14 +288,13 @@ def printAllPitchesFromLiveGame(gamePk, output, stop_event):
 def outputVerbosePrinting(text):
     vprint(text)
 
-
-def main(args):
+def main():
     '''
     +======================+
     |   Live Play Output   |
     +======================+
     '''
-    cli.getOptions(args)
+    cli.getOptions(sys.argv[1:])
 
     # game = statsapi.get('game', {'gamePk': 776189})
     # # with open("tests/meadows.json", "r") as f:
@@ -317,4 +320,4 @@ def main(args):
 
 
 if __name__ == "__main__":
-    main(sys.argv[1:])
+    main()

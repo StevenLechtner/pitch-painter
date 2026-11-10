@@ -1,10 +1,10 @@
 import copy
 import datetime
 import threading
-import pitchbypitch
-import thread_poster
-import win_probability
-from print_util import dprint
+import pitchpainter.pitchbypitch as pitchbypitch
+import pitchpainter.thread_poster as thread_poster
+import pitchpainter.win_probability as win_probability
+from pitchpainter.print_util import dprint
 from PySide6.QtCore import QRunnable, QThreadPool
 
 pitchPool = QThreadPool()

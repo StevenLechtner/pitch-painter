@@ -11,13 +11,13 @@ set -x
 pip install pycodestyle pydocstyle pylint pytest --quiet
 
 # Run pycodestyle
-pycodestyle *.py --max-line-length=120
+pycodestyle src/pitchpainter --max-line-length=120
 
 # Run pydocstyle
-pydocstyle *.py
+pydocstyle src/pitchpainter
 
 # Run pylint
-pylint *.py
+pylint src/pitchpainter
 
 # Run all unit tests
 pytest -v tests/pitch_painter

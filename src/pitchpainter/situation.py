@@ -100,26 +100,18 @@ class Situation():
                 runnerId = runner.get("details", {}).get("runner", {}).get("id", None)
                 if runnerId is None or runnerId == batterId:
                     continue
-                if (self.awayScore == 8):
-                    print(runnerId)
                 if runnerId not in runnerMovements:
                     runnerMovements[runnerId] = []
                 runnerMovements[runnerId].append(runner.get("movement", {}))
 
             # 3) reverse engineer where the runners from 1) started the at bat
             for base, runnerId in baseOccupiedId.items():
-                if (self.awayScore == 8):
-                    print(base, runnerId)
                 if runnerId in runnerMovements:
                     curBase = base
                     baseOccupiedId[base] = -1
                     for runnerMovement in runnerMovements[runnerId]:
-                        if (self.awayScore == 8):
-                                print(runnerMovement)
                         if runnerMovement.get("end", None) == curBase:
                             curBase = runnerMovement.get("start", None)
-                            if (self.awayScore == 8):
-                                print("curBase: ", curBase)
                     if curBase in baseOccupiedId:
                         baseOccupiedId[curBase] = runnerId
                     runnerMovements.pop(runnerId, None)

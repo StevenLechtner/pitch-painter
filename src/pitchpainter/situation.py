@@ -1,5 +1,16 @@
+"""
+Situation Class.
+
+Functionality includes everything you would see on a scorebug:
+teams, inning, score, pitcher, pitch count, baserunners
+"""
+
+
 class Situation():
+    """Handles the contents of every pitch in a game."""
+
     def __init__(self):
+        """Represent the container to output correct data."""
         self.homeTeam = ""
         self.awayTeam = ""
         self.homeScore = -1
@@ -16,6 +27,7 @@ class Situation():
         self.playEventId = -1
 
     def startNewGame(self, home: str, away: str, pitcher: str = None):
+        """Set team names and pitcher, top of the 1st, 0-0 score, 0-0 count, no baserunners, no pitch count."""
         self.homeTeam = home
         self.awayTeam = away
         self.homeScore = 0
@@ -33,52 +45,66 @@ class Situation():
         self.baserunnersById = {1: -1, 2: -1, 3: -1}
 
     def setHomeTeam(self, team: str):
+        """Set home team name."""
         self.homeTeam = team
 
     def setAwayTeam(self, team: str):
+        """Set away team name."""
         self.awayTeam = team
 
     def setHomeScore(self, score: int):
+        """Set home team score."""
         self.homeScore = score
 
     def setAwayScore(self, score: int):
+        """Set away team score."""
         self.awayScore = score
 
     def setPlayEventId(self, playEventId: int):
+        """Set current situation's play event id."""
         self.playEventId = playEventId
 
     def setInning(self, inning: int):
+        """Set inning. Clear baserunners if it is a new inning."""
         if inning != self.inning:
             self.baserunners = {1: False, 2: False, 3: False}
         self.inning = inning
 
     def setTop(self, top: bool):
+        """Set top attribute. True for top of an inning, False for bottom of an inning."""
         self.top = top
 
     def setBalls(self, balls: int):
+        """Set current at bat's ball count."""
         self.balls = balls
 
     def setStrikes(self, strikes: int):
+        """Set current at bat's strike count."""
         self.strikes = strikes
 
     def setOuts(self, outs: int):
+        """Set game's outs."""
         self.outs = outs
 
     def setPitcher(self, pitcher: str):
+        """Set current pitcher on the mound."""
         self.pitcher = pitcher
 
     def setPitchCount(self, pitchCount: int):
+        """Set current pitcher's pitch count."""
         self.pitchCount = pitchCount
 
     def setBaserunners(self, baserunners: dict):
+        """Set baserunners for current situation."""
         self.baserunners = baserunners
 
     def setBaserunnersAtStartOfAtBat(self, currentPlay: dict):
-        '''
+        """Set baserunners at the start of an at bat given the at bat.
+
         1) Start with the end state - hard save the base and id for all baserunners that aren't the batter at the end
         2) Loop through the runners and add a dict if not batter: key=runner_id, val=list of movements in reverse order
         3) For each entry, find the corresponding and correct starting position for that runner, then hard save it
-        '''
+        """
         if self.outs < 3:
             baseOccupiedId = {"1B": -1, "2B": -1, "3B": -1}
             batterId = currentPlay.get("matchup", {}).get("batter", {}).get("id", None)
@@ -141,6 +167,10 @@ class Situation():
                             pass
 
     def setBaserunnersDuringAtBat(self, currentPlay: dict, playIndex):
+        """Set baserunners during an at bat.
+
+        Using where a baserunner is and the movement on the play, we can update the baserunner's position.
+        """
         basesOccupied = self.baserunners
         runners = currentPlay.get("runners", {})
         for runner in runners:
@@ -167,6 +197,7 @@ class Situation():
                         pass
 
     def setBaserunnersAtEndOfAtBat(self, currentPlay: dict):
+        """Set baserunners at the end of an at bat."""
         basesOccupied = {1: False, 2: False, 3: False}
         if self.outs < 3:
             # At bat is over and the inning continues
@@ -179,6 +210,7 @@ class Situation():
         self.baserunners = basesOccupied
 
     def __str__(self):
+        """Pretty print return the current situation."""
         return (
             f"Home Team: {self.homeTeam}\n"
             f"Away Team: {self.awayTeam}\n"

@@ -61,6 +61,8 @@ class ScheduleWorker(QtCore.QObject):
                 self.output.emit(self.scheduleStr)
 
     def getGamePk(self, index):
+        if not self.gamePks:
+            return -1
         if index == 0:
             index = 1
         if index > len(self.gamePks):

@@ -25,7 +25,7 @@ class LiveGameWorker(QtCore.QObject):
 
     @QtCore.Slot()
     def run(self):
-        printAllPitchesFromLiveGame(self.gamePk, self.output, self.stop_event)
+        printAllPitchesFromGame(self.gamePk, self.output, self.stop_event)
         self.finished.emit()
 
     def stop(self):
@@ -228,14 +228,17 @@ def processAtBat(game, atBatIndexToProcess, output, gamePk, stop_event):
     game.processAtBatFinished(atBatToProcess, output)
 
 
-def printAllPitchesFromLiveGame(gamePk, output, stop_event):
+def printAllPitchesFromGame(gamePk, output, stop_event, filepath=None):
     while not stop_event.is_set():
         game = Game()
-        game.getGameByGamePk(gamePk)
-        # game.getGameByFilePath("tests/meadows.json") # Uncomment to test from a json file instead of the server
+        if not filepath:
+            game.getGameByGamePk(gamePk)
+        else:
+            game.getGameByFilePath(filepath)  #  test from a json file instead of the server if filepath provided
         game.setStatus()
         if not game.isValid() or game.gameStatus == Status.PREVIEW:
-            output.emit(game.gameInfo)
+            if output:
+                output.emit(game.gameInfo)
             return
 
         atBatIndexToProcess = 0
@@ -249,7 +252,7 @@ def printAllPitchesFromLiveGame(gamePk, output, stop_event):
                 dprint("Waiting for next at bat to start...")
                 if stop_event.wait(2):
                     return  # stop_event was sent, return
-                game.getGameByGamePk(gamePk)
+                game.getGameByGamePk(game.gamePk)
                 if game.atBats:
                     latestAtBatIndex = game.atBats[-1].get("atBatIndex", -1)
                 else:
@@ -261,7 +264,7 @@ def printAllPitchesFromLiveGame(gamePk, output, stop_event):
             # We process the next at bat at atBatIndexToProcess
             dprint("atBatIndexToProcess", atBatIndexToProcess)
             dprint("latestAtBatIndex", latestAtBatIndex)
-            processAtBat(game, atBatIndexToProcess, output, gamePk, stop_event)
+            processAtBat(game, atBatIndexToProcess, output, game.gamePk, stop_event)
             vprint(
                 game.atBats[atBatIndexToProcess]
                 .get("result", {})
@@ -278,10 +281,11 @@ def printAllPitchesFromLiveGame(gamePk, output, stop_event):
         while len(border) < len(recap):
             border += "─"
         border = "+" + border[1:-1] + "+"
-        output.emit("")
-        output.emit(border)
-        output.emit(recap)
-        output.emit(border)
+        if output:
+            output.emit("")
+            output.emit(border)
+            output.emit(recap)
+            output.emit(border)
         return
 
 
@@ -316,7 +320,10 @@ def main():
     gamePk = 822765
     testThread = LiveGameWorker(gamePk)
     testThread.output.connect(outputVerbosePrinting)
-    printAllPitchesFromLiveGame(gamePk, testThread.output, testThread.stop_event)
+    printAllPitchesFromGame(gamePk,
+                            testThread.output,
+                            testThread.stop_event,
+                            filepath="tests/pitch_painter/data/live_in_play_runs.json")
     return 0
 
 

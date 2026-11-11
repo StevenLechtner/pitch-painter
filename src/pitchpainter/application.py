@@ -58,6 +58,9 @@ class ApplicationWidget(QtWidgets.QWidget):
         self.text_widget.show()
         index = self.gamesWidget.row(self.gamesWidget.currentItem())
         gamePk = self.scheduleWorker.getGamePk(index)
+        if gamePk == -1:
+            self.hideGame()
+            return
         self.getPitches(gamePk)
         self.showGameBtn.setText("Return")
 
@@ -200,8 +203,9 @@ class ApplicationWidget(QtWidgets.QWidget):
 
     def updateDateSelected(self):
         date = self.calendar.selectedDate()
-        self.scheduleWorker.date = date
-        self.scheduleWorker.update_event.set()
+        self.scheduleWorker.setDate(date)
+        # self.scheduleWorker.date = date
+        # self.scheduleWorker.update_event.set()
 
     def initGameSelected(self):
         self.gamesWidget = QtWidgets.QListWidget()
@@ -218,11 +222,12 @@ class ApplicationWidget(QtWidgets.QWidget):
                 + self.calendar.selectedDate().toString("MMMM d, yyyy"))
             # print(game.text())
 
-    def closeEvent(self, event):
+    def closeEvent(self, event=None):
         print("Application shutdown...")
         self.stopAllThreads()
         print("Done!")
-        event.accept()
+        if event:
+            event.accept()
 
 
 def main():

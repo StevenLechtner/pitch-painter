@@ -21,3 +21,8 @@ include = ["pitchpainter*", "snapshot*"]
 
 [project.scripts]
 application = "pitchpainter.application:main"
+
+[tool.pytest.ini_options]
+filterwarnings = [
+    "ignore:datetime.datetime.utcnow\\(\\) is deprecated:DeprecationWarning:dropbox.*",
+]

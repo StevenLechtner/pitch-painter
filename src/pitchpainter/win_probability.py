@@ -1,5 +1,6 @@
 import pitchpainter.cli as cli
 import heapq
+import json
 import requests
 import statsapi
 import sys
@@ -19,6 +20,7 @@ def start():
     stop_event.clear()
 
 
+# TODO: find a better way to read from file vs server instead of passing _filepath for every function
 class WinProbability():
     # score weights
     NORM_PROBS_ADDED = 25
@@ -29,9 +31,9 @@ class WinProbability():
     DRAMA_IDX_WEIGHT = 0.15
     THRESHOLD = 0.375
 
-    def __init__(self, gamePk=None):
+    def __init__(self, gamePk=None, _filepath=None):
         self.gamePk = -1 if gamePk is None else gamePk
-        self.winProbabilities: list[WinProbabilityInfo] = self.setWinProbabilities()  # List of WinProbabilityInfo
+        self.winProbabilities: list[WinProbabilityInfo] = self.setWinProbabilities(_filepath)  # List of WinProbabilityInfo
         # Top ten: List of tuples (x, y) where x is the metric and y is the at bat index
         self.topTenProbsAdded = []
         self.topTenLevIdx = []
@@ -39,11 +41,21 @@ class WinProbability():
         self.scores = []
         self.topTenScores = []
 
-    def getGameWinProbabilities(self):
+    def getGameWinProbabilities(self, _filepath=None):
         if stop_event.is_set():
             return []
 
         winProbabilityList = []
+
+        # path to a win probability local file is provided. Use first, but check server if this fails
+        if _filepath:
+            with open(_filepath, "r") as f:
+                winProbabilityList = json.load(f)
+                #print(winProbabilityList)
+                if winProbabilityList:
+                    return winProbabilityList
+
+        # No path is provided. Get win probabilities from the server using the gamePk
         # Try HTTP GET request up to three times before failing
         for attempt in range(3):
             if stop_event.is_set():
@@ -65,7 +77,7 @@ class WinProbability():
                     winProbabilityList.clear()
         return []
 
-    def getFinishedAtBat(self, atBatIndex):
+    def getFinishedAtBat(self, atBatIndex, _filepath=None):
         # wait for at bat at given atBatIndex to be complete with win probability numbers
         # just check if the next atBatIndex is present
         # if not, check if a win probability is 100% (indicates game over)
@@ -75,7 +87,7 @@ class WinProbability():
         # TODO: Additional check - see if any values are different (win prob, drama, lev) - different indicates
         # they're updated, but they could be updated to the same...
         while not stop_event.is_set():
-            winProbabilityList = self.getGameWinProbabilities()
+            winProbabilityList = self.getGameWinProbabilities(_filepath)
             if not winProbabilityList:
                 # win probabilities list is empty!
                 if stop_event.wait(5):
@@ -116,8 +128,8 @@ class WinProbability():
         atBatIdx = atBat.get("atBatIndex", 0.0)
         return WinProbabilityInfo(homeProb, awayProb, homeProbAdded, levIdx, dramaIdx, atBatIdx)
 
-    def isAboveThreshold(self, atBatIndex):
-        atBat = self.getFinishedAtBat(atBatIndex)
+    def isAboveThreshold(self, atBatIndex, _filepath=None):
+        atBat = self.getFinishedAtBat(atBatIndex, _filepath)
         if atBat is None:
             return False
 
@@ -138,20 +150,21 @@ class WinProbability():
         dprint(f"win prob atBatIndex: {atBat.get("atBatIndex", -1)}")
         return score > self.THRESHOLD
 
-    def isABigPlay(self, atBatIndex):
+    def isABigPlay(self, atBatIndex, _filepath=None):
         if stop_event.is_set():
             return False
 
         # TODO: make this smarter. we want to wait for at bat to be done before checking isScoringPlay and
         # isAboveThreshold, but this currently checks at bat finish twice (here + isAboveThreshold())
-        atBat = self.getFinishedAtBat(atBatIndex)
+        atBat = self.getFinishedAtBat(atBatIndex, _filepath)
         if atBat is None:
             return False
         scoringPlay = atBat.get("about", {}).get("isScoringPlay", False)
-        return self.isAboveThreshold(atBatIndex) or scoringPlay
+        return self.isAboveThreshold(atBatIndex, _filepath) or scoringPlay
 
-    def setWinProbabilities(self):
-        winProbabilityList = self.getGameWinProbabilities()
+    def setWinProbabilities(self, _filepath=None):
+        print(_filepath)
+        winProbabilityList = self.getGameWinProbabilities(_filepath)
         winProbabilities = []
         for atBat in winProbabilityList:
             winProbabilities.append(self.getWinProbabilityInfo(atBat))

@@ -21,6 +21,7 @@ cd "$(dirname "${BASH_SOURCE[0]}")/.."
 echo cd $(pwd)
 
 # Parse argument.  $1 is the first argument
+# TODO: fix this. gamePk can be < 6 digits 
 case $2 in
   "create")
     if ! [[ "$GAMEPK" =~ ^[0-9]{6}$ ]]; then

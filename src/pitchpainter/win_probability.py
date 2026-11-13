@@ -33,7 +33,7 @@ class WinProbability():
 
     def __init__(self, gamePk=None, _filepath=None):
         self.gamePk = -1 if gamePk is None else gamePk
-        self.winProbabilities: list[WinProbabilityInfo] = self.setWinProbabilities(_filepath)  # List of WinProbabilityInfo
+        self.winProbabilities: list[WinProbabilityInfo] = self.setWinProbabilities(_filepath)
         # Top ten: List of tuples (x, y) where x is the metric and y is the at bat index
         self.topTenProbsAdded = []
         self.topTenLevIdx = []
@@ -51,7 +51,6 @@ class WinProbability():
         if _filepath:
             with open(_filepath, "r") as f:
                 winProbabilityList = json.load(f)
-                #print(winProbabilityList)
                 if winProbabilityList:
                     return winProbabilityList
 

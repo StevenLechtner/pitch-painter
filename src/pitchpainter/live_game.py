@@ -234,7 +234,7 @@ def printAllPitchesFromGame(gamePk, output, stop_event, filepath=None):
         if not filepath:
             game.getGameByGamePk(gamePk)
         else:
-            game.getGameByFilePath(filepath)  #  test from a json file instead of the server if filepath provided
+            game.getGameByFilePath(filepath)  # test from a json file instead of the server if filepath provided
         game.setStatus()
         if not game.isValid() or game.gameStatus == Status.PREVIEW:
             if output:

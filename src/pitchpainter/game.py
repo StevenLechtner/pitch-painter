@@ -1,19 +1,26 @@
+"""
+Game Class provides details about a real MLB baseball game. Status Enum specifies game state.
+
+Functionality defines a game:
+situation, at bats, pitchers, game state
+"""
+
+
 import pitchpainter.cli as cli
 import copy
-import datetime
 import json
 import pitchpainter.pitch_posting_processor as pitch_posting_processor
 import requests
 import statsapi
 import time
-import pitchpainter.win_probability as win_probability
 from enum import Enum
-from pitchpainter.pitchbypitch import postPitchToThreads
 from pitchpainter.print_util import dprint, vprint
 from pitchpainter.situation import Situation
 
 
 class Status(Enum):
+    """MLB game states, enum."""
+
     PREVIEW = 1
     LIVE = 2
     FINAL = 3
@@ -21,7 +28,10 @@ class Status(Enum):
 
 
 class Game():
+    """Outlines important actions to parse a baseball game."""
+
     def __init__(self):
+        """Initialize a game with empty contents."""
         self.game = None
         self.gamePk = -1
         self.situation = Situation()
@@ -35,17 +45,9 @@ class Game():
         self.detailedState = ""
         self.pitchCountDict = {}
         self.gameOver = False
-    """
-        if game.game is None:
-            output.emit("Game is None")
-            return
-        atBats = game.game.get("liveData", {}).get("plays", {}).get("allPlays", []) # a play is an at bat from this game
-        if (len(atBats) == 0):
-            output.emit("Game has not started yet!")
-            return
-    """
 
     def isValid(self):
+        """Return True if the game is populated and has at least one at bat. False otherwise."""
         if self.game is None:
             dprint("Game is nothing for some reason")
             self.gameInfo = "Game is None"
@@ -61,6 +63,7 @@ class Game():
         return True
 
     def setStatus(self):
+        """Set Game status from the game's codedGameState. UNKNOWN if codedGameState can not be found."""
         if self.game is not None:
             status = self.game.get("gameData", {}).get("status", {}).get("codedGameState", "")
             self.detailedState = self.game.get("gameData", {}).get("status", {}).get("detailedState", "")
@@ -77,13 +80,18 @@ class Game():
                 case _:
                     self.gameStatus = Status.UNKNOWN
                     self.gameInfo = "Game status unknown!"
-            dprint(f"Game status: {self.gameStatus} ({status})")
+        else:
+            self.gameStatus = Status.UNKNOWN
+            self.gameInfo = "Game status unknown; game attribute is None!"
+        dprint(f"Game status: {self.gameStatus} ({status})")
 
     def isLive(self):
+        """Grab Game status, an return True is Game is valid and has a status of LIVE. False otherwise."""
         self.setStatus()
         return self.isValid() and self.gameStatus == Status.LIVE
 
     def startNewGame(self):
+        """Set up the object for a new game. Populate teams, set pitcher, start the first at bat."""
         if not self.isValid():
             return
         awayAbbr = self.game.get("gameData", {}).get("teams", {}).get("away", {}).get("abbreviation", "[away_team]")
@@ -106,6 +114,12 @@ class Game():
 
     # TODO: Test network connection failure
     def getGameByGamePk(self, _gamePk):
+        """Get game from MLB's server by gamePK.
+
+        Attempt to gather data up to three times.
+        Save, start, and return game if valid.
+        Return None if game can not be found.
+        """
         # Try HTTP GET request up to three times before failing
         for attempt in range(3):
             try:
@@ -128,6 +142,7 @@ class Game():
         return None
 
     def getGameByFilePath(self, _filePath):
+        """Get game from local file given with _filePath. Save and start game if gamePk != -1."""
         with open(_filePath, "r") as f:
             self.game = json.load(f)
         if self.gamePk != self.game.get("gamePk", -1):
@@ -135,6 +150,7 @@ class Game():
             self.gamePk = self.game.get("gamePk", -1)
 
     def getRecap(self):
+        """Return a game's final outcome (score, winning team, losing team)."""
         if self.situation.awayScore > self.situation.homeScore:
             return (
                 f"|  Final score: {self.situation.awayScore}-{self.situation.homeScore}, "
@@ -146,8 +162,8 @@ class Game():
                 f"{self.situation.homeTeam} over {self.situation.awayTeam}  |"
             )
 
-    # sets current pitcher. Updates pitcher if play event type is a pitching_substitution
     def setPitcher(self, playEvent=None):
+        """Set current pitcher. Update pitcher if play event type is a pitching_substitution."""
         if not self.isValid():
             return
 
@@ -172,9 +188,11 @@ class Game():
         self.setPitcher()
 
     def setLastPitch(self, situation: Situation):
+        """Save lastPitch as situation."""
         self.lastPitch = copy.deepcopy(situation)
 
     def processAtBatFinished(self, atBatToProcess, output=None):
+        """Set score, outs, count, baserunners, and gameOver. Process at bat to post to Threads if threading flagged."""
         vprint("Processing at bat finished...")
         self.situation.setAwayScore(atBatToProcess.get("result", {}).get("awayScore", -1))
         self.situation.setHomeScore(atBatToProcess.get("result", {}).get("homeScore", -1))
@@ -262,10 +280,12 @@ class Game():
         vprint("At bat processed!")
 
     def __str__(self):
+        """Pretty print return the game and situation for the Game object."""
         return f"{self.game}\ngamePK: {self.gamePk}\nsituation: {self.situation}"
 
 
 def ordinal(n: int):
+    """Human readable number output. Ex: 1st, 2nd, 5th."""
     if 11 <= (n % 100) <= 13:
         suffix = 'th'
     else:

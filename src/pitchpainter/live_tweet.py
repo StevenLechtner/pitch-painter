@@ -1,3 +1,6 @@
+"""Module to automatically tweet contents to Twitter (X)."""
+
+
 import pitchpainter.cli as cli
 import json
 import pitchpainter.passwords as passwords
@@ -17,6 +20,7 @@ TWITTER_ACCESS_SECRET = passwords.TWITTER_ACCESS_SECRET
 
 
 def createClient():
+    """Create the Twitter client using tweepy."""
     # v2 authentication
     client = tweepy.Client(bearer_token=TWITTER_BEARER_TOKEN,
                            consumer_key=TWITTER_API_KEY,
@@ -27,6 +31,7 @@ def createClient():
 
 
 def sendTweet(client: tweepy.Client, text: str, isTweeting=False):
+    """Tweet text to configured account given correct developer credentials."""
     if not isTweeting:
         return "We are not tweeting right now. -t or --tweet to tweet. -h or --help for other command line options"
 
@@ -47,7 +52,9 @@ def sendTweet(client: tweepy.Client, text: str, isTweeting=False):
     return response
 
 
+# TODO: Remove this?
 def main():
+    """Test only this file's contents."""
     cli.getOptions(sys.argv[1:])
     client = createClient()
 

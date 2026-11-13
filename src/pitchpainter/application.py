@@ -1,3 +1,6 @@
+"""PyQt Application to choose a game, view pitches, and post big plays to Threads with command line arguments."""
+
+
 import pitchpainter.cli as cli
 import pitchpainter.schedule as schedule
 import sys
@@ -8,8 +11,10 @@ from shiboken6 import isValid
 
 
 class ApplicationWidget(QtWidgets.QWidget):
+    """PtQt application window that a user can interact with to select desired games."""
 
     def __init__(self):
+        """Initialize the PyQt widget with schedule and live game threads, setting date to current date."""
         super().__init__()
 
         self.showingGame = False
@@ -42,6 +47,7 @@ class ApplicationWidget(QtWidgets.QWidget):
 
     @QtCore.Slot()
     def toggleGame(self):
+        """Show/hide game button toggle."""
         if self.showingGame:
             self.hideGame()
             if self.liveGameThread is not None and isValid(self.liveGameThread):
@@ -51,6 +57,7 @@ class ApplicationWidget(QtWidgets.QWidget):
             self.showGame()
 
     def showGame(self):
+        """Show output from a game when desired game is selected."""
         self.showingGame = True
         self.calendar.hide()
         self.gamesWidget.hide()
@@ -65,6 +72,7 @@ class ApplicationWidget(QtWidgets.QWidget):
         self.showGameBtn.setText("Return")
 
     def hideGame(self):
+        """Hide output from a game and return to calendar/game choose screen."""
         self.stopLiveGameThread()
         self.showingGame = False
         self.calendar.show()
@@ -81,7 +89,9 @@ class ApplicationWidget(QtWidgets.QWidget):
         else:
             self.showGameBtn.setText("Select desired game...")
 
+    # TODO: decide if this is still necessary - can maybe move to a test file?
     def getPitches(self, gamePk):
+        """Start reading from a live game."""
         # ================
         # Preset JSON file
         # ================
@@ -100,6 +110,7 @@ class ApplicationWidget(QtWidgets.QWidget):
         self.startLiveGameThread(gamePk)
 
     def startLiveGameThread(self, gamePk):
+        """Start reading from a live game."""
         if self.liveGameThread is not None and isValid(self.liveGameThread):
             if self.liveGameThread.isRunning():
                 self.stopLiveGameThread()
@@ -115,6 +126,7 @@ class ApplicationWidget(QtWidgets.QWidget):
         self.liveGameThread.start()
 
     def startScheduleThread(self):
+        """Start reading from the MLB's schedule as a separate thread."""
         if self.scheduleThread is not None and isValid(self.scheduleThread):
             if self.scheduleThread.isRunning():
                 self.stopScheduleThread()
@@ -130,6 +142,7 @@ class ApplicationWidget(QtWidgets.QWidget):
         self.scheduleThread.start()
 
     def updateGameOutput(self, text):
+        """Add text to the game print view and vprint to stdout if flagged."""
         # update text_widget with text
         self.text_widget.append(text)
 
@@ -137,6 +150,7 @@ class ApplicationWidget(QtWidgets.QWidget):
         vprint(text)
 
     def updateScheduleOutput(self):
+        """Show all games for a given date with teams, score, and status (inning if live)."""
         if not self.showingGame:
             self.text_widget.setPlainText(self.scheduleWorker.scheduleStr)
             self.text_widget.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
@@ -154,11 +168,13 @@ class ApplicationWidget(QtWidgets.QWidget):
         self.gamesWidget.setItemWidget(header, label)
 
     def stopAllThreads(self):
+        """Stop the live game and schedule threads."""
         self.stopLiveGameThread()
         self.stopScheduleThread()
         dprint("All threads stopped")
 
     def stopLiveGameThread(self):
+        """Stop the live game thread worker and child threads."""
         if self.liveGameThread is not None:
             dprint("Stopping live game worker and child threads")
             self.liveGameWorker.stop()
@@ -175,6 +191,7 @@ class ApplicationWidget(QtWidgets.QWidget):
                 dprint("Live game thread was not running")
 
     def stopScheduleThread(self):
+        """Stop the schedule worker thread."""
         if self.scheduleThread is not None and isValid(self.scheduleThread):
             if self.scheduleThread.isRunning():
                 dprint("Stopping schedule worker")
@@ -186,15 +203,18 @@ class ApplicationWidget(QtWidgets.QWidget):
                 dprint("Schedule thread stopped")
 
     def liveGameThreadFinished(self):
+        """Enable the bottom show game button when the live game thread is finished."""
         dprint("Live game output finished")
         self.showGameBtn.setEnabled(True)
 
     def scheduleThreadFinished(self):
+        """Set schedule thread and worker to None."""
         dprint("Schedule thread finished")
         self.scheduleThread = None
         self.scheduleWorker = None
 
     def initCalander(self):
+        """Create the calendar widget and set the date to the current date."""
         self.calendar = QtWidgets.QCalendarWidget()
         self.calendar.setGridVisible(True)
         self.calendar.show()
@@ -202,17 +222,20 @@ class ApplicationWidget(QtWidgets.QWidget):
         self.updateDateSelected()
 
     def updateDateSelected(self):
+        """Set the date in the schedule worker, which populates the games scheduled on the day."""
         date = self.calendar.selectedDate()
         self.scheduleWorker.setDate(date)
         # self.scheduleWorker.date = date
         # self.scheduleWorker.update_event.set()
 
     def initGameSelected(self):
+        """Create the list widget below the calendar to select a game to view."""
         self.gamesWidget = QtWidgets.QListWidget()
         self.gamesWidget.currentItemChanged.connect(self.updateGameSelected)
         self.updateGameSelected()
 
     def updateGameSelected(self):
+        """Update highlighed game selected and change bottom text to view the highlighed game."""
         game = self.gamesWidget.currentItem()
         if game is not None and game.flags() & QtCore.Qt.ItemFlag.ItemIsSelectable:
             self.showGameBtn.setText(
@@ -223,6 +246,7 @@ class ApplicationWidget(QtWidgets.QWidget):
             # print(game.text())
 
     def closeEvent(self, event=None):
+        """Stop all threads and close the application widget."""
         print("Application shutdown...")
         self.stopAllThreads()
         print("Done!")
@@ -231,6 +255,7 @@ class ApplicationWidget(QtWidgets.QWidget):
 
 
 def main():
+    """Create the application widget. Specify the application name, window size/title, and show the widget."""
     cli.getOptions(sys.argv[1:])
     app = QtWidgets.QApplication(sys.argv)
     app.setApplicationName("Pitcher Painter")

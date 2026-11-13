@@ -1,3 +1,6 @@
+"""Parse MLB games with teams, score, and game status (inning if live game) for each game given a date."""
+
+
 import re
 import statsapi
 import threading
@@ -6,10 +9,13 @@ from PySide6 import QtCore
 
 
 class ScheduleWorker(QtCore.QObject):
+    """Get games, date, and schedule with logic to parse games by date."""
+
     output = QtCore.Signal(str)
     finished = QtCore.Signal()
 
     def __init__(self):
+        """Initialize object to nothing of importance."""
         super().__init__()
         self.gamePks = []
         self.schedule = None
@@ -20,6 +26,7 @@ class ScheduleWorker(QtCore.QObject):
 
     @QtCore.Slot()
     def run(self):
+        """Set schedule of games. Ping MLB's schedule every 30 seconds to update events."""
         while not self.stop_event.is_set():
             self.setScheduleStr()
             # Wait until either 30 seconds has passed, date has been updated, or worker has been stopped
@@ -28,14 +35,17 @@ class ScheduleWorker(QtCore.QObject):
         self.finished.emit()
 
     def stop(self):
+        """Stop this thread."""
         self.stop_event.set()
         self.update_event.set()
 
     def setDate(self, date: QtCore.QDate):
+        """Set this object's date as a QDate and update the schedule."""
         self.date = date
         self.update_event.set()
 
     def setScheduleStr(self):
+        """Find all MLB games for the object's date with teams, score, and game status (inning if live)."""
         if self.date is None:
             self.gamePks.clear()
             self.scheduleStr = "Date provided is invalid"
@@ -61,6 +71,7 @@ class ScheduleWorker(QtCore.QObject):
                 self.output.emit(self.scheduleStr)
 
     def getGamePk(self, index):
+        """Get the gamePk of the game listed in index from gamePks. -1 if index not present."""
         if not self.gamePks:
             return -1
         if index == 0:

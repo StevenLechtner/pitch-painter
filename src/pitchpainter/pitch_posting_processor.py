@@ -1,3 +1,6 @@
+"""Helper module to check, configure, and post a pitch to Threads."""
+
+
 import copy
 import datetime
 import threading
@@ -13,6 +16,7 @@ stop_event = threading.Event()
 
 
 def stop():
+    """Stop Thread posting and win probability threads."""
     dprint("pitch_posting_processor stop_event is True")
     stop_event.set()
     pitchPool.clear()
@@ -21,6 +25,7 @@ def stop():
 
 
 def start():
+    """Start Thread posting and win probability threads."""
     dprint("pitch_posting_processor stop_event is False")
     stop_event.clear()
     win_probability.start()
@@ -28,6 +33,7 @@ def start():
 
 
 def postToThreads(gamePk, playEventId, pitchToPost, awayScore, homeScore, scoringPlay, description):
+    """Get desired text from a situation and post to Threads."""
     now = datetime.datetime.now()
     curTime = f"{now.strftime('%Y-%m-%d_%H-%M-%S')}.{now.microsecond // 1000:03d}"
     filepath = f"images/{gamePk}/play_id_{playEventId}_created_{curTime}.png"
@@ -41,6 +47,7 @@ def postToThreads(gamePk, playEventId, pitchToPost, awayScore, homeScore, scorin
 
 
 def processAndPostPitch(gamePk, atBatToProcess, playEventId, pitchToPost, awayScore, homeScore):
+    """Process the pitch and post to Threads if it is a big play."""
     winProb = win_probability.WinProbability(gamePk)
     if winProb.isABigPlay(atBatToProcess.get("about", {}).get("atBatIndex", -1)):
         description = atBatToProcess.get("result", {}).get("description", "")
@@ -49,8 +56,10 @@ def processAndPostPitch(gamePk, atBatToProcess, playEventId, pitchToPost, awaySc
 
 
 class AtBatQueue(QRunnable):
+    """Queue at bats to process and post to Threads as a background thread."""
 
     def __init__(self, gamePk, atBatToProcess, lastPitch, awayScore, homeScore):
+        """Set object variables given arguments."""
         super().__init__()
         self.pitchToPost = copy.deepcopy(lastPitch)
         self.gamePk = gamePk
@@ -60,6 +69,7 @@ class AtBatQueue(QRunnable):
         self.homeScore = homeScore
 
     def run(self):
+        """Process at bat and post to Threads if it fits the requirements."""
         processAndPostPitch(
             self.gamePk,
             self.atBatToProcess,
@@ -71,8 +81,10 @@ class AtBatQueue(QRunnable):
 
 
 class PitchQueue(QRunnable):
+    """Queue pitches to process and post to Threads as a background thread."""
 
     def __init__(self, gamePk, lastPitch, description, scoringPlay, awayScore, homeScore):
+        """Set object variables given arguments."""
         super().__init__()
         self.pitchToPost = copy.deepcopy(lastPitch)
         self.gamePk = gamePk
@@ -83,6 +95,7 @@ class PitchQueue(QRunnable):
         self.scoringPlay = scoringPlay
 
     def run(self):
+        """Process pitch and post to Threads if it fits the requirements."""
         postToThreads(
             self.gamePk,
             self.playEventId,
@@ -95,10 +108,12 @@ class PitchQueue(QRunnable):
 
 
 def enqueueAtBatForProcessing(gamePk, atBatToProcess, lastPitch, awayScore, homeScore):
+    """Create the at bat queue and add the at bat to the pitch pool to process pitch in the background thread."""
     abQueue = AtBatQueue(gamePk, atBatToProcess, lastPitch, awayScore, homeScore)
     pitchPool.start(abQueue)
 
 
 def enqueuePitchForProcessing(gamePk, lastPitch, description, scoringPlay, awayScore, homeScore):
+    """Create the pitch queue and add the pitch to the pitch pool to process pitch in the background thread."""
     pQueue = PitchQueue(gamePk, lastPitch, description, scoringPlay, awayScore, homeScore)
     pitchPool.start(pQueue)

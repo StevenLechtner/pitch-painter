@@ -1,10 +1,11 @@
-'''
-cp passwords_template.py passwords.py
+"""
+cp passwords_template.py passwords.py.
+
 Update values to connect your Threads application and Dropbox (for image uploads to Threads)
 Check README.md or notes.txt to learn how to create/connect your Threads app to this project, get ids,
 and generate long term access tokens from short term ones (valid for 60 days, can be refreshed)
 Same for Dropbox keys. Note that Dropbox's refresh token will automatically refresh when used!
-'''
+"""
 
 # Threads bot developer credentials
 THREADS_APP_ID = "your_threads_app_id_here"

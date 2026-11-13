@@ -1,3 +1,6 @@
+"""Process command line arguments."""
+
+
 import getopt
 import pitchpainter.print_util as print_util
 import sys
@@ -7,6 +10,7 @@ postingMode = "catch-up"
 
 
 def usage():
+    """Print command line arguments help message."""
     print(f"Usage: python {sys.argv[0]} [options] arguments")
     print("Options:")
     print("  -h, --help          Show this help message and exit")
@@ -16,6 +20,7 @@ def usage():
 
 
 def getOptions(args):
+    """Parge command line arguments."""
     options = "hvdt::o:"
     long_options = ["help", "verbose", "debug", "threading=?", "output="]
     try:

@@ -1,3 +1,6 @@
+"""Logic used to print all pitches from a baseball game. Post big plays to Threads if flag enabled."""
+
+
 import pitchpainter.cli as cli
 import json
 import pitchpainter.pitch_posting_processor as pitch_posting_processor
@@ -10,14 +13,17 @@ from pitchpainter.pitchbypitch import drawPitch, postPitchToThreads
 from pitchpainter.print_util import vprint, dprint
 from PySide6 import QtCore
 
-desiredTeam = 'Detroit Tigers'
+desiredTeam = 'Detroit Tigers'  # TODO: remove.
 
 
 class LiveGameWorker(QtCore.QObject):
+    """Thread to print all pitches from game and process each at bat to post to Threads."""
+
     output = QtCore.Signal(str)
     finished = QtCore.Signal()
 
     def __init__(self, gamePk):
+        """Start Threads poster and win probability check threads."""
         super().__init__()
         self.gamePk = gamePk
         self.stop_event = threading.Event()
@@ -25,15 +31,19 @@ class LiveGameWorker(QtCore.QObject):
 
     @QtCore.Slot()
     def run(self):
+        """Start printing all pitches from the game by this object's gamePk."""
         printAllPitchesFromGame(self.gamePk, self.output, self.stop_event)
         self.finished.emit()
 
     def stop(self):
+        """Stop this thread from printing pitches and posting big plays to Threads."""
         self.stop_event.set()
         pitch_posting_processor.stop()
 
 
+# TODO: Remove
 def getGamePk():
+    """Get a specific gamePk (Deprecated)."""
     schedule = statsapi.get('schedule', {'sportId': 1})
     today = '2026-05-18'
     for date in schedule['dates']:
@@ -51,7 +61,9 @@ def getGamePk():
     return -1
 
 
+# TODO: remove
 def getTeamsByGame(gamePk):
+    """Get teams by gamePk (Deprecated)."""
     game = statsapi.get('game', {'gamePk': gamePk})
     homeId = game["gameData"]["teams"]["home"]["id"]
     awayId = game["gameData"]["teams"]["away"]["id"]
@@ -60,7 +72,9 @@ def getTeamsByGame(gamePk):
     return [homeTeam, awayTeam]
 
 
+# TODO: remove
 def getTeamName(teamId):
+    """Get team name by team id."""
     team = statsapi.get('team', {'teamId': teamId})
     teamName = "null"
     teams = team['teams']
@@ -70,7 +84,9 @@ def getTeamName(teamId):
     return teamName
 
 
+# TODO: stop using this?
 def isABigPlay(playEvent, atBatToProcess, game):
+    """Return True if this at bat resulted in a big play - above THRESHOLD or scoring play. False othersise."""
     if (
         atBatToProcess.get("about", {}).get("isComplete", False)
         and (atBatToProcess.get("playEvents", {})[-1].get("index", -1) == playEvent.get("index", -1))
@@ -81,6 +97,11 @@ def isABigPlay(playEvent, atBatToProcess, game):
 
 
 def processPlayEvent(playEvent, situation, atBatToProcess, game, output):
+    """Process a play event.
+
+    A play event is one 'event' inside of a game - could be a pitch, a substitution, a steal, game advisory, etc.
+    Any event that affects the game gets processed here - usually processes a pitch, but does more if needed.
+    """
     playEndTime = playEvent.get("endTime", -1).replace(":", "-").replace("T", "_").replace("Z", "")
     situation.setPlayEventId(playEvent.get("playId", f"play_end_time_{playEndTime}"))
 
@@ -173,6 +194,7 @@ def processPlayEvent(playEvent, situation, atBatToProcess, game, output):
 
 
 def processAtBat(game, atBatIndexToProcess, output, gamePk, stop_event):
+    """Process this at bat until it is complete."""
     situation = game.situation
     atBatToProcess = game.atBats[atBatIndexToProcess]
     dprint("New at bat. Index: ", atBatToProcess.get("atBatIndex", -1))
@@ -229,6 +251,7 @@ def processAtBat(game, atBatIndexToProcess, output, gamePk, stop_event):
 
 
 def printAllPitchesFromGame(gamePk, output, stop_event, filepath=None):
+    """Print every siutatuion from a baseball game. The main driver for this entire project."""
     while not stop_event.is_set():
         game = Game()
         if not filepath:
@@ -289,11 +312,15 @@ def printAllPitchesFromGame(gamePk, output, stop_event, filepath=None):
         return
 
 
+# TODO: remove.
 def outputVerbosePrinting(text):
+    """Use output to print to stdout."""
     vprint(text)
 
 
+# TODO: remove?
 def main():
+    """Test this file."""
     '''
     +======================+
     |   Live Play Output   |

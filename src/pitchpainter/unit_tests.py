@@ -1,3 +1,6 @@
+"""Deprecated - unittest replaced with pytest."""
+
+
 from io import StringIO
 
 import json
@@ -11,7 +14,10 @@ import unittest
 
 # TODO: Remove this file - replaced with tests/ dir
 class TestPrint(unittest.TestCase):
+    """Unit tests (Deprecated)."""
+
     def save_prints(self, situation):
+        """Save drawn pitches (Deprecated)."""
         # output = StringIO()
         # sys.stdout = output
         out = pitchbypitch.drawPitch(situation)
@@ -21,6 +27,7 @@ class TestPrint(unittest.TestCase):
             self.assertEqual(len(line), 27)
 
     def test_out_row_len(self):
+        """Test a situation (Deprecated)."""
         with open("example_out.json", "r") as f:
             game = json.load(f)
         awayAbbr = game["gameData"]["teams"]["away"]["abbreviation"]  # LAA

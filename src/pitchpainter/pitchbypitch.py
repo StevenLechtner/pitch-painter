@@ -1,3 +1,6 @@
+"""Draws and outputs the scoreboard for a pitch in a game."""
+
+
 import datetime
 import json
 from pitchpainter.situation import Situation
@@ -5,7 +8,7 @@ from pitchpainter.thread_poster import postThreadTextAsImage
 
 
 def drawPitchForTweeting(situation: Situation):
-
+    """Draw a pitch given the situation with spacing to best match altText in Threads."""
     # Away team row logic
     awayTeam = situation.awayTeam[:3]
     while len(awayTeam) < 3:
@@ -72,6 +75,7 @@ def drawPitchForTweeting(situation: Situation):
 
 
 def drawPitchWithScoreAltText(_awayScore, _homeScore, situation):
+    """Draw a score update to add to a scoreboard post on run(s) scored."""
     awayTeam = situation.awayTeam[:3]
     while len(awayTeam) < 3:
         awayTeam += " "
@@ -101,7 +105,7 @@ def drawPitchWithScoreAltText(_awayScore, _homeScore, situation):
 
 # FIXME: extra innings look off centered
 def drawPitch(situation: Situation):
-
+    """Draw a pitch given the situation with spacing used for image uploading - the actual Threads image contents."""
     # Away team row logic
     awayTeam = situation.awayTeam[:3]
     while len(awayTeam) < 3:
@@ -168,6 +172,7 @@ def drawPitch(situation: Situation):
 
 
 def drawPitchWithScoreUpdate(_awayScore, _homeScore, situation):
+    """Draw a pitch with a score update added on run(s) scored."""
     awayTeam = situation.awayTeam[:3]
     while len(awayTeam) < 3:
         awayTeam += " "
@@ -196,6 +201,7 @@ def drawPitchWithScoreUpdate(_awayScore, _homeScore, situation):
 
 
 def postPitchToThreads(situation: Situation, filepath, description="", awayScore=-1, homeScore=-1, scoringPlay=False):
+    """Convert a situation to its desired output and call a post to Threads."""
     if scoringPlay and awayScore > -1 and homeScore > -1:
         text = drawPitchWithScoreUpdate(awayScore, homeScore, situation)
         altText = drawPitchWithScoreAltText(awayScore, homeScore, situation)
@@ -207,6 +213,7 @@ def postPitchToThreads(situation: Situation, filepath, description="", awayScore
 
 # TODO: remove testOut
 def printAllPitchesFromGame(game):
+    """Print all pitches of a game to stdout."""
     testOut = ""
     awayAbbr = game["gameData"]["teams"]["away"]["abbreviation"]  # LAA
     homeAbbr = game["gameData"]["teams"]["home"]["abbreviation"]  # HOU
@@ -313,6 +320,7 @@ def printAllPitchesFromGame(game):
 
 
 def listAllPitchesFromGame(game):
+    """Return a list of all pitches from a game."""
     out = []
     awayAbbr = game["gameData"]["teams"]["away"]["abbreviation"]  # LAA
     homeAbbr = game["gameData"]["teams"]["home"]["abbreviation"]  # HOU
@@ -402,6 +410,7 @@ def listAllPitchesFromGame(game):
 
 
 def printLiveGame(game):
+    """Print all pitches from a live game to stdout."""
     awayAbbr = game["gameData"]["teams"]["away"]["abbreviation"]  # LAA
     homeAbbr = game["gameData"]["teams"]["home"]["abbreviation"]  # HOU
     currentPitcher = game["liveData"]["plays"]["currentPlay"]["matchup"]["pitcher"]["fullName"]  # José Quijada
@@ -485,10 +494,7 @@ def printLiveGame(game):
 
 # TODO: move these tests to actual pytest test functions in tests/pitch_painter/test_*.py
 def main():
-    '''
-    Runs the code.
-    '''
-
+    """Run this file's code."""
     '''
     +==============================================+
     |   Testing on all games for a specific date   |

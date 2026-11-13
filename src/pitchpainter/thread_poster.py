@@ -1,3 +1,6 @@
+"""Module to automatically post contents to Meta Threads."""
+
+
 import pitchpainter.cli as cli
 import dropbox
 import os
@@ -34,16 +37,24 @@ stop_event = threading.Event()
 
 
 def stop():
+    """Stop trying to post to Threads."""
     dprint("thread_poster stop_event is True")
     stop_event.set()
 
 
 def start():
+    """Start trying to post to Threads."""
     dprint("thread_poster stop_event is False")
     stop_event.clear()
 
 
 def postThreadTextAsImage(situationText, descriptionText=None, altText=None, filepath="images/miscPk/temp.png"):
+    """Post the given text to Threads as an image using Dropbox as a middleman.
+
+    Convert situationText to an image,
+    upload the image to dropbox to get an image url,
+    and post an image to Threads using that image url.
+    """
     if stop_event.is_set():
         return
     if not cli.threading:
@@ -74,6 +85,7 @@ def postThreadTextAsImage(situationText, descriptionText=None, altText=None, fil
 
 
 def uploadImageToDropbox(filepath):
+    """Upload image from filepath to Dropbox using configured Dropbox credentials. Return the direct image URL."""
     if stop_event.is_set():
         return None
 
@@ -104,6 +116,7 @@ def uploadImageToDropbox(filepath):
 
 
 def postThread(contents):
+    """Post contents to Threads using configured Threads credentials. Attempt to post up to 3 times before failing."""
     if stop_event.is_set():
         return
     if not cli.threading:
@@ -148,6 +161,7 @@ def postThread(contents):
 
 
 def createThreadToPost(contents):
+    """Use contents to create a post for Threads. Return the post's creationId, -1 if failed to create 3 times."""
     if stop_event.is_set():
         return -1
     # Try to create thread to post up to three times before failing
@@ -191,6 +205,7 @@ def createThreadToPost(contents):
 
 
 def textToPNG(text, filepath="images/miscPk/temp.png"):
+    """Convert text to a PNG file and save to filepath."""
     lines = text.split("\n")
     font = ImageFont.truetype("/System/Library/Fonts/Menlo.ttc", 24)
 
@@ -217,6 +232,7 @@ def textToPNG(text, filepath="images/miscPk/temp.png"):
 
 # TODO: move these tests to actual pytest test functions in tests/pitch_painter/test_*.py
 def main():
+    """Test this file (Deprecated)."""
     cli.getOptions(sys.argv[1:])
 
     testText = (

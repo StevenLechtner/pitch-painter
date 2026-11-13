@@ -1,3 +1,6 @@
+"""Use MLB's win probability added, leverage index, and drama index of every at bat to find big plays of a game."""
+
+
 import pitchpainter.cli as cli
 import heapq
 import json
@@ -11,17 +14,21 @@ stop_event = threading.Event()
 
 
 def stop():
+    """Stop checking win probabilities."""
     dprint("win_probability stop_event is True")
     stop_event.set()
 
 
 def start():
+    """Start checking win probabilities."""
     dprint("win_probability stop_event is False")
     stop_event.clear()
 
 
 # TODO: find a better way to read from file vs server instead of passing _filepath for every function
 class WinProbability():
+    """Get win probabilities of an at bat and determine if it is a big play."""
+
     # score weights
     NORM_PROBS_ADDED = 25
     NORM_LEV_IDX = 2.5
@@ -32,6 +39,7 @@ class WinProbability():
     THRESHOLD = 0.375
 
     def __init__(self, gamePk=None, _filepath=None):
+        """Initialize this object with win probabilities."""
         self.gamePk = -1 if gamePk is None else gamePk
         self.winProbabilities: list[WinProbabilityInfo] = self.setWinProbabilities(_filepath)
         # Top ten: List of tuples (x, y) where x is the metric and y is the at bat index
@@ -42,6 +50,7 @@ class WinProbability():
         self.topTenScores = []
 
     def getGameWinProbabilities(self, _filepath=None):
+        """Set all at bats win probabilites from _filepath if provided; from the server by gamePk if not."""
         if stop_event.is_set():
             return []
 
@@ -76,7 +85,12 @@ class WinProbability():
                     winProbabilityList.clear()
         return []
 
+    # TODO: optimize this! test_all_scoring_and_big_plays_from_game_envokes_post takes ~12 seconds to run...
     def getFinishedAtBat(self, atBatIndex, _filepath=None):
+        """Get the win probability weights from the end of this at bat.
+
+        Wait for the at bat to end by checking if there is a new at bat after this, or the game is over.
+        """
         # wait for at bat at given atBatIndex to be complete with win probability numbers
         # just check if the next atBatIndex is present
         # if not, check if a win probability is 100% (indicates game over)
@@ -119,6 +133,7 @@ class WinProbability():
         return None
 
     def getWinProbabilityInfo(self, atBat):
+        """Convert at bat's win probability weights to a WinProbabilityInfo object."""
         homeProb = atBat.get("homeTeamWinProbability", 0.0)
         awayProb = atBat.get("awayTeamWinProbability", 0.0)
         homeProbAdded = atBat.get("homeTeamWinProbabilityAdded", 0.0)
@@ -128,6 +143,13 @@ class WinProbability():
         return WinProbabilityInfo(homeProb, awayProb, homeProbAdded, levIdx, dramaIdx, atBatIdx)
 
     def isAboveThreshold(self, atBatIndex, _filepath=None):
+        """Check if this at bat's score is above the threshold to trigger a big play.
+
+        Use the atBatIndex to get the at bat,
+        wait for the at bat to be finished (win probability weights finalized),
+        calculate the score using the weights,
+        and return True if the score is above the THRESHOLD, False otherwise.
+        """
         atBat = self.getFinishedAtBat(atBatIndex, _filepath)
         if atBat is None:
             return False
@@ -150,6 +172,7 @@ class WinProbability():
         return score > self.THRESHOLD
 
     def isABigPlay(self, atBatIndex, _filepath=None):
+        """Return True if this at bat is above the THRESHOLD or is a scoring play. False otherise."""
         if stop_event.is_set():
             return False
 
@@ -162,6 +185,7 @@ class WinProbability():
         return self.isAboveThreshold(atBatIndex, _filepath) or scoringPlay
 
     def setWinProbabilities(self, _filepath=None):
+        """Configure each finished at bat's win probabilities as a WinProbabilityInfo object."""
         print(_filepath)
         winProbabilityList = self.getGameWinProbabilities(_filepath)
         winProbabilities = []
@@ -169,7 +193,9 @@ class WinProbability():
             winProbabilities.append(self.getWinProbabilityInfo(atBat))
         return winProbabilities
 
+    # TODO: remove?
     def findAverages(self):
+        """Find the average score of each at bat."""
         atBats = len(self.winProbabilities)
         if (atBats <= 0):
             return
@@ -196,7 +222,9 @@ class WinProbability():
         dprint(f"averageLevIdx: {averageLevIdx}")
         dprint(f"averageDramaIdx: {averageDramaIdx}")
 
+    # TODO: remove?
     def findTopTens(self):
+        """Find the top ten scores of a game."""
         probsAdded = []
         levIdx = []
         dramaIdx = []
@@ -248,7 +276,10 @@ class WinProbability():
 
 
 class WinProbabilityInfo():
+    """Save win probability weights and at bat index."""
+
     def __init__(self, homeProb=0.0, awayProb=0.0, homeProbAdded=0.0, levIdx=0.0, dramaIdx=0.0, atBatIdx=-1):
+        """Set object's variables to given argument values. Weights 0.0 and index -1 if not present."""
         self.homeTeamWinProbability = homeProb
         self.awayTeamWinProbability = awayProb
         self.homeTeamWinProbabilityAdded = homeProbAdded
@@ -257,7 +288,9 @@ class WinProbabilityInfo():
         self.atBatIndex = atBatIdx
 
 
+# TODO: Remove this?
 def main():
+    """Test this file."""
     cli.getOptions(sys.argv[1:])
 
     # gamePk = 745369

@@ -169,7 +169,7 @@ def test_scoring_play_envokes_post(monkeypatch):
     # choose a scoring play that is not above the threshold - check for both and then confirm its still worthy
     game = Game()
     winProbPath = "tests/pitch_painter/data/rangers_30_win_prob.json"
-    game.getGameByFilePath("tests/pitch_painter/data/rangers_30_orioles_3.json")
+    game.get_game_by_file_path("tests/pitch_painter/data/rangers_30_orioles_3.json")
     winProb = WinProbability(_filepath=winProbPath)
     monkeypatch.setattr(WinProbability, "NORM_PROBS_ADDED", 25)
     monkeypatch.setattr(WinProbability, "NORM_LEV_IDX", 2.5)
@@ -190,7 +190,7 @@ def test_big_play_envokes_post(monkeypatch):
     # atBatIndex = 29. ground out.
     game = Game()
     winProbPath = "tests/pitch_painter/data/ws_game_7_win_prob.json"
-    game.getGameByFilePath("tests/pitch_painter/data/ws_game_7_game.json")
+    game.get_game_by_file_path("tests/pitch_painter/data/ws_game_7_game.json")
     winProb = WinProbability(_filepath=winProbPath)
     monkeypatch.setattr(WinProbability, "NORM_PROBS_ADDED", 25)
     monkeypatch.setattr(WinProbability, "NORM_LEV_IDX", 2.5)

@@ -1,4 +1,4 @@
-from pitchpainter.live_game import printAllPitchesFromGame, LiveGameWorker
+from pitchpainter.live_game import print_all_pitches_from_game, LiveGameWorker
 
 outputs = []
 
@@ -16,7 +16,7 @@ def test_full_game():
     gamePk = 745369
     testThread = LiveGameWorker(gamePk)
     testThread.output.connect(drawPitchOutput)
-    printAllPitchesFromGame(gamePk,
+    print_all_pitches_from_game(gamePk,
                             testThread.output,
                             testThread.stop_event,
                             filepath="tests/pitch_painter/data/meadows.json")

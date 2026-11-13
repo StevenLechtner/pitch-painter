@@ -233,7 +233,7 @@ def textToPNG(text, filepath="images/miscPk/temp.png"):
 # TODO: move these tests to actual pytest test functions in tests/pitch_painter/test_*.py
 def main():
     """Test this file (Deprecated)."""
-    cli.getOptions(sys.argv[1:])
+    cli.get_options(sys.argv[1:])
 
     testText = (
         "+─────────────────────────+\n"

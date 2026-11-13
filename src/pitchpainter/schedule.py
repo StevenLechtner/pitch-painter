@@ -8,7 +8,7 @@ from pitchpainter.print_util import dprint
 from PySide6 import QtCore
 
 
-class ScheduleWorker(QtCore.QObject):
+class schedule_worker(QtCore.QObject):
     """Get games, date, and schedule with logic to parse games by date."""
 
     output = QtCore.Signal(str)

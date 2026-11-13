@@ -291,7 +291,7 @@ class WinProbabilityInfo():
 # TODO: Remove this?
 def main():
     """Test this file."""
-    cli.getOptions(sys.argv[1:])
+    cli.get_options(sys.argv[1:])
 
     # gamePk = 745369
     # gamePk = 823660

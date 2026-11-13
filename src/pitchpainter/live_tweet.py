@@ -55,7 +55,7 @@ def sendTweet(client: tweepy.Client, text: str, isTweeting=False):
 # TODO: Remove this?
 def main():
     """Test only this file's contents."""
-    cli.getOptions(sys.argv[1:])
+    cli.get_options(sys.argv[1:])
     client = createClient()
 
     # Post a tweet

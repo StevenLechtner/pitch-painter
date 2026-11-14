@@ -20,7 +20,7 @@ class TestPrint(unittest.TestCase):
         """Save drawn pitches (Deprecated)."""
         # output = StringIO()
         # sys.stdout = output
-        out = pitchbypitch.drawPitch(situation)
+        out = pitchbypitch.draw_pitch(situation)
         # sys.stdout = sys.__stdout__
         out = out.strip().split('\n')
         for line in out:

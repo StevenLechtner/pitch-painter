@@ -1,17 +1,16 @@
 """Helper module to check, configure, and post a pitch to Threads."""
 
 
+# pylint: disable=c-extension-no-member, no-name-in-module
 import copy
 import datetime
 import threading
-import pitchpainter.pitchbypitch as pitchbypitch
-import pitchpainter.thread_poster as thread_poster
-import pitchpainter.win_probability as win_probability
-from pitchpainter.print_util import dprint
 from PySide6.QtCore import QRunnable, QThreadPool
+from pitchpainter import pitchbypitch, thread_poster, win_probability
+from pitchpainter.print_util import dprint
 
-pitchPool = QThreadPool()
-pitchPool.setMaxThreadCount(1)
+pitch_pool = QThreadPool()
+pitch_pool.setMaxThreadCount(1)
 stop_event = threading.Event()
 
 
@@ -19,7 +18,7 @@ def stop():
     """Stop Thread posting and win probability threads."""
     dprint("pitch_posting_processor stop_event is True")
     stop_event.set()
-    pitchPool.clear()
+    pitch_pool.clear()
     win_probability.stop()
     thread_poster.stop()
 
@@ -32,88 +31,88 @@ def start():
     thread_poster.start()
 
 
-def postToThreads(gamePk, playEventId, pitchToPost, awayScore, homeScore, scoringPlay, description):
+def post_to_threads(game_pk, play_event_id, pitch_to_post, away_score, home_score, scoring_play, description):
     """Get desired text from a situation and post to Threads."""
     now = datetime.datetime.now()
-    curTime = f"{now.strftime('%Y-%m-%d_%H-%M-%S')}.{now.microsecond // 1000:03d}"
-    filepath = f"images/{gamePk}/play_id_{playEventId}_created_{curTime}.png"
-    if scoringPlay and awayScore > -1 and homeScore > -1:
-        text = pitchbypitch.drawPitchWithScoreUpdate(awayScore, homeScore, pitchToPost)
-        altText = pitchbypitch.drawPitchWithScoreAltText(awayScore, homeScore, pitchToPost)
+    cur_time = f"{now.strftime('%Y-%m-%d_%H-%M-%S')}.{now.microsecond // 1000:03d}"
+    filepath = f"images/{game_pk}/play_id_{play_event_id}_created_{cur_time}.png"
+    if scoring_play and away_score > -1 and home_score > -1:
+        text = pitchbypitch.draw_pitch_with_score_update(away_score, home_score, pitch_to_post)
+        alt_text = pitchbypitch.draw_pitch_with_score_alt_text(away_score, home_score, pitch_to_post)
     else:
-        text = pitchbypitch.drawPitch(pitchToPost)
-        altText = pitchbypitch.drawPitchForTweeting(pitchToPost)
-    thread_poster.postThreadTextAsImage(text, descriptionText=description, altText=altText, filepath=filepath)
+        text = pitchbypitch.draw_pitch(pitch_to_post)
+        alt_text = pitchbypitch.draw_pitch_for_tweeting(pitch_to_post)
+    thread_poster.postThreadTextAsImage(text, descriptionText=description, altText=alt_text, filepath=filepath)
 
 
-def processAndPostPitch(gamePk, atBatToProcess, playEventId, pitchToPost, awayScore, homeScore):
+def process_and_post_pitch(game_pk, at_bat_to_process, play_event_id, pitch_to_post, away_score, home_score):
     """Process the pitch and post to Threads if it is a big play."""
-    winProb = win_probability.WinProbability(gamePk)
-    if winProb.isABigPlay(atBatToProcess.get("about", {}).get("atBatIndex", -1)):
-        description = atBatToProcess.get("result", {}).get("description", "")
-        scoringPlay = atBatToProcess.get("about", {}).get("isScoringPlay", False)
-        postToThreads(gamePk, playEventId, pitchToPost, awayScore, homeScore, scoringPlay, description)
+    win_prob = win_probability.WinProbability(game_pk)
+    if win_prob.isABigPlay(at_bat_to_process.get("about", {}).get("atBatIndex", -1)):
+        description = at_bat_to_process.get("result", {}).get("description", "")
+        scoring_play = at_bat_to_process.get("about", {}).get("isScoringPlay", False)
+        post_to_threads(game_pk, play_event_id, pitch_to_post, away_score, home_score, scoring_play, description)
 
 
 class AtBatQueue(QRunnable):
     """Queue at bats to process and post to Threads as a background thread."""
 
-    def __init__(self, gamePk, atBatToProcess, lastPitch, awayScore, homeScore):
+    def __init__(self, game_pk, at_bat_to_process, last_pitch, away_score, home_score):
         """Set object variables given arguments."""
         super().__init__()
-        self.pitchToPost = copy.deepcopy(lastPitch)
-        self.gamePk = gamePk
-        self.atBatToProcess = atBatToProcess
-        self.playEventId = lastPitch.playEventId
-        self.awayScore = awayScore
-        self.homeScore = homeScore
+        self.pitch_to_post = copy.deepcopy(last_pitch)
+        self.game_pk = game_pk
+        self.at_bat_to_process = at_bat_to_process
+        self.play_event_id = last_pitch.playEventId
+        self.away_score = away_score
+        self.home_score = home_score
 
     def run(self):
         """Process at bat and post to Threads if it fits the requirements."""
-        processAndPostPitch(
-            self.gamePk,
-            self.atBatToProcess,
-            self.playEventId,
-            self.pitchToPost,
-            self.awayScore,
-            self.homeScore
+        process_and_post_pitch(
+            self.game_pk,
+            self.at_bat_to_process,
+            self.play_event_id,
+            self.pitch_to_post,
+            self.away_score,
+            self.home_score
         )
 
 
 class PitchQueue(QRunnable):
     """Queue pitches to process and post to Threads as a background thread."""
 
-    def __init__(self, gamePk, lastPitch, description, scoringPlay, awayScore, homeScore):
+    def __init__(self, game_pk, last_pitch, description, scoring_play, away_score, home_score):
         """Set object variables given arguments."""
         super().__init__()
-        self.pitchToPost = copy.deepcopy(lastPitch)
-        self.gamePk = gamePk
-        self.playEventId = lastPitch.playEventId
+        self.pitch_to_post = copy.deepcopy(last_pitch)
+        self.game_pk = game_pk
+        self.play_event_id = last_pitch.playEventId
         self.description = description
-        self.awayScore = awayScore
-        self.homeScore = homeScore
-        self.scoringPlay = scoringPlay
+        self.away_score = away_score
+        self.home_score = home_score
+        self.scoring_play = scoring_play
 
     def run(self):
         """Process pitch and post to Threads if it fits the requirements."""
-        postToThreads(
-            self.gamePk,
-            self.playEventId,
-            self.pitchToPost,
-            self.awayScore,
-            self.homeScore,
-            self.scoringPlay,
+        post_to_threads(
+            self.game_pk,
+            self.play_event_id,
+            self.pitch_to_post,
+            self.away_score,
+            self.home_score,
+            self.scoring_play,
             self.description
         )
 
 
-def enqueueAtBatForProcessing(gamePk, atBatToProcess, lastPitch, awayScore, homeScore):
+def enqueue_at_bat_for_processing(game_pk, at_bat_to_process, last_pitch, away_score, home_score):
     """Create the at bat queue and add the at bat to the pitch pool to process pitch in the background thread."""
-    abQueue = AtBatQueue(gamePk, atBatToProcess, lastPitch, awayScore, homeScore)
-    pitchPool.start(abQueue)
+    ab_queue = AtBatQueue(game_pk, at_bat_to_process, last_pitch, away_score, home_score)
+    pitch_pool.start(ab_queue)
 
 
-def enqueuePitchForProcessing(gamePk, lastPitch, description, scoringPlay, awayScore, homeScore):
+def enqueue_pitch_for_processing(game_pk, last_pitch, description, scoring_play, away_score, home_score):
     """Create the pitch queue and add the pitch to the pitch pool to process pitch in the background thread."""
-    pQueue = PitchQueue(gamePk, lastPitch, description, scoringPlay, awayScore, homeScore)
-    pitchPool.start(pQueue)
+    p_queue = PitchQueue(game_pk, last_pitch, description, scoring_play, away_score, home_score)
+    pitch_pool.start(p_queue)

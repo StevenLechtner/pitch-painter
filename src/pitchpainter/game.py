@@ -235,7 +235,7 @@ class Game():
             # Uncomment below to post all big plays of a game, even if the game is live
             # And retroactively post big pitches form earlier in the game
             # TODO: make this a flag
-            pitch_posting_processor.enqueueAtBatForProcessing(
+            pitch_posting_processor.enqueue_at_bat_for_processing(
                 self.game_pk,
                 at_bat_to_process,
                 self.last_pitch,

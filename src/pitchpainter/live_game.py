@@ -11,7 +11,7 @@ from pitchpainter import cli
 from pitchpainter import pitch_posting_processor
 from pitchpainter import win_probability
 from pitchpainter.game import Game, Status
-from pitchpainter.pitchbypitch import drawPitch, postPitchToThreads
+from pitchpainter.pitchbypitch import draw_pitch, post_pitch_to_threads
 from pitchpainter.print_util import vprint, dprint
 
 
@@ -63,7 +63,7 @@ def process_play_event(play_event, situation, at_bat_to_process, game, output):
 
     if play_event.get("isPitch", False):
         if output:
-            output.emit(drawPitch(situation))
+            output.emit(draw_pitch(situation))
         game.set_last_pitch(situation)
     if output:
         output.emit(play_event.get("details", {}).get("description", ""))
@@ -109,13 +109,13 @@ def process_play_event(play_event, situation, at_bat_to_process, game, output):
         situation.setHomeScore(home_score)
     if scoring_play:
         description = play_event.get("details", {}).get("description", "")
-        pitch_posting_processor.enqueuePitchForProcessing(
+        pitch_posting_processor.enqueue_pitch_for_processing(
             game.game_pk,
             game.last_pitch,
             description=description,
-            scoringPlay=True,
-            awayScore=situation.awayScore,
-            homeScore=situation.homeScore
+            scoring_play=True,
+            away_score=situation.awayScore,
+            home_score=situation.homeScore
         )
     # set pitcher for every play event and update pitcher if play event type is a pitching_substitution
     game.set_pitcher(play_event)

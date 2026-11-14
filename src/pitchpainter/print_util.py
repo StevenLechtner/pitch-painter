@@ -4,6 +4,7 @@ verbose flag shows vprint in the console.
 debug flag shows dprint in the console.
 tweet flag sets tweet. TODO: remove.
 """
+# pylint: disable=invalid-name, global-statement
 verbose = False
 debug = False
 tweet = False

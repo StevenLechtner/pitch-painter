@@ -12,12 +12,12 @@ def test_extra_inning_final():
     # away team wins in extras
     awayWinGame = Game()
     awayWinGame.get_game_by_file_path("tests/pitch_painter/data/extra_innings_away_wins.json")
-    awayWinGame.situation.setInning(awayWinGame.at_bats[-2].get("about", {}).get("inning", -1))
-    awayWinGame.situation.setTop(awayWinGame.at_bats[-2].get("about", {}).get("isTopInning", False))
+    awayWinGame.situation.set_inning(awayWinGame.at_bats[-2].get("about", {}).get("inning", -1))
+    awayWinGame.situation.set_top(awayWinGame.at_bats[-2].get("about", {}).get("isTopInning", False))
     awayWinGame.process_at_bat_finished(awayWinGame.at_bats[-2])
     assert awayWinGame.game_over == False
-    awayWinGame.situation.setInning(awayWinGame.at_bats[-1].get("about", {}).get("inning", -1))
-    awayWinGame.situation.setTop(awayWinGame.at_bats[-1].get("about", {}).get("isTopInning", False))
+    awayWinGame.situation.set_inning(awayWinGame.at_bats[-1].get("about", {}).get("inning", -1))
+    awayWinGame.situation.set_top(awayWinGame.at_bats[-1].get("about", {}).get("isTopInning", False))
     awayWinGame.process_at_bat_finished(awayWinGame.at_bats[-1])
     assert awayWinGame.game_over == True
 
@@ -30,12 +30,12 @@ def test_no_extra_inning_final():
     # home team wins in a 9th inning walk off
     walkOff = Game()
     walkOff.get_game_by_file_path("tests/pitch_painter/data/example_game_end.json")
-    walkOff.situation.setInning(walkOff.at_bats[-2].get("about", {}).get("inning", -1))
-    walkOff.situation.setTop(walkOff.at_bats[-2].get("about", {}).get("isTopInning", False))
+    walkOff.situation.set_inning(walkOff.at_bats[-2].get("about", {}).get("inning", -1))
+    walkOff.situation.set_top(walkOff.at_bats[-2].get("about", {}).get("isTopInning", False))
     walkOff.process_at_bat_finished(walkOff.at_bats[-2])
     assert walkOff.game_over == False
-    walkOff.situation.setInning(walkOff.at_bats[-1].get("about", {}).get("inning", -1))
-    walkOff.situation.setTop(walkOff.at_bats[-1].get("about", {}).get("isTopInning", False))
+    walkOff.situation.set_inning(walkOff.at_bats[-1].get("about", {}).get("inning", -1))
+    walkOff.situation.set_top(walkOff.at_bats[-1].get("about", {}).get("isTopInning", False))
     walkOff.process_at_bat_finished(walkOff.at_bats[-1])
     assert walkOff.game_over == True
 
@@ -54,7 +54,7 @@ def test_pitching_change_mid_at_bat():
                      game,
                      None)  # ball
     assert game.situation.pitcher == "Shohei Ohtani"
-    assert game.situation.pitchCount == 5
+    assert game.situation.pitch_count == 5
     assert game.situation.balls == 1
     assert game.situation.strikes == 0
     process_play_event(game.at_bats[30].get("playEvents", [])[1],
@@ -63,7 +63,7 @@ def test_pitching_change_mid_at_bat():
                      game,
                      None)  # ball
     assert game.situation.pitcher == "Shohei Ohtani"
-    assert game.situation.pitchCount == 6
+    assert game.situation.pitch_count == 6
     assert game.situation.balls == 2
     assert game.situation.strikes == 0
     process_play_event(game.at_bats[30].get("playEvents", [])[2],
@@ -72,7 +72,7 @@ def test_pitching_change_mid_at_bat():
                      game,
                      None)  # injury
     assert game.situation.pitcher == "Shohei Ohtani"
-    assert game.situation.pitchCount == 6
+    assert game.situation.pitch_count == 6
     assert game.situation.balls == 2
     assert game.situation.strikes == 0
     process_play_event(game.at_bats[30].get("playEvents", [])[3],
@@ -81,7 +81,7 @@ def test_pitching_change_mid_at_bat():
                      game,
                      None)  # pitching change
     assert game.situation.pitcher == "Anthony Banda"
-    assert game.situation.pitchCount == 0
+    assert game.situation.pitch_count == 0
     assert game.situation.balls == 2
     assert game.situation.strikes == 0
     process_play_event(game.at_bats[30].get("playEvents", [])[4],
@@ -90,7 +90,7 @@ def test_pitching_change_mid_at_bat():
                      game,
                      None)  # defensive substitution
     assert game.situation.pitcher == "Anthony Banda"
-    assert game.situation.pitchCount == 0
+    assert game.situation.pitch_count == 0
     assert game.situation.balls == 2
     assert game.situation.strikes == 0
     process_play_event(game.at_bats[30].get("playEvents", [])[5],
@@ -99,7 +99,7 @@ def test_pitching_change_mid_at_bat():
                      game,
                      None)  # ball
     assert game.situation.pitcher == "Anthony Banda"
-    assert game.situation.pitchCount == 1
+    assert game.situation.pitch_count == 1
     assert game.situation.balls == 3
     assert game.situation.strikes == 0
 
@@ -109,7 +109,7 @@ def test_live_pitching_change():
     # 0=mound_visit, 1=pitching_change
     process_at_bat(game, 64, None, None, None)
     # init pitcher manually for testing
-    game.situation.setPitcher("Ben Joyce")
+    game.situation.set_pitcher("Ben Joyce")
     game.cur_pitcher = "Ben Joyce"
     game.cur_home_pitcher = "Ben Joyce"
     assert game.situation.pitcher == "Ben Joyce"
@@ -127,7 +127,7 @@ def test_live_pitching_change():
                      game,
                      None)  # pitching change
     assert game.situation.pitcher == "Sammy Peralta"
-    assert game.situation.pitchCount == 0
+    assert game.situation.pitch_count == 0
     assert game.situation.balls == 0
     assert game.situation.strikes == 0
     assert game.situation.outs == 2

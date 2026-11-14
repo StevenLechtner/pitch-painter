@@ -64,7 +64,7 @@ class ApplicationWidget(QtWidgets.QWidget):
         self.text_widget.setPlainText("")
         self.text_widget.show()
         index = self.games_widget.row(self.games_widget.currentItem())
-        game_pk = self.schedule_worker.getGamePk(index)
+        game_pk = self.schedule_worker.get_game_pk(index)
         if game_pk == -1:
             self.hide_game()
             return
@@ -131,7 +131,7 @@ class ApplicationWidget(QtWidgets.QWidget):
             if self.schedule_thread.isRunning():
                 self.stop_schedule_thread()
         self.schedule_thread = QtCore.QThread()
-        self.schedule_worker = schedule.schedule_worker()
+        self.schedule_worker = schedule.ScheduleWorker()
         self.schedule_worker.moveToThread(self.schedule_thread)
         self.schedule_thread.started.connect(self.schedule_worker.run)
         self.schedule_worker.output.connect(self.update_schedule_output)
@@ -152,10 +152,10 @@ class ApplicationWidget(QtWidgets.QWidget):
     def update_schedule_output(self):
         """Show all games for a given date with teams, score, and status (inning if live)."""
         if not self.showing_game:
-            self.text_widget.setPlainText(self.schedule_worker.scheduleStr)
+            self.text_widget.setPlainText(self.schedule_worker.schedule_str)
             self.text_widget.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
         self.games_widget.clear()
-        self.games_widget.addItems(self.schedule_worker.scheduleStr.split("\n"))
+        self.games_widget.addItems(self.schedule_worker.schedule_str.split("\n"))
 
         header = self.games_widget.item(0)
         header.setFlags(QtCore.Qt.ItemFlag.ItemIsEnabled)
@@ -224,7 +224,7 @@ class ApplicationWidget(QtWidgets.QWidget):
     def update_date_selected(self):
         """Set the date in the schedule worker, which populates the games scheduled on the day."""
         date = self.calendar.selectedDate()
-        self.schedule_worker.setDate(date)
+        self.schedule_worker.set_date(date)
         # self.schedule_worker.date = date
         # self.schedule_worker.update_event.set()
 

@@ -6,16 +6,16 @@
 import datetime
 import json
 from pitchpainter.situation import Situation
-from pitchpainter.thread_poster import postThreadTextAsImage
+from pitchpainter.thread_poster import post_thread_text_as_image
 
 
 def draw_pitch_for_tweeting(situation: Situation):
     """Draw a pitch given the situation with spacing to best match altText in Threads."""
     # Away team row logic
-    away_team = situation.awayTeam[:3]
+    away_team = situation.away_team[:3]
     while len(away_team) < 3:
         away_team += " "
-    away_score = str(situation.awayScore)[:9]
+    away_score = str(situation.away_score)[:9]
     while len(away_score) < 9:
         away_score += " "
     second_base = '\u25C6    ' if situation.baserunners[2] else '\u25C7    '  # Diamond
@@ -29,10 +29,10 @@ def draw_pitch_for_tweeting(situation: Situation):
         away_row = f"| {away_team} {away_score}       {second_base}       {inning}        |"
 
     # Home team row logic
-    home_team = situation.homeTeam[:3]
+    home_team = situation.home_team[:3]
     while len(home_team) < 3:
         home_team += " "
-    home_score = str(situation.homeScore)[:8]
+    home_score = str(situation.home_score)[:8]
     while len(home_score) < 8:
         home_score += " "
     third_base = '\u25C6' if situation.baserunners[3] else '\u25C7'  # Diamond
@@ -58,7 +58,7 @@ def draw_pitch_for_tweeting(situation: Situation):
         pitcher = pitcher.split(" ")[1][:18]
     while len(pitcher) < 18:
         pitcher += " "
-    pitch_count = str(situation.pitchCount)[:4]
+    pitch_count = str(situation.pitch_count)[:4]
     while len(pitch_count) < 4:
         pitch_count += " "
     pitcher_row = f"| {pitcher}        P: {pitch_count}       |"
@@ -76,15 +76,15 @@ def draw_pitch_for_tweeting(situation: Situation):
     return output
 
 
-def draw_pitch_with_score_alt_text(_away_score, _home_score, situation):
+def draw_pitch_with_score_alt_text(_away_score, _home_score, situation: Situation):
     """Draw a score update to add to a scoreboard post on run(s) scored."""
-    away_team = situation.awayTeam[:3]
+    away_team = situation.away_team[:3]
     while len(away_team) < 3:
         away_team += " "
     away_score = str(_away_score)[:9]
     while len(away_score) < 12:
         away_score += " "
-    home_team = situation.homeTeam[:3]
+    home_team = situation.home_team[:3]
     while len(home_team) < 3:
         home_team += " "
     home_score = str(_home_score)[:8]
@@ -109,10 +109,10 @@ def draw_pitch_with_score_alt_text(_away_score, _home_score, situation):
 def draw_pitch(situation: Situation):
     """Draw a pitch given the situation with spacing used for image uploading - the actual Threads image contents."""
     # Away team row logic
-    away_team = situation.awayTeam[:3]
+    away_team = situation.away_team[:3]
     while len(away_team) < 3:
         away_team += " "
-    away_score = str(situation.awayScore)[:9]
+    away_score = str(situation.away_score)[:9]
     while len(away_score) < 9:
         away_score += " "
     second_base = '\u25C6    ' if situation.baserunners[2] else '\u25C7    '  # Diamond
@@ -126,10 +126,10 @@ def draw_pitch(situation: Situation):
         away_row = f"|{away_team} {away_score} {second_base} {inning}|"
 
     # Home team row logic
-    home_team = situation.homeTeam[:3]
+    home_team = situation.home_team[:3]
     while len(home_team) < 3:
         home_team += " "
-    home_score = str(situation.homeScore)[:8]
+    home_score = str(situation.home_score)[:8]
     while len(home_score) < 8:
         home_score += " "
     third_base = '\u25C6' if situation.baserunners[3] else '\u25C7'  # Diamond
@@ -155,7 +155,7 @@ def draw_pitch(situation: Situation):
         pitcher = pitcher.split(" ")[1][:18]
     while len(pitcher) < 18:
         pitcher += " "
-    pitch_count = str(situation.pitchCount)[:4]
+    pitch_count = str(situation.pitch_count)[:4]
     while len(pitch_count) < 4:
         pitch_count += " "
     pitcher_row = f"|{pitcher} P:{pitch_count}|"
@@ -173,15 +173,15 @@ def draw_pitch(situation: Situation):
     return output
 
 
-def draw_pitch_with_score_update(_away_score, _home_score, situation):
+def draw_pitch_with_score_update(_away_score, _home_score, situation: Situation):
     """Draw a pitch with a score update added on run(s) scored."""
-    away_team = situation.awayTeam[:3]
+    away_team = situation.away_team[:3]
     while len(away_team) < 3:
         away_team += " "
     away_score = str(_away_score)[:9]
     while len(away_score) < 8:
         away_score += " "
-    home_team = situation.homeTeam[:3]
+    home_team = situation.home_team[:3]
     while len(home_team) < 3:
         home_team += " "
     home_score = str(_home_score)[:8]
@@ -215,7 +215,7 @@ def post_pitch_to_threads(situation: Situation,
     else:
         text = draw_pitch(situation)
         alt_text = draw_pitch_for_tweeting(situation)
-    postThreadTextAsImage(text, descriptionText=description, altText=alt_text, filepath=filepath)
+    post_thread_text_as_image(text, description_text=description, alt_text=alt_text, filepath=filepath)
 
 
 # TODO: remove testOut
@@ -226,7 +226,7 @@ def print_all_pitches_from_game(game):
     home_abbr = game["gameData"]["teams"]["home"]["abbreviation"]  # HOU
     current_pitcher = game["liveData"]["plays"]["currentPlay"]["matchup"]["pitcher"]["fullName"]  # José Quijada
     situation = Situation()
-    situation.startNewGame(home_abbr, away_abbr, current_pitcher)
+    situation.start_new_game(home_abbr, away_abbr, current_pitcher)
     last_description = ""
     current_play = game["liveData"]["plays"]["currentPlay"]
     plays = game["liveData"]["plays"]["allPlays"]
@@ -238,10 +238,10 @@ def print_all_pitches_from_game(game):
         live_description = current_play["result"]["description"]
         if last_description != live_description:
             last_description = live_description
-            situation.setInning(current_play["about"]["inning"])
-            situation.setTop(current_play["about"]["isTopInning"])
+            situation.set_inning(current_play["about"]["inning"])
+            situation.set_top(current_play["about"]["isTopInning"])
             # situation.setOuts(currentPlay["count"]["outs"])
-            situation.setPitcher(current_play["matchup"]["pitcher"]["fullName"])  # José Quijada
+            situation.set_pitcher(current_play["matchup"]["pitcher"]["fullName"])  # José Quijada
 
             # Loop through all play events of current play - print when a pitch is thrown
             for index, play_event in enumerate(current_play["playEvents"]):
@@ -252,25 +252,25 @@ def print_all_pitches_from_game(game):
                 # If this is the last pitch of the at bat
                 if index == len(current_play["playEvents"]) - 1:
                     # set score, baserunners, and outs
-                    situation.setAwayScore(current_play["result"]["awayScore"])
-                    situation.setHomeScore(current_play["result"]["homeScore"])
-                    situation.setOuts(current_play["count"]["outs"])
+                    situation.set_away_score(current_play["result"]["awayScore"])
+                    situation.set_home_score(current_play["result"]["homeScore"])
+                    situation.set_outs(current_play["count"]["outs"])
                     # set balls and strikes to 0
-                    situation.setBalls(0)
-                    situation.setStrikes(0)
-                    situation.setBaserunnersAtEndOfAtBat(current_play)
+                    situation.set_balls(0)
+                    situation.set_strikes(0)
+                    situation.set_baserunners_at_end_of_at_bat(current_play)
 
                 else:
-                    situation.setBalls(play_event["count"]["balls"])
-                    situation.setStrikes(play_event["count"]["strikes"])
-                    situation.setOuts(play_event["count"]["outs"])
-                    situation.setBaserunnersDuringAtBat(current_play, play_event.get("index", -1))
+                    situation.set_balls(play_event["count"]["balls"])
+                    situation.set_strikes(play_event["count"]["strikes"])
+                    situation.set_outs(play_event["count"]["outs"])
+                    situation.set_baserunners_during_at_bat(current_play, play_event.get("index", -1))
 
                 # Incrememnt pitch count for current pitcher
                 pitch_count = game.pitch_count_dict.get(situation.pitcher, 0)
                 pitch_count += 1
                 game.pitch_count_dict[situation.pitcher] = pitch_count
-                situation.setPitchCount(pitch_count)
+                situation.set_pitch_count(pitch_count)
 
                 print(f"{draw_pitch(situation)}\n")
                 game_pk = game.get("gameData", {}).get("game", {}).get("pk", -1)
@@ -283,8 +283,8 @@ def print_all_pitches_from_game(game):
                     situation.balls == 3
                     and situation.strikes == 2
                     and situation.outs == 2
-                    and situation.awayScore == 0
-                    and situation.homeScore == 3
+                    and situation.away_score == 0
+                    and situation.home_score == 3
                     and situation.inning == 9
                 ):
                     test_out = draw_pitch(situation)
@@ -294,27 +294,27 @@ def print_all_pitches_from_game(game):
             if situation.inning >= 9:
                 if situation.outs >= 3:
                     if situation.top:
-                        if situation.homeScore > situation.awayScore:
+                        if situation.home_score > situation.away_score:
                             game.game_over = True
                     else:
-                        if situation.homeScore != situation.awayScore:
+                        if situation.home_score != situation.away_score:
                             game.game_over = True
                 else:
-                    if not situation.top and situation.homeScore > situation.awayScore:
+                    if not situation.top and situation.home_score > situation.away_score:
                         game.game_over = True
         play_idx += 1
 
     border = ""
     recap = ""
-    if situation.awayScore > situation.homeScore:
+    if situation.away_score > situation.home_score:
         recap = (
-            f"|  Final score: {situation.awayScore}-{situation.homeScore}, "
-            f"{situation.awayTeam} over {situation.homeTeam}  |"
+            f"|  Final score: {situation.away_score}-{situation.home_score}, "
+            f"{situation.away_team} over {situation.home_team}  |"
         )
     else:
         recap = (
-            f"|  Final score: {situation.homeScore}-{situation.awayScore}, "
-            f"{situation.homeTeam} over {situation.awayTeam}  |"
+            f"|  Final score: {situation.home_score}-{situation.away_score}, "
+            f"{situation.home_team} over {situation.away_team}  |"
         )
     while len(border) < len(recap):
         border += "─"
@@ -344,10 +344,10 @@ def list_all_pitches_from_game(game):
         live_description = current_play["result"]["description"]
         if last_description != live_description:
             last_description = live_description
-            situation.setInning(current_play["about"]["inning"])
-            situation.setTop(current_play["about"]["isTopInning"])
+            situation.set_inning(current_play["about"]["inning"])
+            situation.set_top(current_play["about"]["isTopInning"])
             # situation.setOuts(currentPlay["count"]["outs"])
-            situation.setPitcher(current_play["matchup"]["pitcher"]["fullName"])  # José Quijada
+            situation.set_pitcher(current_play["matchup"]["pitcher"]["fullName"])  # José Quijada
 
             # Loop through all play events of current play - print when a pitch is thrown
             for index, play_event in enumerate(current_play["playEvents"]):
@@ -358,24 +358,24 @@ def list_all_pitches_from_game(game):
                 # If this is the last pitch of the at bat
                 if index == len(current_play["playEvents"]) - 1:
                     # set score, baserunners, and outs
-                    situation.setAwayScore(current_play["result"]["awayScore"])
-                    situation.setHomeScore(current_play["result"]["homeScore"])
-                    situation.setOuts(current_play["count"]["outs"])
+                    situation.set_away_score(current_play["result"]["awayScore"])
+                    situation.set_home_score(current_play["result"]["homeScore"])
+                    situation.set_outs(current_play["count"]["outs"])
                     # set balls and strikes to 0
-                    situation.setBalls(0)
-                    situation.setStrikes(0)
+                    situation.set_balls(0)
+                    situation.set_strikes(0)
                     situation.setBaserunnersFromPlay(current_play)
 
                 else:
-                    situation.setBalls(play_event["count"]["balls"])
-                    situation.setStrikes(play_event["count"]["strikes"])
-                    situation.setOuts(play_event["count"]["outs"])
+                    situation.set_balls(play_event["count"]["balls"])
+                    situation.set_strikes(play_event["count"]["strikes"])
+                    situation.set_outs(play_event["count"]["outs"])
 
                 # Incrememnt pitch count for current pitcher
                 pitch_count = game.pitch_count_dict.get(situation.pitcher, 0)
                 pitch_count += 1
                 game.pitch_count_dict[situation.pitcher] = pitch_count
-                situation.setPitchCount(pitch_count)
+                situation.set_pitch_count(pitch_count)
 
                 out.append(draw_pitch(situation))
                 i += 1
@@ -384,27 +384,27 @@ def list_all_pitches_from_game(game):
             if situation.inning >= 9:
                 if situation.outs >= 3:
                     if situation.top:
-                        if situation.homeScore > situation.awayScore:
+                        if situation.home_score > situation.away_score:
                             game.game_over = True
                     else:
-                        if situation.homeScore != situation.awayScore:
+                        if situation.home_score != situation.away_score:
                             game.game_over = True
                 else:
-                    if not situation.top and situation.homeScore > situation.awayScore:
+                    if not situation.top and situation.home_score > situation.away_score:
                         game.game_over = True
         play_idx += 1
 
     border = ""
     recap = ""
-    if situation.awayScore > situation.homeScore:
+    if situation.away_score > situation.home_score:
         recap = (
-            f"|  Final score: {situation.awayScore}-{situation.homeScore}, "
-            f"{situation.awayTeam} over {situation.homeTeam}  |"
+            f"|  Final score: {situation.away_score}-{situation.home_score}, "
+            f"{situation.away_team} over {situation.home_team}  |"
         )
     else:
         recap = (
-            f"|  Final score: {situation.homeScore}-{situation.awayScore}, "
-            f"{situation.homeTeam} over {situation.awayTeam}  |"
+            f"|  Final score: {situation.home_score}-{situation.away_score}, "
+            f"{situation.home_team} over {situation.away_team}  |"
         )
     while len(border) < len(recap):
         border += "─"
@@ -429,9 +429,9 @@ def print_live_game(game):
         live_description = last_description
         if last_description == live_description:
             last_description = live_description
-            situation.setInning(current_play["about"]["inning"])
-            situation.setTop(current_play["about"]["isTopInning"])
-            situation.setPitcher(current_play["matchup"]["pitcher"]["fullName"])  # José Quijada
+            situation.set_inning(current_play["about"]["inning"])
+            situation.set_top(current_play["about"]["isTopInning"])
+            situation.set_pitcher(current_play["matchup"]["pitcher"]["fullName"])  # José Quijada
 
             print(f"{current_play["matchup"]["batter"]["fullName"]} now batting.")
 
@@ -444,18 +444,18 @@ def print_live_game(game):
                 # If this is the last pitch of the at bat
                 if index == len(current_play["playEvents"]) - 1:
                     # set score, baserunners, and outs
-                    situation.setAwayScore(current_play["result"]["awayScore"])
-                    situation.setHomeScore(current_play["result"]["homeScore"])
-                    situation.setOuts(current_play["count"]["outs"])
+                    situation.set_away_score(current_play["result"]["awayScore"])
+                    situation.set_home_score(current_play["result"]["homeScore"])
+                    situation.set_outs(current_play["count"]["outs"])
                     # set balls and strikes to 0
-                    situation.setBalls(0)
-                    situation.setStrikes(0)
+                    situation.set_balls(0)
+                    situation.set_strikes(0)
                     situation.setBaserunnersFromPlay(current_play)
 
                     print(live_description)
                 else:
-                    situation.setBalls(play_event["count"]["balls"])
-                    situation.setStrikes(play_event["count"]["strikes"])
+                    situation.set_balls(play_event["count"]["balls"])
+                    situation.set_strikes(play_event["count"]["strikes"])
                     if play_event["details"]["isStrike"]:
                         print(f"{play_event["details"]["description"]} {situation.strikes}.")
                     elif play_event["details"]["isBall"]:
@@ -465,30 +465,30 @@ def print_live_game(game):
                 pitch_count = game.pitch_count_dict.get(situation.pitcher, 0)
                 pitch_count += 1
                 game.pitch_count_dict[situation.pitcher] = pitch_count
-                situation.setPitchCount(pitch_count)
+                situation.set_pitch_count(pitch_count)
 
                 print(f"{draw_pitch(situation)}\n")
 
             # Check if the result of this at bat finished the game
             if situation.outs >= 3 and situation.inning >= 9:
                 if situation.top:
-                    if situation.homeScore > situation.awayScore:
+                    if situation.home_score > situation.away_score:
                         game.game_over = True
                 else:
-                    if situation.homeScore != situation.awayScore:
+                    if situation.home_score != situation.away_score:
                         game.game_over = True
 
     border = ""
     recap = ""
-    if situation.awayScore > situation.homeScore:
+    if situation.away_score > situation.home_score:
         recap = (
-            f"|  Final score: {situation.awayScore}-{situation.homeScore}, "
-            f"{situation.awayTeam} over {situation.homeTeam}  |"
+            f"|  Final score: {situation.away_score}-{situation.home_score}, "
+            f"{situation.away_team} over {situation.home_team}  |"
         )
     else:
         recap = (
-            f"|  Final score: {situation.homeScore}-{situation.awayScore}, "
-            f"{situation.homeTeam} over {situation.awayTeam}  |"
+            f"|  Final score: {situation.home_score}-{situation.away_score}, "
+            f"{situation.home_team} over {situation.away_team}  |"
         )
     while len(border) < len(recap):
         border += "─"

@@ -110,7 +110,7 @@ class Game():
         self.cur_home_pitcher = self.at_bats[0].get("matchup", {}).get("pitcher", {}).get("fullName", "[home_pitcher]")
         self.cur_pitcher = self.cur_home_pitcher
         self.situation = Situation()
-        self.situation.startNewGame(home_abbr, away_abbr, self.cur_pitcher)
+        self.situation.start_new_game(home_abbr, away_abbr, self.cur_pitcher)
 
     # TODO: Test network connection failure
     def get_game_by_game_pk(self, _game_pk):
@@ -151,14 +151,14 @@ class Game():
 
     def get_recap(self):
         """Return a game's final outcome (score, winning team, losing team)."""
-        if self.situation.awayScore > self.situation.homeScore:
+        if self.situation.away_score > self.situation.home_score:
             return (
-                f"|  Final score: {self.situation.awayScore}-{self.situation.homeScore}, "
-                f"{self.situation.awayTeam} over {self.situation.homeTeam}  |"
+                f"|  Final score: {self.situation.away_score}-{self.situation.home_score}, "
+                f"{self.situation.away_team} over {self.situation.home_team}  |"
             )
         return (
-            f"|  Final score: {self.situation.homeScore}-{self.situation.awayScore}, "
-            f"{self.situation.homeTeam} over {self.situation.awayTeam}  |"
+            f"|  Final score: {self.situation.home_score}-{self.situation.away_score}, "
+            f"{self.situation.home_team} over {self.situation.away_team}  |"
         )
 
     def set_pitcher(self, play_event=None):
@@ -171,8 +171,8 @@ class Game():
                 self.cur_pitcher = self.cur_home_pitcher
             else:
                 self.cur_pitcher = self.cur_away_pitcher
-            self.situation.setPitcher(self.cur_pitcher)
-            self.situation.setPitchCount(self.pitch_count_dict.get(self.situation.pitcher, 0))
+            self.situation.set_pitcher(self.cur_pitcher)
+            self.situation.set_pitch_count(self.pitch_count_dict.get(self.situation.pitcher, 0))
             return
 
         default = "[home_pitcher]" if self.situation.top else "[away_pitcher]"
@@ -198,27 +198,27 @@ class Game():
     def process_at_bat_finished(self, at_bat_to_process, output=None):
         """Set score, outs, count, baserunners, and game_over. Process at bat, post to Threads if threading flagged."""
         vprint("Processing at bat finished...")
-        self.situation.setAwayScore(at_bat_to_process.get("result", {}).get("awayScore", -1))
-        self.situation.setHomeScore(at_bat_to_process.get("result", {}).get("homeScore", -1))
-        self.situation.setOuts(at_bat_to_process.get("count", {}).get("outs", -1))
-        self.situation.setBalls(0)
-        self.situation.setStrikes(0)
-        self.situation.setBaserunnersAtEndOfAtBat(at_bat_to_process)
+        self.situation.set_away_score(at_bat_to_process.get("result", {}).get("awayScore", -1))
+        self.situation.set_home_score(at_bat_to_process.get("result", {}).get("homeScore", -1))
+        self.situation.set_outs(at_bat_to_process.get("count", {}).get("outs", -1))
+        self.situation.set_balls(0)
+        self.situation.set_strikes(0)
+        self.situation.set_baserunners_at_end_of_at_bat(at_bat_to_process)
         # Check if the result of this at bat finished the game
         if self.situation.inning >= 9:
             if self.situation.outs >= 3:
                 if self.situation.top:
-                    if self.situation.homeScore > self.situation.awayScore:
+                    if self.situation.home_score > self.situation.away_score:
                         self.game_over = True
                 else:
-                    if self.situation.homeScore != self.situation.awayScore:
+                    if self.situation.home_score != self.situation.away_score:
                         self.game_over = True
             else:
-                if not self.situation.top and self.situation.homeScore > self.situation.awayScore:
+                if not self.situation.top and self.situation.home_score > self.situation.away_score:
                     self.game_over = True
         # Half inning is over but game is not done yet - set outs to 0
         if not self.game_over and self.situation.outs == 3:
-            self.situation.setOuts(0)
+            self.situation.set_outs(0)
             if output:
                 if self.situation.top:
                     output.emit(f"Mid {ordinal(self.situation.inning)}.")
@@ -239,8 +239,8 @@ class Game():
                 self.game_pk,
                 at_bat_to_process,
                 self.last_pitch,
-                self.situation.awayScore,
-                self.situation.homeScore
+                self.situation.away_score,
+                self.situation.home_score
             )
             # Uncomment below to post live game pitches when actually live
             # And don't retroactively post big pitches from earlier in the game
@@ -273,8 +273,8 @@ class Game():
             #         self.game_pk,
             #         at_bat_to_process,
             #         self.last_pitch,
-            #         self.situation.awayScore,
-            #         self.situation.homeScore
+            #         self.situation.away_score,
+            #         self.situation.home_score
             #     )
         else:
             vprint(

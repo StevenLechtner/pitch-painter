@@ -42,13 +42,13 @@ def post_to_threads(game_pk, play_event_id, pitch_to_post, away_score, home_scor
     else:
         text = pitchbypitch.draw_pitch(pitch_to_post)
         alt_text = pitchbypitch.draw_pitch_for_tweeting(pitch_to_post)
-    thread_poster.postThreadTextAsImage(text, descriptionText=description, altText=alt_text, filepath=filepath)
+    thread_poster.post_thread_text_as_image(text, description_text=description, alt_text=alt_text, filepath=filepath)
 
 
 def process_and_post_pitch(game_pk, at_bat_to_process, play_event_id, pitch_to_post, away_score, home_score):
     """Process the pitch and post to Threads if it is a big play."""
     win_prob = win_probability.WinProbability(game_pk)
-    if win_prob.isABigPlay(at_bat_to_process.get("about", {}).get("atBatIndex", -1)):
+    if win_prob.is_a_big_play(at_bat_to_process.get("about", {}).get("atBatIndex", -1)):
         description = at_bat_to_process.get("result", {}).get("description", "")
         scoring_play = at_bat_to_process.get("about", {}).get("isScoringPlay", False)
         post_to_threads(game_pk, play_event_id, pitch_to_post, away_score, home_score, scoring_play, description)
@@ -63,7 +63,7 @@ class AtBatQueue(QRunnable):
         self.pitch_to_post = copy.deepcopy(last_pitch)
         self.game_pk = game_pk
         self.at_bat_to_process = at_bat_to_process
-        self.play_event_id = last_pitch.playEventId
+        self.play_event_id = last_pitch.play_event_id
         self.away_score = away_score
         self.home_score = home_score
 
@@ -87,7 +87,7 @@ class PitchQueue(QRunnable):
         super().__init__()
         self.pitch_to_post = copy.deepcopy(last_pitch)
         self.game_pk = game_pk
-        self.play_event_id = last_pitch.playEventId
+        self.play_event_id = last_pitch.play_event_id
         self.description = description
         self.away_score = away_score
         self.home_score = home_score

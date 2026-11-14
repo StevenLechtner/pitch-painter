@@ -58,7 +58,7 @@ def test_text_to_png(tmp_path):
         "|Robert Suarez      P:25  |\n"
         "+─────────────────────────+"
     )
-    image_path = thread_poster.textToPNG(situation, filepath=str(test_filepath))
+    image_path = thread_poster.text_to_png(situation, filepath=str(test_filepath))
 
     # Verify that the image exists
     assert image_path == str(test_filepath)
@@ -88,7 +88,7 @@ def test_upload_image_to_dropbox_success(mock_dbx, tmp_path):
     mock_dbx.sharing_create_shared_link_with_settings.return_value = mock_link_meta
 
     # Run upload function
-    url = thread_poster.uploadImageToDropbox(str(test_image))
+    url = thread_poster.upload_image_to_dropbox(str(test_image))
 
     # Verify Dropbox methods were called correctly
     mock_dbx.files_upload.assert_called_once()
@@ -99,9 +99,9 @@ def test_upload_image_to_dropbox_success(mock_dbx, tmp_path):
 
 
 @patch("pitchpainter.thread_poster.requests.post")
-@patch("pitchpainter.thread_poster.createThreadToPost")
-@patch("pitchpainter.thread_poster.uploadImageToDropbox")
-@patch("pitchpainter.thread_poster.textToPNG")
+@patch("pitchpainter.thread_poster.create_thread_to_post")
+@patch("pitchpainter.thread_poster.upload_image_to_dropbox")
+@patch("pitchpainter.thread_poster.text_to_png")
 @patch("pitchpainter.thread_poster.cli")
 def test_post_thread_text_as_image(mock_cli, mock_text_to_png, mock_upload, mock_create_thread, mock_requests_post):
     """Test the end-to-end flow of posting a thread.
@@ -141,7 +141,7 @@ def test_post_thread_text_as_image(mock_cli, mock_text_to_png, mock_upload, mock
 
     # Mock disable threading in CLI - should not try to post
     mock_cli.threading = False
-    thread_poster.postThreadTextAsImage(situationText=situation, descriptionText=description)
+    thread_poster.post_thread_text_as_image(situation_text=situation, description_text=description)
     mock_text_to_png.assert_not_called()
     mock_upload.assert_not_called()
     mock_create_thread.assert_not_called()
@@ -149,7 +149,7 @@ def test_post_thread_text_as_image(mock_cli, mock_text_to_png, mock_upload, mock
 
     # Mock enable threading in CLI - should post
     mock_cli.threading = True
-    thread_poster.postThreadTextAsImage(situationText=situation, descriptionText=description)
+    thread_poster.post_thread_text_as_image(situation_text=situation, description_text=description)
     mock_text_to_png.assert_called_once_with(situation, "images/miscPk/temp.png")
     mock_upload.assert_called_once_with("images/test_image_upload.png")
     # Verify createThreadToPost was invoked, but since it's mocked, we just verify it received the expected arguments
@@ -161,7 +161,8 @@ def test_post_thread_text_as_image(mock_cli, mock_text_to_png, mock_upload, mock
     }
     mock_requests_post.assert_called_once_with(
         f"{thread_poster.BASE_URL}/threads_publish", 
-        json=expected_publish_payload
+        json=expected_publish_payload,
+        timeout=25
     )
 
 
@@ -181,8 +182,8 @@ def test_scoring_play_envokes_post(monkeypatch):
 
     # If it's a big play but not above the threshold, it has to be a scoring play
     # This play was a 3 run homer (27-3 -> 30-3), a major blowout. The play was not impactful, but it was a scoring play
-    assert winProb.isABigPlay(96, winProbPath) == True
-    assert winProb.isAboveThreshold(96, winProbPath) == False
+    assert winProb.is_a_big_play(96, winProbPath) == True
+    assert winProb.is_above_threshold(96, winProbPath) == False
 
 
 def test_big_play_envokes_post(monkeypatch):
@@ -202,8 +203,8 @@ def test_big_play_envokes_post(monkeypatch):
 
     # This play was a ground out with second and third in a one run game of the world series
     # It was not a scoring play, but it was above the threshold so it was a big play
-    assert winProb.isABigPlay(29, winProbPath) == True
-    assert winProb.isAboveThreshold(29, winProbPath) == True
+    assert winProb.is_a_big_play(29, winProbPath) == True
+    assert winProb.is_above_threshold(29, winProbPath) == True
 
 
 def test_all_scoring_and_big_plays_from_game_envokes_post(monkeypatch):
@@ -218,19 +219,19 @@ def test_all_scoring_and_big_plays_from_game_envokes_post(monkeypatch):
     monkeypatch.setattr(WinProbability, "DRAMA_IDX_WEIGHT", 0.15)
     monkeypatch.setattr(WinProbability, "THRESHOLD", 0.375)
 
-    assert len(win_prob.winProbabilities) == 71
+    assert len(win_prob.win_probabilities) == 71
     found_threshold_0_375_big_plays = []
     correct_threshold_0_375_big_plays = [6, True, 7, True, 13, True, 49, True, 61, True, 62, True, 63, True, 64, True, 65, True, 67, True, 68, True, 70, True]
     for i in range(72):
-        if win_prob.isABigPlay(i, win_prob_path):
-            found_threshold_0_375_big_plays += (i, win_prob.isAboveThreshold(i, win_prob_path))
+        if win_prob.is_a_big_play(i, win_prob_path):
+            found_threshold_0_375_big_plays += (i, win_prob.is_above_threshold(i, win_prob_path))
     assert found_threshold_0_375_big_plays == correct_threshold_0_375_big_plays
 
     monkeypatch.setattr(WinProbability, "THRESHOLD", 0.5)
-    assert len(win_prob.winProbabilities) == 71
+    assert len(win_prob.win_probabilities) == 71
     found_threshold_0_5_big_plays = []
     correct_threshold_0_5_big_plays = [7, False, 13, False, 64, True, 65, True, 67, True, 70, True]
     for i in range(72):
-        if win_prob.isABigPlay(i, win_prob_path):
-            found_threshold_0_5_big_plays += (i, win_prob.isAboveThreshold(i, win_prob_path))
+        if win_prob.is_a_big_play(i, win_prob_path):
+            found_threshold_0_5_big_plays += (i, win_prob.is_above_threshold(i, win_prob_path))
     assert found_threshold_0_5_big_plays == correct_threshold_0_5_big_plays

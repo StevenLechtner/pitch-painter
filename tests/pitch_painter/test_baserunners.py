@@ -8,11 +8,11 @@ def test_ghost_runner():
     assert game.situation.baserunners[1] == False
     assert game.situation.baserunners[2] == False
     assert game.situation.baserunners[3] == False
-    game.situation.setBaserunnersAtStartOfAtBat(game.at_bats[86])  # top of the 10th ghost runner put on
+    game.situation.set_baserunners_at_start_of_at_bat(game.at_bats[86])  # top of the 10th ghost runner put on
     assert game.situation.baserunners[1] == False
     assert game.situation.baserunners[2] == True
     assert game.situation.baserunners[3] == False
-    game.situation.setBaserunnersAtEndOfAtBat(game.at_bats[86])  # single leads to first and third
+    game.situation.set_baserunners_at_end_of_at_bat(game.at_bats[86])  # single leads to first and third
     assert game.situation.baserunners[1] == True
     assert game.situation.baserunners[2] == False
     assert game.situation.baserunners[3] == True
@@ -23,7 +23,7 @@ def test_ghost_runner_live():
     assert game.situation.baserunners[1] == False
     assert game.situation.baserunners[2] == False
     assert game.situation.baserunners[3] == False
-    game.situation.setBaserunnersAtStartOfAtBat(game.at_bats[-1])  # live game top of the 10th start
+    game.situation.set_baserunners_at_start_of_at_bat(game.at_bats[-1])  # live game top of the 10th start
     assert game.situation.baserunners[1] == False
     assert game.situation.baserunners[2] == True
     assert game.situation.baserunners[3] == False
@@ -40,7 +40,7 @@ def test_wild_pitch():
     assert game.situation.baserunners[1] == False
     assert game.situation.baserunners[2] == True
     assert game.situation.baserunners[3] == True
-    assert game.situation.awayScore == 6
+    assert game.situation.away_score == 6
     process_play_event(game.at_bats[53].get("playEvents", [])[4],
                      game.situation,
                      game.at_bats[53],
@@ -49,7 +49,7 @@ def test_wild_pitch():
     assert game.situation.baserunners[1] == False
     assert game.situation.baserunners[2] == False
     assert game.situation.baserunners[3] == True
-    assert game.situation.awayScore == 7
+    assert game.situation.away_score == 7
 
     liveGame = Game()
     liveGame.get_game_by_file_path("tests/pitch_painter/data/live_wild_pitch.json")
@@ -112,7 +112,7 @@ def test_stolen_every_base_same_at_bat():
     assert game.situation.baserunners[1] == False
     assert game.situation.baserunners[2] == False
     assert game.situation.baserunners[3] == True
-    assert game.situation.awayScore == 6
+    assert game.situation.away_score == 6
     process_play_event(game.at_bats[59].get("playEvents", [])[7],
                      game.situation,
                      game.at_bats[59],
@@ -121,4 +121,4 @@ def test_stolen_every_base_same_at_bat():
     assert game.situation.baserunners[1] == False
     assert game.situation.baserunners[2] == False
     assert game.situation.baserunners[3] == False
-    assert game.situation.awayScore == 7
+    assert game.situation.away_score == 7

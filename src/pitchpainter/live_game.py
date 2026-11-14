@@ -7,12 +7,11 @@ import sys
 import threading
 import statsapi
 from PySide6 import QtCore
-from pitchpainter import cli
-from pitchpainter import pitch_posting_processor
-from pitchpainter import win_probability
+from pitchpainter import cli, pitch_posting_processor, win_probability
 from pitchpainter.game import Game, Status
 from pitchpainter.pitchbypitch import draw_pitch, post_pitch_to_threads
 from pitchpainter.print_util import vprint, dprint
+from pitchpainter.situation import Situation
 
 
 class LiveGameWorker(QtCore.QObject):
@@ -41,25 +40,25 @@ class LiveGameWorker(QtCore.QObject):
 
 
 # TODO: stop using this?
-def is_a_big_play(play_event, at_bat_to_process, game):
+def is_a_big_play(play_event, at_bat_to_process, game: Game):
     """Return True if this at bat resulted in a big play - above THRESHOLD or scoring play. False othersise."""
     if (
         at_bat_to_process.get("about", {}).get("isComplete", False)
         and (at_bat_to_process.get("playEvents", {})[-1].get("index", -1) == play_event.get("index", -1))
     ):
         win_prob = win_probability.WinProbability(game.game_pk)
-        return win_prob.isAboveThreshold(at_bat_to_process.get("about", {}).get("atBatIndex", -1))
+        return win_prob.is_above_threshold(at_bat_to_process.get("about", {}).get("atBatIndex", -1))
     return False
 
 
-def process_play_event(play_event, situation, at_bat_to_process, game, output):
+def process_play_event(play_event, situation: Situation, at_bat_to_process, game, output):
     """Process a play event.
 
     A play event is one 'event' inside of a game - could be a pitch, a substitution, a steal, game advisory, etc.
     Any event that affects the game gets processed here - usually processes a pitch, but does more if needed.
     """
     play_end_time = play_event.get("endTime", -1).replace(":", "-").replace("T", "_").replace("Z", "")
-    situation.setPlayEventId(play_event.get("playId", f"play_end_time_{play_end_time}"))
+    situation.set_play_event_id(play_event.get("playId", f"play_end_time_{play_end_time}"))
 
     if play_event.get("isPitch", False):
         if output:
@@ -103,10 +102,10 @@ def process_play_event(play_event, situation, at_bat_to_process, game, output):
     scoring_play = play_event.get("details", {}).get("isScoringPlay", False)
     away_score = play_event.get("details", {}).get("awayScore", -1)
     if away_score > -1:
-        situation.setAwayScore(away_score)
+        situation.set_away_score(away_score)
     home_score = play_event.get("details", {}).get("homeScore", -1)
     if home_score > -1:
-        situation.setHomeScore(home_score)
+        situation.set_home_score(home_score)
     if scoring_play:
         description = play_event.get("details", {}).get("description", "")
         pitch_posting_processor.enqueue_pitch_for_processing(
@@ -114,8 +113,8 @@ def process_play_event(play_event, situation, at_bat_to_process, game, output):
             game.last_pitch,
             description=description,
             scoring_play=True,
-            away_score=situation.awayScore,
-            home_score=situation.homeScore
+            away_score=situation.away_score,
+            home_score=situation.home_score
         )
     # set pitcher for every play event and update pitcher if play event type is a pitching_substitution
     game.set_pitcher(play_event)
@@ -128,37 +127,37 @@ def process_play_event(play_event, situation, at_bat_to_process, game, output):
         and (at_bat_to_process.get("playEvents", {})[-1].get("index", -1) == play_event.get("index", -1))
     ):
         # The at bat is complete - set score, baserunners, and outs, and set balls and strikes to 0
-        situation.setAwayScore(at_bat_to_process.get("result", {}).get("awayScore", -1))
-        situation.setHomeScore(at_bat_to_process.get("result", {}).get("homeScore", -1))
-        situation.setOuts(at_bat_to_process.get("count", {}).get("outs", -1))
-        situation.setBalls(0)
-        situation.setStrikes(0)
-        situation.setBaserunnersAtEndOfAtBat(at_bat_to_process)
+        situation.set_away_score(at_bat_to_process.get("result", {}).get("awayScore", -1))
+        situation.set_home_score(at_bat_to_process.get("result", {}).get("homeScore", -1))
+        situation.set_outs(at_bat_to_process.get("count", {}).get("outs", -1))
+        situation.set_balls(0)
+        situation.set_strikes(0)
+        situation.set_baserunners_at_end_of_at_bat(at_bat_to_process)
     else:
         # Pitch was thrown - set current count and baserunners
-        situation.setBalls(play_event.get("count", {}).get("balls", -1))
-        situation.setStrikes(play_event.get("count", {}).get("strikes", -1))
-        situation.setOuts(play_event.get("count", {}).get("outs", -1))
-        situation.setBaserunnersDuringAtBat(at_bat_to_process, play_event.get("index", -1))
+        situation.set_balls(play_event.get("count", {}).get("balls", -1))
+        situation.set_strikes(play_event.get("count", {}).get("strikes", -1))
+        situation.set_outs(play_event.get("count", {}).get("outs", -1))
+        situation.set_baserunners_during_at_bat(at_bat_to_process, play_event.get("index", -1))
 
     # Incrememnt pitch count for current pitcher
     if play_event.get("isPitch", False):
         pitch_count = game.pitch_count_dict.get(situation.pitcher, 0)
         pitch_count += 1
         game.pitch_count_dict[situation.pitcher] = pitch_count
-        situation.setPitchCount(pitch_count)
+        situation.set_pitch_count(pitch_count)
 
 
-def process_at_bat(game, at_bat_index_to_process, output, game_pk, stop_event):
+def process_at_bat(game: Game, at_bat_index_to_process, output, game_pk, stop_event):
     """Process this at bat until it is complete."""
     situation = game.situation
     at_bat_to_process = game.at_bats[at_bat_index_to_process]
     dprint("New at bat. Index: ", at_bat_to_process.get("atBatIndex", -1))
     dprint(f"Now batting: {at_bat_to_process.get("matchup", {}).get("batter", {}).get("fullName", "")}")
-    situation.setInning(at_bat_to_process.get("about", {}).get("inning", -1))
-    situation.setTop(at_bat_to_process.get("about", {}).get("isTopInning", False))
+    situation.set_inning(at_bat_to_process.get("about", {}).get("inning", -1))
+    situation.set_top(at_bat_to_process.get("about", {}).get("isTopInning", False))
     game.set_pitcher()  # set pitcher when new at bat starts to account for inning change
-    situation.setBaserunnersAtStartOfAtBat(at_bat_to_process)
+    situation.set_baserunners_at_start_of_at_bat(at_bat_to_process)
 
     # Loop through all play events of current play - print when a pitch is thrown
     latest_play_event_index = -1

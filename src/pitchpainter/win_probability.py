@@ -1,13 +1,13 @@
 """Use MLB's win probability added, leverage index, and drama index of every at bat to find big plays of a game."""
 
 
-import pitchpainter.cli as cli
 import heapq
 import json
-import requests
-import statsapi
 import sys
 import threading
+import requests
+import statsapi
+from pitchpainter import cli
 from pitchpainter.print_util import dprint
 
 stop_event = threading.Event()
@@ -38,30 +38,30 @@ class WinProbability():
     DRAMA_IDX_WEIGHT = 0.15
     THRESHOLD = 0.375
 
-    def __init__(self, gamePk=None, _filepath=None):
+    def __init__(self, game_pk=None, _filepath=None):
         """Initialize this object with win probabilities."""
-        self.gamePk = -1 if gamePk is None else gamePk
-        self.winProbabilities: list[WinProbabilityInfo] = self.setWinProbabilities(_filepath)
+        self.game_pk = -1 if game_pk is None else game_pk
+        self.win_probabilities: list[WinProbabilityInfo] = self.set_win_probabilities(_filepath)
         # Top ten: List of tuples (x, y) where x is the metric and y is the at bat index
-        self.topTenProbsAdded = []
-        self.topTenLevIdx = []
-        self.topTenDramaIdx = []
+        self.top_ten_probs_added = []
+        self.top_ten_lev_idx = []
+        self.top_ten_drama_idx = []
         self.scores = []
-        self.topTenScores = []
+        self.top_ten_scores = []
 
-    def getGameWinProbabilities(self, _filepath=None):
+    def get_game_win_probabilities(self, _filepath=None):
         """Set all at bats win probabilites from _filepath if provided; from the server by gamePk if not."""
         if stop_event.is_set():
             return []
 
-        winProbabilityList = []
+        win_probability_list = []
 
         # path to a win probability local file is provided. Use first, but check server if this fails
         if _filepath:
-            with open(_filepath, "r") as f:
-                winProbabilityList = json.load(f)
-                if winProbabilityList:
-                    return winProbabilityList
+            with open(_filepath, "r", encoding="utf-8") as f:
+                win_probability_list = json.load(f)
+                if win_probability_list:
+                    return win_probability_list
 
         # No path is provided. Get win probabilities from the server using the gamePk
         # Try HTTP GET request up to three times before failing
@@ -69,24 +69,24 @@ class WinProbability():
             if stop_event.is_set():
                 return []
             try:
-                winProbabilityList = statsapi.get('game_winProbability', {'gamePk': self.gamePk})
-                if winProbabilityList:
-                    return winProbabilityList
+                win_probability_list = statsapi.get('game_winProbability', {'gamePk': self.game_pk})
+                if win_probability_list:
+                    return win_probability_list
             except requests.exceptions.RequestException as e:
                 print(
-                    f"https://statsapi.mlb.com/api/v1.1/game/{self.gamePk}/winProbability "
+                    f"https://statsapi.mlb.com/api/v1.1/game/{self.game_pk}/winProbability "
                     f"request failed (attempt {attempt + 1}/3): {e}"
                 )
                 if attempt < 2:
                     if stop_event.wait(1):
                         return []
                 else:
-                    print(f"Failed to retrieve win probability (game_pk={self.gamePk}) GET request after 3 attempts.")
-                    winProbabilityList.clear()
+                    print(f"Failed to retrieve win probability (game_pk={self.game_pk}) GET request after 3 attempts.")
+                    win_probability_list.clear()
         return []
 
     # TODO: optimize this! test_all_scoring_and_big_plays_from_game_envokes_post takes ~12 seconds to run...
-    def getFinishedAtBat(self, atBatIndex, _filepath=None):
+    def get_finished_at_bat(self, at_bat_index, _filepath=None):
         """Get the win probability weights from the end of this at bat.
 
         Wait for the at bat to end by checking if there is a new at bat after this, or the game is over.
@@ -94,55 +94,53 @@ class WinProbability():
         # wait for at bat at given atBatIndex to be complete with win probability numbers
         # just check if the next atBatIndex is present
         # if not, check if a win probability is 100% (indicates game over)
-        winProbabilityList = []
+        win_probability_list = []
         # TODO: don't make this an "infinite" loop. Check for a max of 5(ish) minutes?
         # Determine how long it takes to be 100% sure that the values are updated
         # TODO: Additional check - see if any values are different (win prob, drama, lev) - different indicates
         # they're updated, but they could be updated to the same...
         while not stop_event.is_set():
-            winProbabilityList = self.getGameWinProbabilities(_filepath)
-            if not winProbabilityList:
+            win_probability_list = self.get_game_win_probabilities(_filepath)
+            if not win_probability_list:
                 # win probabilities list is empty!
                 if stop_event.wait(5):
                     return None
-                else:
-                    continue
-            latestAtBat = winProbabilityList[-1]
-            latestAtBatIndex = latestAtBat.get("atBatIndex", -1)
-            if latestAtBatIndex > atBatIndex:
+                continue
+            latest_at_bat = win_probability_list[-1]
+            latest_at_bat_index = latest_at_bat.get("atBatIndex", -1)
+            if latest_at_bat_index > at_bat_index:
                 # there is a new at bat, this at bat is complete
                 break
-            elif latestAtBatIndex < atBatIndex:
+            if latest_at_bat_index < at_bat_index:
                 # error check: this at bat has not even happened yet
-                dprint(f"Win probability at bat has not happened yet! {atBatIndex} < {latestAtBatIndex}")
+                dprint(f"Win probability at bat has not happened yet! {at_bat_index} < {latest_at_bat_index}")
                 break
-            elif (
-                latestAtBat.get("homeTeamWinProbability", -1) >= 100
-                or latestAtBat.get("awayTeamWinProbability", -1) >= 100
+            if (
+                latest_at_bat.get("homeTeamWinProbability", -1) >= 100
+                or latest_at_bat.get("awayTeamWinProbability", -1) >= 100
             ):
                 # no new at bat because the game is over, this at bat is complete
                 break
-            else:
-                # at bat is not yet complete
-                if stop_event.wait(5):
-                    return None
+            # at bat is not yet complete
+            if stop_event.wait(5):
+                return None
 
-        for atBat in winProbabilityList:
-            if atBat.get("atBatIndex", -1) == atBatIndex:
-                return atBat
+        for at_bat in win_probability_list:
+            if at_bat.get("atBatIndex", -1) == at_bat_index:
+                return at_bat
         return None
 
-    def getWinProbabilityInfo(self, atBat):
+    def get_win_probability_info(self, at_bat):
         """Convert at bat's win probability weights to a WinProbabilityInfo object."""
-        homeProb = atBat.get("homeTeamWinProbability", 0.0)
-        awayProb = atBat.get("awayTeamWinProbability", 0.0)
-        homeProbAdded = atBat.get("homeTeamWinProbabilityAdded", 0.0)
-        levIdx = atBat.get("leverageIndex", 0.0)
-        dramaIdx = atBat.get("dramaIndex", 0.0)
-        atBatIdx = atBat.get("atBatIndex", 0.0)
-        return WinProbabilityInfo(homeProb, awayProb, homeProbAdded, levIdx, dramaIdx, atBatIdx)
+        home_prob = at_bat.get("homeTeamWinProbability", 0.0)
+        away_prob = at_bat.get("awayTeamWinProbability", 0.0)
+        home_prob_added = at_bat.get("homeTeamWinProbabilityAdded", 0.0)
+        lev_idx = at_bat.get("leverageIndex", 0.0)
+        drama_idx = at_bat.get("dramaIndex", 0.0)
+        at_bat_idx = at_bat.get("atBatIndex", 0.0)
+        return WinProbabilityInfo(home_prob, away_prob, home_prob_added, lev_idx, drama_idx, at_bat_idx)
 
-    def isAboveThreshold(self, atBatIndex, _filepath=None):
+    def is_above_threshold(self, at_bat_index, _filepath=None):
         """Check if this at bat's score is above the threshold to trigger a big play.
 
         Use the atBatIndex to get the at bat,
@@ -150,142 +148,142 @@ class WinProbability():
         calculate the score using the weights,
         and return True if the score is above the THRESHOLD, False otherwise.
         """
-        atBat = self.getFinishedAtBat(atBatIndex, _filepath)
-        if atBat is None:
+        at_bat = self.get_finished_at_bat(at_bat_index, _filepath)
+        if at_bat is None:
             return False
 
-        winProb = self.getWinProbabilityInfo(atBat)
-        probsAddedVal = abs(winProb.homeTeamWinProbabilityAdded)
-        levIdxVal = winProb.leverageIndex
-        dramaIdxVal = winProb.dramaIndex
+        win_prob = self.get_win_probability_info(at_bat)
+        probs_added_val = abs(win_prob.home_team_win_probability_added)
+        lev_idx_val = win_prob.leverage_index
+        drama_idx_val = win_prob.drama_index
         score = (
-            self.PROBS_ADDED_WEIGHT * (probsAddedVal / self.NORM_PROBS_ADDED)
-            + self.LEV_IDX_WEIGHT * (levIdxVal / self.NORM_LEV_IDX)
-            + self.DRAMA_IDX_WEIGHT * (dramaIdxVal / self.NORM_DRAMA_IDX)
+            self.PROBS_ADDED_WEIGHT * (probs_added_val / self.NORM_PROBS_ADDED)
+            + self.LEV_IDX_WEIGHT * (lev_idx_val / self.NORM_LEV_IDX)
+            + self.DRAMA_IDX_WEIGHT * (drama_idx_val / self.NORM_DRAMA_IDX)
         )
         dprint(f"At Bat score {score}/{self.THRESHOLD}")
-        dprint(f"probsAddedVal: {probsAddedVal}")
-        dprint(f"levIdxVal: {levIdxVal}")
-        dprint(f"dramaIdxVal: {dramaIdxVal}")
-        dprint(f"win prob complete? {atBat.get("about", {}).get("isComplete", False)}")
-        dprint(f"win prob atBatIndex: {atBat.get("atBatIndex", -1)}")
+        dprint(f"probsAddedVal: {probs_added_val}")
+        dprint(f"levIdxVal: {lev_idx_val}")
+        dprint(f"dramaIdxVal: {drama_idx_val}")
+        dprint(f"win prob complete? {at_bat.get("about", {}).get("isComplete", False)}")
+        dprint(f"win prob atBatIndex: {at_bat.get("atBatIndex", -1)}")
         return score > self.THRESHOLD
 
-    def isABigPlay(self, atBatIndex, _filepath=None):
+    def is_a_big_play(self, at_bat_index, _filepath=None):
         """Return True if this at bat is above the THRESHOLD or is a scoring play. False otherise."""
         if stop_event.is_set():
             return False
 
         # TODO: make this smarter. we want to wait for at bat to be done before checking isScoringPlay and
         # isAboveThreshold, but this currently checks at bat finish twice (here + isAboveThreshold())
-        atBat = self.getFinishedAtBat(atBatIndex, _filepath)
-        if atBat is None:
+        at_bat = self.get_finished_at_bat(at_bat_index, _filepath)
+        if at_bat is None:
             return False
-        scoringPlay = atBat.get("about", {}).get("isScoringPlay", False)
-        return self.isAboveThreshold(atBatIndex, _filepath) or scoringPlay
+        scoring_play = at_bat.get("about", {}).get("isScoringPlay", False)
+        return self.is_above_threshold(at_bat_index, _filepath) or scoring_play
 
-    def setWinProbabilities(self, _filepath=None):
+    def set_win_probabilities(self, _filepath=None):
         """Configure each finished at bat's win probabilities as a WinProbabilityInfo object."""
         print(_filepath)
-        winProbabilityList = self.getGameWinProbabilities(_filepath)
-        winProbabilities = []
-        for atBat in winProbabilityList:
-            winProbabilities.append(self.getWinProbabilityInfo(atBat))
-        return winProbabilities
+        win_probability_list = self.get_game_win_probabilities(_filepath)
+        win_probabilities = []
+        for at_bat in win_probability_list:
+            win_probabilities.append(self.get_win_probability_info(at_bat))
+        return win_probabilities
 
     # TODO: remove?
-    def findAverages(self):
+    def find_averages(self):
         """Find the average score of each at bat."""
-        atBats = len(self.winProbabilities)
-        if (atBats <= 0):
+        at_bats = len(self.win_probabilities)
+        if at_bats <= 0:
             return
-        averageHomeProb = 0.0
-        averageAwayProb = 0.0
-        averageHomeProbAdded = 0.0
-        averageLevIdx = 0.0
-        averageDramaIdx = 0.0
-        for winProbability in self.winProbabilities:
-            averageHomeProb += winProbability.homeTeamWinProbability
-            averageAwayProb += winProbability.awayTeamWinProbability
-            averageHomeProbAdded += winProbability.homeTeamWinProbabilityAdded
-            averageLevIdx += winProbability.leverageIndex
-            averageDramaIdx += winProbability.dramaIndex
-        averageHomeProb /= atBats
-        averageAwayProb /= atBats
-        averageHomeProbAdded /= atBats
-        averageLevIdx /= atBats
-        averageDramaIdx /= atBats
-        dprint(f"atBats: {atBats}")
-        dprint(f"averageHomeProb: {averageHomeProb}")
-        dprint(f"averageAwayProb: {averageAwayProb}")
-        dprint(f"averageHomeProbAdded: {averageHomeProbAdded}")
-        dprint(f"averageLevIdx: {averageLevIdx}")
-        dprint(f"averageDramaIdx: {averageDramaIdx}")
+        average_home_prob = 0.0
+        average_away_prob = 0.0
+        average_home_prob_added = 0.0
+        average_lev_idx = 0.0
+        average_drama_idx = 0.0
+        for win_probability in self.win_probabilities:
+            average_home_prob += win_probability.home_team_win_probability
+            average_away_prob += win_probability.away_team_win_probability
+            average_home_prob_added += win_probability.home_team_win_probability_added
+            average_lev_idx += win_probability.leverage_index
+            average_drama_idx += win_probability.drama_index
+        average_home_prob /= at_bats
+        average_away_prob /= at_bats
+        average_home_prob_added /= at_bats
+        average_lev_idx /= at_bats
+        average_drama_idx /= at_bats
+        dprint(f"atBats: {at_bats}")
+        dprint(f"averageHomeProb: {average_home_prob}")
+        dprint(f"averageAwayProb: {average_away_prob}")
+        dprint(f"averageHomeProbAdded: {average_home_prob_added}")
+        dprint(f"averageLevIdx: {average_lev_idx}")
+        dprint(f"averageDramaIdx: {average_drama_idx}")
 
     # TODO: remove?
-    def findTopTens(self):
+    def find_top_tens(self):
         """Find the top ten scores of a game."""
-        probsAdded = []
-        levIdx = []
-        dramaIdx = []
+        probs_added = []
+        lev_idx = []
+        drama_idx = []
         self.scores.clear()
         # loop through all plays and save a tuple of the metric with its at bat index
-        for winProb in self.winProbabilities:
+        for win_prob in self.win_probabilities:
             # take abs to get the total top ten probability change plays
-            probsAddedVal = abs(winProb.homeTeamWinProbabilityAdded)
-            levIdxVal = winProb.leverageIndex
-            dramaIdxVal = winProb.dramaIndex
-            probsAdded.append((probsAddedVal, winProb.atBatIndex))
-            levIdx.append((levIdxVal, winProb.atBatIndex))
-            dramaIdx.append((dramaIdxVal, winProb.atBatIndex))
+            probs_added_val = abs(win_prob.home_team_win_probability_added)
+            lev_idx_val = win_prob.leverage_index
+            drama_idx_val = win_prob.drama_index
+            probs_added.append((probs_added_val, win_prob.at_bat_index))
+            lev_idx.append((lev_idx_val, win_prob.at_bat_index))
+            drama_idx.append((drama_idx_val, win_prob.at_bat_index))
             score = (
-                self.PROBS_ADDED_WEIGHT * (probsAddedVal / self.NORM_PROBS_ADDED)
-                + self.LEV_IDX_WEIGHT * (levIdxVal / self.NORM_LEV_IDX)
-                + self.DRAMA_IDX_WEIGHT * (dramaIdxVal / self.NORM_DRAMA_IDX)
+                self.PROBS_ADDED_WEIGHT * (probs_added_val / self.NORM_PROBS_ADDED)
+                + self.LEV_IDX_WEIGHT * (lev_idx_val / self.NORM_LEV_IDX)
+                + self.DRAMA_IDX_WEIGHT * (drama_idx_val / self.NORM_DRAMA_IDX)
             )
-            self.scores.append((score, winProb.atBatIndex))
+            self.scores.append((score, win_prob.at_bat_index))
 
         # probsAdded = [(x * normProbsAddedVal, y) for x, y in probsAdded]
         # levIdx = [(x * normLevIdxVal, y) for x, y in levIdx]
         # dramaIdx = [(x * normDramaIdxVal, y) for x, y in dramaIdx]
 
         # sort in descending order and save the first ten elements
-        self.topTenProbsAdded = heapq.nlargest(10, probsAdded, key=lambda x: x[0])
-        self.topTenLevIdx = heapq.nlargest(10, levIdx, key=lambda x: x[0])
-        self.topTenDramaIdx = heapq.nlargest(10, dramaIdx, key=lambda x: x[0])
+        self.top_ten_probs_added = heapq.nlargest(10, probs_added, key=lambda x: x[0])
+        self.top_ten_lev_idx = heapq.nlargest(10, lev_idx, key=lambda x: x[0])
+        self.top_ten_drama_idx = heapq.nlargest(10, drama_idx, key=lambda x: x[0])
         self.scores = sorted(self.scores, key=lambda x: x[0], reverse=True)
-        self.topTenScores = self.scores[:10]
+        self.top_ten_scores = self.scores[:10]
         dprint(f"scores: {self.scores}\n")
-        dprint(f"topTenProbsAdded: {self.topTenProbsAdded}\n")
-        dprint(f"topTenLevIdx: {self.topTenLevIdx}\n")
-        dprint(f"topTenDramaIdx: {self.topTenDramaIdx}\n")
-        dprint(f"topTenScores: {self.topTenScores}")
-        averageTopTenScore = 0
-        for score in self.topTenScores:
-            averageTopTenScore += score[0]
-        averageTopTenScore /= 10
+        dprint(f"topTenProbsAdded: {self.top_ten_probs_added}\n")
+        dprint(f"topTenLevIdx: {self.top_ten_lev_idx}\n")
+        dprint(f"topTenDramaIdx: {self.top_ten_drama_idx}\n")
+        dprint(f"topTenScores: {self.top_ten_scores}")
+        average_top_ten_score = 0
+        for score in self.top_ten_scores:
+            average_top_ten_score += score[0]
+        average_top_ten_score /= 10
         dprint()
-        print(f"Average top ten score: {averageTopTenScore}")
-        print(f"Highest score: {self.topTenScores[0][0]}")
-        print(f"Tenth score: {self.topTenScores[-1][0]}")
-        inRange = []
+        print(f"Average top ten score: {average_top_ten_score}")
+        print(f"Highest score: {self.top_ten_scores[0][0]}")
+        print(f"Tenth score: {self.top_ten_scores[-1][0]}")
+        in_range = []
         for score in self.scores:
-            if (score[0] > self.THRESHOLD):
-                inRange.append(score)
-        print(f"Plays above the {self.THRESHOLD} threshold: {len(inRange)}")
+            if score[0] > self.THRESHOLD:
+                in_range.append(score)
+        print(f"Plays above the {self.THRESHOLD} threshold: {len(in_range)}")
 
 
 class WinProbabilityInfo():
     """Save win probability weights and at bat index."""
 
-    def __init__(self, homeProb=0.0, awayProb=0.0, homeProbAdded=0.0, levIdx=0.0, dramaIdx=0.0, atBatIdx=-1):
+    def __init__(self, home_prob=0.0, away_prob=0.0, home_prob_added=0.0, lev_idx=0.0, drama_idx=0.0, at_bat_idx=-1):
         """Set object's variables to given argument values. Weights 0.0 and index -1 if not present."""
-        self.homeTeamWinProbability = homeProb
-        self.awayTeamWinProbability = awayProb
-        self.homeTeamWinProbabilityAdded = homeProbAdded
-        self.leverageIndex = levIdx
-        self.dramaIndex = dramaIdx
-        self.atBatIndex = atBatIdx
+        self.home_team_win_probability = home_prob
+        self.away_team_win_probability = away_prob
+        self.home_team_win_probability_added = home_prob_added
+        self.leverage_index = lev_idx
+        self.drama_index = drama_idx
+        self.at_bat_index = at_bat_idx
 
 
 # TODO: Remove this?
@@ -295,11 +293,11 @@ def main():
 
     # gamePk = 745369
     # gamePk = 823660
-    gamePk = 822765
-    winProbTest = WinProbability(gamePk)
-    winProbTest.findAverages()
-    winProbTest.findTopTens()
-    print(winProbTest.isAboveThreshold(50))
+    game_pk = 822765
+    win_prob_test = WinProbability(game_pk)
+    win_prob_test.find_averages()
+    win_prob_test.find_top_tens()
+    print(win_prob_test.is_above_threshold(50))
 
     # schedule = statsapi.schedule(date="2026-09-06")
     # gamePks = []

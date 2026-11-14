@@ -18,14 +18,14 @@ def test_pitch_clock_violation():
     process_play_event(game.at_bats[-1].get("playEvents", [])[0], game.situation, game.at_bats[-1], game, None)
     assert game.situation.balls == 1
     assert game.situation.strikes == 0
-    assert game.situation.pitchCount == 1
+    assert game.situation.pitch_count == 1
     # pitcher violation (2-0), pitch count does not increment
     process_play_event(game.at_bats[-1].get("playEvents", [])[1], game.situation, game.at_bats[-1], game, None)
     assert game.situation.balls == 2
     assert game.situation.strikes == 0
-    assert game.situation.pitchCount == 1
+    assert game.situation.pitch_count == 1
     # third pitch normal ball (3-0), but pitch count is still at 2
     process_play_event(game.at_bats[-1].get("playEvents", [])[2], game.situation, game.at_bats[-1], game, None)
     assert game.situation.balls == 3
     assert game.situation.strikes == 0
-    assert game.situation.pitchCount == 2
+    assert game.situation.pitch_count == 2

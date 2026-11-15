@@ -30,30 +30,68 @@ class Status(Enum):
 class Game():
     """Outlines important actions to parse a baseball game."""
 
+    # pylint: disable=too-many-instance-attributes
+    # A couple extra attributes here is not the end of the world
     def __init__(self):
         """Initialize a game with empty contents."""
-        self.game = None
+        self.game_feed = None
         self.game_pk = -1
+        self.at_bats = None
+        self.game_info = ""
+        self.game_status = Status.UNKNOWN
         self.situation = Situation()
         self.last_pitch = Situation()
-        self.game_info = ""
-        self.at_bats = None
-        self.cur_away_pitcher = ""
-        self.cur_home_pitcher = ""
-        self.cur_pitcher = ""
-        self.game_status = Status.UNKNOWN
-        self.detailed_state = ""
-        self.pitch_count_dict = {}
+        self.pitcher_info = self.PitcherInfo(self)
         self.game_over = False
+
+    class PitcherInfo():
+        """Specify home and away pitchers and pitch counts for all pitchers in the game."""
+
+        # pylint: disable=too-few-public-methods
+        def __init__(self, game: Game):
+            """Initialize the game's pitchers to empty."""
+            self.game = game
+            self.cur_away_pitcher = ""
+            self.cur_home_pitcher = ""
+            self.pitch_count_dict = {}
+
+        def set_pitcher(self, play_event=None):
+            """Set current pitcher. Update pitcher if play event type is a pitching_substitution."""
+            if not self.game.is_valid():
+                return
+
+            if play_event is None:
+                if self.game.situation.top:
+                    self.game.situation.set_pitcher(self.cur_home_pitcher)
+                else:
+                    self.game.situation.set_pitcher(self.cur_away_pitcher)
+                self.game.situation.set_pitch_count(self.pitch_count_dict.get(self.game.situation.pitcher, 0))
+                return
+
+            default = "[home_pitcher]" if self.game.situation.top else "[away_pitcher]"
+            pitcher = default
+            if play_event.get("details", {}).get("eventType", "") == "pitching_substitution":
+                player_id = play_event.get("player", {}).get("id", -1)
+                pitcher = (
+                    self.game.game_feed.get("gameData", {})
+                    .get("players", {})
+                    .get(f"ID{player_id}", {})
+                    .get("fullName", default)
+                )
+                if self.game.situation.top:
+                    self.cur_home_pitcher = pitcher
+                else:
+                    self.cur_away_pitcher = pitcher
+            self.set_pitcher()  # set the pitcher with no play event provided
 
     def is_valid(self):
         """Return True if the game is populated and has at least one at bat. False otherwise."""
-        if self.game is None:
+        if self.game_feed is None:
             dprint("Game is nothing for some reason")
             self.game_info = "Game is None"
             return False
         self.at_bats = (
-            self.game.get("liveData", {})
+            self.game_feed.get("liveData", {})
             .get("plays", {})
             .get("allPlays", [])
         )  # a play is an at bat from this game
@@ -64,19 +102,19 @@ class Game():
 
     def set_status(self):
         """Set Game status from the game's codedGameState. UNKNOWN if codedGameState can not be found."""
-        if self.game is not None:
-            status = self.game.get("gameData", {}).get("status", {}).get("codedGameState", "")
-            self.detailed_state = self.game.get("gameData", {}).get("status", {}).get("detailedState", "")
+        if self.game_feed is not None:
+            status = self.game_feed.get("gameData", {}).get("status", {}).get("codedGameState", "")
+            detailed_state = self.game_feed.get("gameData", {}).get("status", {}).get("detailedState", "")
             match status:
                 case "P" | "S" | "U":
                     self.game_status = Status.PREVIEW
-                    self.game_info = f"{self.detailed_state}\nGame has not started yet!"
+                    self.game_info = f"{detailed_state}\nGame has not started yet!"
                 case "I" | "M" | "E" | "C" | "D":
                     self.game_status = Status.LIVE
-                    self.game_info = f"{self.detailed_state}\nGame in progress!"
+                    self.game_info = f"{detailed_state}\nGame in progress!"
                 case "F" | "O" | "W" | "A" | "D" | "T" | "R":
                     self.game_status = Status.FINAL
-                    self.game_info = f"{self.detailed_state}\nGame has ended!"
+                    self.game_info = f"{detailed_state}\nGame has ended!"
                 case _:
                     self.game_status = Status.UNKNOWN
                     self.game_info = "Game status unknown!"
@@ -94,23 +132,36 @@ class Game():
         """Set up the object for a new game. Populate teams, set pitcher, start the first at bat."""
         if not self.is_valid():
             return
-        away_abbr = self.game.get("gameData", {}).get("teams", {}).get("away", {}).get("abbreviation", "[away_team]")
-        home_abbr = self.game.get("gameData", {}).get("teams", {}).get("home", {}).get("abbreviation", "[home_team]")
-        self.cur_away_pitcher = (
-            self.game.get("gameData", {})
+        away_abbr = (
+            self.game_feed.get("gameData", {})
+            .get("teams", {})
+            .get("away", {})
+            .get("abbreviation", "[away_team]")
+        )
+        home_abbr = (
+            self.game_feed.get("gameData", {})
+            .get("teams", {})
+            .get("home", {})
+            .get("abbreviation", "[home_team]")
+        )
+        self.pitcher_info.cur_away_pitcher = (
+            self.game_feed.get("gameData", {})
             .get("probablePitchers", {})
             .get("away", {})
             .get("fullName", "[away_pitcher]")
         )
         self.at_bats = (
-            self.game.get("liveData", {})
+            self.game_feed.get("liveData", {})
             .get("plays", {})
             .get("allPlays", [])
         )  # a play is an at bat from this game
-        self.cur_home_pitcher = self.at_bats[0].get("matchup", {}).get("pitcher", {}).get("fullName", "[home_pitcher]")
-        self.cur_pitcher = self.cur_home_pitcher
+        self.pitcher_info.cur_home_pitcher = (
+            self.at_bats[0].get("matchup", {})
+            .get("pitcher", {})
+            .get("fullName", "[home_pitcher]")
+        )
         self.situation = Situation()
-        self.situation.start_new_game(home_abbr, away_abbr, self.cur_pitcher)
+        self.situation.start_new_game(home_abbr, away_abbr, self.pitcher_info.cur_home_pitcher)
 
     # TODO: Test network connection failure
     def get_game_by_game_pk(self, _game_pk):
@@ -123,13 +174,13 @@ class Game():
         # Try HTTP GET request up to three times before failing
         for attempt in range(3):
             try:
-                self.game = statsapi.get('game', {'gamePk': _game_pk})
+                self.game_feed = statsapi.get('game', {'gamePk': _game_pk})
                 if not self.is_valid():
                     continue  # game we got was not valid, try again...
                 if self.game_pk != _game_pk:
                     self.start_new_game()
                     self.game_pk = _game_pk
-                return self.game
+                return self.game_feed
             except requests.exceptions.RequestException as e:
                 print(
                     f"https://statsapi.mlb.com/api/v1.1/game/{_game_pk}/feed/live "
@@ -144,10 +195,10 @@ class Game():
     def get_game_by_file_path(self, _filepath):
         """Get game from local file given with _filepath. Save and start game if game_pk != -1."""
         with open(_filepath, "r", encoding="utf-8") as f:
-            self.game = json.load(f)
-        if self.game_pk != self.game.get("gamePk", -1):
+            self.game_feed = json.load(f)
+        if self.game_pk != self.game_feed.get("gamePk", -1):
             self.start_new_game()
-            self.game_pk = self.game.get("gamePk", -1)
+            self.game_pk = self.game_feed.get("gamePk", -1)
 
     def get_recap(self):
         """Return a game's final outcome (score, winning team, losing team)."""
@@ -160,36 +211,6 @@ class Game():
             f"|  Final score: {self.situation.home_score}-{self.situation.away_score}, "
             f"{self.situation.home_team} over {self.situation.away_team}  |"
         )
-
-    def set_pitcher(self, play_event=None):
-        """Set current pitcher. Update pitcher if play event type is a pitching_substitution."""
-        if not self.is_valid():
-            return
-
-        if play_event is None:
-            if self.situation.top:
-                self.cur_pitcher = self.cur_home_pitcher
-            else:
-                self.cur_pitcher = self.cur_away_pitcher
-            self.situation.set_pitcher(self.cur_pitcher)
-            self.situation.set_pitch_count(self.pitch_count_dict.get(self.situation.pitcher, 0))
-            return
-
-        default = "[home_pitcher]" if self.situation.top else "[away_pitcher]"
-        pitcher = default
-        if play_event.get("details", {}).get("eventType", "") == "pitching_substitution":
-            player_id = play_event.get("player", {}).get("id", -1)
-            pitcher = (
-                self.game.get("gameData", {})
-                .get("players", {})
-                .get(f"ID{player_id}", {})
-                .get("fullName", default)
-            )
-            if self.situation.top:
-                self.cur_home_pitcher = pitcher
-            else:
-                self.cur_away_pitcher = pitcher
-        self.set_pitcher()
 
     def set_last_pitch(self, situation: Situation):
         """Save last_pitch as situation."""
@@ -286,7 +307,7 @@ class Game():
 
     def __str__(self):
         """Pretty print return the game and situation for the Game object."""
-        return f"{self.game}\ngamePK: {self.game_pk}\nsituation: {self.situation}"
+        return f"{self.game_feed}\ngamePK: {self.game_pk}\nsituation: {self.situation}"
 
 
 def ordinal(n: int):

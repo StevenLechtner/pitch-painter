@@ -2,14 +2,12 @@
 
 
 # pylint: disable=c-extension-no-member
-import json
 import sys
 import threading
-import statsapi
 from PySide6 import QtCore
 from pitchpainter import cli, pitch_posting_processor, win_probability
 from pitchpainter.game import Game, Status
-from pitchpainter.pitchbypitch import draw_pitch, post_pitch_to_threads
+from pitchpainter.pitchbypitch import draw_pitch
 from pitchpainter.print_util import vprint, dprint
 from pitchpainter.situation import Situation
 
@@ -51,7 +49,7 @@ def is_a_big_play(play_event, at_bat_to_process, game: Game):
     return False
 
 
-def process_play_event(play_event, situation: Situation, at_bat_to_process, game, output):
+def process_play_event(play_event, situation: Situation, at_bat_to_process, game: Game, output):
     """Process a play event.
 
     A play event is one 'event' inside of a game - could be a pitch, a substitution, a steal, game advisory, etc.
@@ -117,7 +115,7 @@ def process_play_event(play_event, situation: Situation, at_bat_to_process, game
             home_score=situation.home_score
         )
     # set pitcher for every play event and update pitcher if play event type is a pitching_substitution
-    game.set_pitcher(play_event)
+    game.pitcher_info.set_pitcher(play_event)
 
     dprint("Is current play complete? ", at_bat_to_process.get("about", {}).get("isComplete", False))
     dprint("Current playEvents[-1] index", at_bat_to_process.get("playEvents", {})[-1].get("index", -1))
@@ -142,9 +140,9 @@ def process_play_event(play_event, situation: Situation, at_bat_to_process, game
 
     # Incrememnt pitch count for current pitcher
     if play_event.get("isPitch", False):
-        pitch_count = game.pitch_count_dict.get(situation.pitcher, 0)
+        pitch_count = game.pitcher_info.pitch_count_dict.get(situation.pitcher, 0)
         pitch_count += 1
-        game.pitch_count_dict[situation.pitcher] = pitch_count
+        game.pitcher_info.pitch_count_dict[situation.pitcher] = pitch_count
         situation.set_pitch_count(pitch_count)
 
 
@@ -156,7 +154,7 @@ def process_at_bat(game: Game, at_bat_index_to_process, output, game_pk, stop_ev
     dprint(f"Now batting: {at_bat_to_process.get("matchup", {}).get("batter", {}).get("fullName", "")}")
     situation.set_inning(at_bat_to_process.get("about", {}).get("inning", -1))
     situation.set_top(at_bat_to_process.get("about", {}).get("isTopInning", False))
-    game.set_pitcher()  # set pitcher when new at bat starts to account for inning change
+    game.pitcher_info.set_pitcher()
     situation.set_baserunners_at_start_of_at_bat(at_bat_to_process)
 
     # Loop through all play events of current play - print when a pitch is thrown
@@ -192,7 +190,7 @@ def process_at_bat(game: Game, at_bat_index_to_process, output, game_pk, stop_ev
             if stop_event.wait(2):
                 return
             game.get_game_by_game_pk(game_pk)
-            at_bats = game.game.get("liveData", {}).get("plays", {}).get("allPlays", [])
+            at_bats = game.game_feed.get("liveData", {}).get("plays", {}).get("allPlays", [])
             if at_bats:
                 latest_at_bat_index = at_bats[-1].get("atBatIndex", -1)
             else:
@@ -211,55 +209,61 @@ def process_at_bat(game: Game, at_bat_index_to_process, output, game_pk, stop_ev
     game.process_at_bat_finished(at_bat_to_process, output)
 
 
+def process_all_at_bats_from_game(game: Game, output, stop_event):
+    """Process all at bats from a baseball game until game is over or stop_event is set."""
+    at_bat_index_to_process = 0
+    while not game.game_over and not stop_event.is_set():
+        if game.at_bats:
+            latest_at_bat_index = game.at_bats[-1].get("atBatIndex", -1)
+        else:
+            latest_at_bat_index = -1
+        while at_bat_index_to_process > latest_at_bat_index:
+            # All at bats have been processed but the game is not over - ping + wait for next at bat from the server
+            dprint("Waiting for next at bat to start...")
+            if stop_event.wait(2):
+                return  # stop_event was sent, return
+            game.get_game_by_game_pk(game.game_pk)
+            if game.at_bats:
+                latest_at_bat_index = game.at_bats[-1].get("atBatIndex", -1)
+            else:
+                dprint("atBats len is 0. TODO: Check why...")
+                latest_at_bat_index = -1
+                continue
+
+        # Right here we know that atBatIndexToProcess is <= latestAtBatIndex
+        # We process the next at bat at atBatIndexToProcess
+        dprint("atBatIndexToProcess", at_bat_index_to_process)
+        dprint("latestAtBatIndex", latest_at_bat_index)
+        process_at_bat(game, at_bat_index_to_process, output, game.game_pk, stop_event)
+        vprint(
+            game.at_bats[at_bat_index_to_process]
+            .get("result", {})
+            .get("description", "")
+        )  # print at bat description
+        at_bat_index_to_process += 1
+
+
 def print_all_pitches_from_game(game_pk, output, stop_event, filepath=None):
     """Print every siutatuion from a baseball game. The main driver for this entire project."""
     while not stop_event.is_set():
+        # 1) initialize game
         game = Game()
         if not filepath:
             game.get_game_by_game_pk(game_pk)
         else:
-            game.get_game_by_file_path(filepath)  # test from a json file instead of the server if filepath provided
+            game.get_game_by_file_path(filepath)  # read from a json file instead of the server if filepath provided
         game.set_status()
+
+        # 2) return if game is invalid or game status is preview (game has not started yet)
         if not game.is_valid() or game.game_status == Status.PREVIEW:
             if output:
                 output.emit(game.game_info)
             return
 
-        at_bat_index_to_process = 0
-        while not game.game_over and not stop_event.is_set():
-            if game.at_bats:
-                latest_at_bat_index = game.at_bats[-1].get("atBatIndex", -1)
-            else:
-                latest_at_bat_index = -1
-            while at_bat_index_to_process > latest_at_bat_index:
-                # All at bats have been processed but the game is not over - ping + wait for next at bat from the server
-                dprint("Waiting for next at bat to start...")
-                if stop_event.wait(2):
-                    return  # stop_event was sent, return
-                game.get_game_by_game_pk(game.game_pk)
-                if game.at_bats:
-                    latest_at_bat_index = game.at_bats[-1].get("atBatIndex", -1)
-                else:
-                    dprint("atBats len is 0. TODO: Check why...")
-                    latest_at_bat_index = -1
-                    continue
+        # 3) process the entire game
+        process_all_at_bats_from_game(game, output, stop_event)
 
-            # Right here we know that atBatIndexToProcess is <= latestAtBatIndex
-            # We process the next at bat at atBatIndexToProcess
-            dprint("atBatIndexToProcess", at_bat_index_to_process)
-            dprint("latestAtBatIndex", latest_at_bat_index)
-            process_at_bat(game, at_bat_index_to_process, output, game.game_pk, stop_event)
-            vprint(
-                game.at_bats[at_bat_index_to_process]
-                .get("result", {})
-                .get("description", "")
-            )  # print at bat description
-            at_bat_index_to_process += 1
-
-        # additional check - stop_event got set within processAtBat()
-        if stop_event.is_set():
-            return
-
+        # 4) output the final score
         border = ""
         recap = game.get_recap()
         while len(border) < len(recap):
@@ -270,7 +274,7 @@ def print_all_pitches_from_game(game_pk, output, stop_event, filepath=None):
             output.emit(border)
             output.emit(recap)
             output.emit(border)
-        return
+        break
 
 
 # TODO: remove.
@@ -282,21 +286,7 @@ def output_verbose_printing(text):
 # TODO: remove?
 def main():
     """Test this file."""
-    # +======================+
-    # |   Live Play Output   |
-    # +======================+
     cli.get_options(sys.argv[1:])
-
-    # game = statsapi.get('game', {'gamePk': 776189})
-    # # with open("tests/meadows.json", "r") as f:
-    # # # with open("tests/example_out.json", "r") as f:
-    # #     game = json.load(f)
-    # pitchbypitch.printLiveGame(game)
-    # printTeamName(116)
-
-    # game = statsapi.get('game', {'gamePk': game_pk})
-    # game_pk = 823989
-    # game_pk = 745369
     game_pk = 822765
     test_thread = LiveGameWorker(game_pk)
     test_thread.output.connect(output_verbose_printing)

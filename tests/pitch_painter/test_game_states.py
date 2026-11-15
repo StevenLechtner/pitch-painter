@@ -110,8 +110,7 @@ def test_live_pitching_change():
     process_at_bat(game, 64, None, None, None)
     # init pitcher manually for testing
     game.situation.set_pitcher("Ben Joyce")
-    game.cur_pitcher = "Ben Joyce"
-    game.cur_home_pitcher = "Ben Joyce"
+    game.pitcher_info.cur_home_pitcher = "Ben Joyce"
     assert game.situation.pitcher == "Ben Joyce"
     assert game.situation.outs == 2
     process_play_event(game.at_bats[-1].get("playEvents", [])[0],

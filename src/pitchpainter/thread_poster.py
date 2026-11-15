@@ -163,9 +163,6 @@ def post_thread(contents):
 
 def create_thread_to_post(contents):
     """Use contents to create a post for Threads. Return the post's creationId, -1 if failed to create 3 times."""
-    if stop_event.is_set():
-        return -1
-    # Try to create thread to post up to three times before failing
     for attempt in range(3):
         if stop_event.is_set():
             return -1

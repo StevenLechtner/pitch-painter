@@ -9,6 +9,8 @@ teams, inning, score, pitcher, pitch count, baserunners
 class Situation():
     """Handles the contents of every pitch in a game."""
 
+    # pylint: disable=too-many-instance-attributes
+    # This class acts as a data interpreter. 15 attributes is okay here.
     def __init__(self):
         """Represent the container to output correct data."""
         self.home_team = ""
@@ -106,66 +108,90 @@ class Situation():
         2) Loop through the runners and add a dict if not batter: key=runner_id, val=list of movements in reverse order
         3) For each entry, find the corresponding and correct starting position for that runner, then hard save it
         """
-        if self.outs < 3:
-            base_occupied_id = {"1B": -1, "2B": -1, "3B": -1}
-            batter_id = current_play.get("matchup", {}).get("batter", {}).get("id", None)
+        if self.outs >= 3 or self.outs < 0:
+            return
 
-            # 1) get the ids of all bases occupied by non-current batter after the at bat
-            post_on_first_id = current_play.get("matchup", {}).get("postOnFirst", {}).get("id", None)
-            post_on_second_id = current_play.get("matchup", {}).get("postOnSecond", {}).get("id", None)
-            post_on_third_id = current_play.get("matchup", {}).get("postOnThird", {}).get("id", None)
-            if post_on_first_id is not None and post_on_first_id != batter_id:
-                base_occupied_id["1B"] = post_on_first_id
-            if post_on_second_id is not None and post_on_second_id != batter_id:
-                base_occupied_id["2B"] = post_on_second_id
-            if post_on_third_id is not None and post_on_third_id != batter_id:
-                base_occupied_id["3B"] = post_on_third_id
+        batter_id = current_play.get("matchup", {}).get("batter", {}).get("id", None)
 
-            # 2) get a dict of all non-current batter runners movements during the at bat in reverse order
-            runner_movements = {}
-            for runner in current_play.get("runners", [])[::-1]:
-                runner_id = runner.get("details", {}).get("runner", {}).get("id", None)
-                if runner_id is None or runner_id == batter_id:
-                    continue
-                if runner_id not in runner_movements:
-                    runner_movements[runner_id] = []
-                runner_movements[runner_id].append(runner.get("movement", {}))
+        # 1) get the ids of all bases occupied by non-current batter after the at bat
+        base_occupied_id = self.__get_runners_post_at_bat_position(current_play, batter_id)
 
-            # 3) reverse engineer where the runners from 1) started the at bat
-            for base, runner_id in base_occupied_id.items():
-                if runner_id in runner_movements:
-                    cur_base = base
-                    base_occupied_id[base] = -1
-                    for runner_movement in runner_movements[runner_id]:
-                        if runner_movement.get("end", None) == cur_base:
-                            cur_base = runner_movement.get("start", None)
-                    if cur_base in base_occupied_id:
-                        base_occupied_id[cur_base] = runner_id
-                    runner_movements.pop(runner_id, None)
+        # 2) get a dict of all non-current batter runners movements during the at bat in reverse order
+        runner_movements = self.__get_runners_reverse_movement(current_play, batter_id)
 
-            # 4) reverse engineer where the other non-batter runners started the at bat given movement data
-            for runner_id, cur_runner_movements in runner_movements.items():
-                if runner_id is not None:
-                    cur_base = None
-                    for runner_movement in cur_runner_movements:
-                        if cur_base is None or runner_movement.get("end", None) == cur_base:
-                            cur_base = runner_movement.get("start", None)
-                    if cur_base in base_occupied_id:
-                        if base_occupied_id[cur_base] != -1:
-                            print("THIS IS AN ERROR!")
-                        base_occupied_id[cur_base] = runner_id
+        # 3) use runner_movements (2) to reverse engineer where the non-batter runners (1) started the at bat
+        self.__trace_runners_to_start_at_bat_position(base_occupied_id, runner_movements)
 
-            for base, runner_id in base_occupied_id.items():
-                if runner_id is not None and runner_id != -1:
-                    match base:
-                        case "1B":
-                            self.baserunners[1] = True
-                        case "2B":
-                            self.baserunners[2] = True
-                        case "3B":
-                            self.baserunners[3] = True
-                        case _:
-                            pass
+        # 4) reverse engineer where the other non-batter runners started the at bat given movement data
+        self.__trace_additional_runners_to_start_at_bat_position(base_occupied_id, runner_movements)
+
+        # 5) translate base_occupied_id (3+4) to Situation baserunners attribute to set baserunners at start of at bat
+        for base, runner_id in base_occupied_id.items():
+            if runner_id is not None and runner_id != -1:
+                match base:
+                    case "1B":
+                        self.baserunners[1] = True
+                    case "2B":
+                        self.baserunners[2] = True
+                    case "3B":
+                        self.baserunners[3] = True
+                    case _:
+                        pass
+
+    @staticmethod
+    def __get_runners_post_at_bat_position(current_play: dict, batter_id):
+        """Get the position of every non-batter runner at the end of the at bat. Return the result."""
+        base_occupied_id = {"1B": -1, "2B": -1, "3B": -1}
+        post_on_first_id = current_play.get("matchup", {}).get("postOnFirst", {}).get("id", None)
+        post_on_second_id = current_play.get("matchup", {}).get("postOnSecond", {}).get("id", None)
+        post_on_third_id = current_play.get("matchup", {}).get("postOnThird", {}).get("id", None)
+        if post_on_first_id is not None and post_on_first_id != batter_id:
+            base_occupied_id["1B"] = post_on_first_id
+        if post_on_second_id is not None and post_on_second_id != batter_id:
+            base_occupied_id["2B"] = post_on_second_id
+        if post_on_third_id is not None and post_on_third_id != batter_id:
+            base_occupied_id["3B"] = post_on_third_id
+        return base_occupied_id
+
+    @staticmethod
+    def __get_runners_reverse_movement(current_play: dict, batter_id):
+        """Get the movement of every non-batter runner during the at bat in reverse order. Return the result."""
+        runner_movements = {}
+        for runner in current_play.get("runners", [])[::-1]:
+            runner_id = runner.get("details", {}).get("runner", {}).get("id", None)
+            if runner_id is None or runner_id == batter_id:
+                continue
+            if runner_id not in runner_movements:
+                runner_movements[runner_id] = []
+            runner_movements[runner_id].append(runner.get("movement", {}))
+        return runner_movements
+
+    @staticmethod
+    def __trace_runners_to_start_at_bat_position(base_occupied_id: dict, runner_movements: dict):
+        """Use runner movements to find the runner's initial position and save it to base_occupied_id."""
+        for base, runner_id in base_occupied_id.items():
+            if runner_id in runner_movements:
+                cur_base = base
+                base_occupied_id[base] = -1
+                for runner_movement in runner_movements[runner_id]:
+                    if runner_movement.get("end", None) == cur_base:
+                        cur_base = runner_movement.get("start", None)
+                if cur_base in base_occupied_id:
+                    base_occupied_id[cur_base] = runner_id
+                runner_movements.pop(runner_id, None)
+
+    @staticmethod
+    def __trace_additional_runners_to_start_at_bat_position(base_occupied_id: dict, runner_movements: dict):
+        for runner_id, cur_runner_movements in runner_movements.items():
+            if runner_id is not None:
+                cur_base = None
+                for runner_movement in cur_runner_movements:
+                    if cur_base is None or runner_movement.get("end", None) == cur_base:
+                        cur_base = runner_movement.get("start", None)
+                if cur_base in base_occupied_id:
+                    if base_occupied_id[cur_base] != -1:
+                        print("THIS IS AN ERROR!")
+                    base_occupied_id[cur_base] = runner_id
 
     def set_baserunners_during_at_bat(self, current_play: dict, play_index):
         """Set baserunners during an at bat.

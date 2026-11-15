@@ -13,6 +13,8 @@ from pitchpainter.print_util import vprint, dprint
 class ApplicationWidget(QtWidgets.QWidget):
     """PtQt application window that a user can interact with to select desired games."""
 
+    # pylint: disable=too-many-instance-attributes
+    # This class acts as the driver for the application and other threads. 10 attributes is okay here.
     def __init__(self):
         """Initialize the PyQt widget with schedule and live game threads, setting date to current date."""
         super().__init__()
@@ -56,6 +58,7 @@ class ApplicationWidget(QtWidgets.QWidget):
         else:
             self.show_game()
 
+    # TODO: move preset JSON and no threading to a test file and delete from here
     def show_game(self):
         """Show output from a game when desired game is selected."""
         self.showing_game = True
@@ -68,7 +71,24 @@ class ApplicationWidget(QtWidgets.QWidget):
         if game_pk == -1:
             self.hide_game()
             return
-        self.get_pitches(game_pk)
+
+        # ================
+        # Preset JSON file
+        # ================
+        # with open("tests/meadows.json", "r") as f:
+        #     game = json.load(f)
+
+        # ===============================================
+        # Assumes game is completed (no threading needed)
+        # ===============================================
+        # game = statsapi.get('game', {'game_pk': game_pk})
+        # return pitchbypitch.listAllPitchesFromGame(game)
+
+        # ================================================
+        # Print pitches for live game (threading required)
+        # ================================================
+        self.start_live_game_thread(game_pk)
+
         self.show_game_btn.setText("Return")
 
     def hide_game(self):
@@ -88,26 +108,6 @@ class ApplicationWidget(QtWidgets.QWidget):
                 + self.calendar.selectedDate().toString("MMMM d, yyyy"))
         else:
             self.show_game_btn.setText("Select desired game...")
-
-    # TODO: decide if this is still necessary - can maybe move to a test file?
-    def get_pitches(self, game_pk):
-        """Start reading from a live game."""
-        # ================
-        # Preset JSON file
-        # ================
-        # with open("tests/meadows.json", "r") as f:
-        #     game = json.load(f)
-
-        # ===============================================
-        # Assumes game is completed (no threading needed)
-        # ===============================================
-        # game = statsapi.get('game', {'game_pk': game_pk})
-        # return pitchbypitch.listAllPitchesFromGame(game)
-
-        # ================================================
-        # Print pitches for live game (threading required)
-        # ================================================
-        self.start_live_game_thread(game_pk)
 
     def start_live_game_thread(self, game_pk):
         """Start reading from a live game."""

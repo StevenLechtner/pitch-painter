@@ -5,6 +5,7 @@ import heapq
 import json
 import sys
 import threading
+from dataclasses import dataclass
 import requests
 import statsapi
 from pitchpainter import cli
@@ -273,17 +274,16 @@ class WinProbability():
         print(f"Plays above the {self.THRESHOLD} threshold: {len(in_range)}")
 
 
-class WinProbabilityInfo():
-    """Save win probability weights and at bat index."""
+@dataclass
+class WinProbabilityInfo:
+    """Save win probability weights and at bat index. Weights 0.0 and index -1 if not present."""
 
-    def __init__(self, home_prob=0.0, away_prob=0.0, home_prob_added=0.0, lev_idx=0.0, drama_idx=0.0, at_bat_idx=-1):
-        """Set object's variables to given argument values. Weights 0.0 and index -1 if not present."""
-        self.home_team_win_probability = home_prob
-        self.away_team_win_probability = away_prob
-        self.home_team_win_probability_added = home_prob_added
-        self.leverage_index = lev_idx
-        self.drama_index = drama_idx
-        self.at_bat_index = at_bat_idx
+    home_team_win_probability: float = 0.0
+    away_team_win_probability: float = 0.0
+    home_team_win_probability_added: float = 0.0
+    leverage_index: float = 0.0
+    drama_index: float = 0.0
+    at_bat_index: int = -1
 
 
 # TODO: Remove this?

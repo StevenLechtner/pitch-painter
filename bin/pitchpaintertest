@@ -17,7 +17,7 @@ pycodestyle src/pitchpainter --max-line-length=120
 pydocstyle src/pitchpainter
 
 # Run pylint
-pylint src/pitchpainter --max-line-length=120 --disable=c-extension-no-member,no-name-in-module
+pylint src/pitchpainter --max-line-length=120 --disable=fixme
 
 # Run all unit tests
 pytest -v tests/pitch_painter

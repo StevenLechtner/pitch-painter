@@ -310,7 +310,7 @@ steal_second_third_and_home
 wild_pitch
 
 
-DEPRECATED:
+DEPRECATED (live_game.py):
 # TODO: Remove
 def getGamePk():
     """Get a specific gamePk (Deprecated)."""
@@ -355,3 +355,51 @@ def main():
     if (gamePk == -1):
         print(f"The {desiredTeam} do not play today!")
         return 0
+
+DEPRECATED (application.py)
+# TODO: decide if this is still necessary - can maybe move to a test file?
+def get_pitches(self, game_pk):
+    """Start reading from a live game."""
+    # ================
+    # Preset JSON file
+    # ================
+    # with open("tests/meadows.json", "r") as f:
+    #     game = json.load(f)
+
+    # ===============================================
+    # Assumes game is completed (no threading needed)
+    # ===============================================
+    # game = statsapi.get('game', {'game_pk': game_pk})
+    # return pitchbypitch.listAllPitchesFromGame(game)
+
+    # ================================================
+    # Print pitches for live game (threading required)
+    # ================================================
+    self.start_live_game_thread(game_pk)
+
+DEPRECATED (live_game.py)
+def main():
+    """Test this file."""
+    # +======================+
+    # |   Live Play Output   |
+    # +======================+
+    cli.get_options(sys.argv[1:])
+
+    # game = statsapi.get('game', {'gamePk': 776189})
+    # # with open("tests/meadows.json", "r") as f:
+    # # # with open("tests/example_out.json", "r") as f:
+    # #     game = json.load(f)
+    # pitchbypitch.printLiveGame(game)
+    # printTeamName(116)
+
+    # game = statsapi.get('game', {'gamePk': game_pk})
+    # game_pk = 823989
+    # game_pk = 745369
+    game_pk = 822765
+    test_thread = LiveGameWorker(game_pk)
+    test_thread.output.connect(output_verbose_printing)
+    print_all_pitches_from_game(game_pk,
+                                test_thread.output,
+                                test_thread.stop_event,
+                                filepath="tests/pitch_painter/data/live_in_play_runs.json")
+    return 0

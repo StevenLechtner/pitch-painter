@@ -169,9 +169,8 @@ def test_post_thread_text_as_image(mock_cli, mock_text_to_png, mock_upload, mock
 def test_scoring_play_envokes_post(monkeypatch):
     # choose a scoring play that is not above the threshold - check for both and then confirm its still worthy
     game = Game()
-    winProbPath = "tests/pitch_painter/data/rangers_30_win_prob.json"
     game.get_game_by_file_path("tests/pitch_painter/data/rangers_30_orioles_3.json")
-    winProb = WinProbability(_filepath=winProbPath)
+    winProb = WinProbability(_filepath="tests/pitch_painter/data/rangers_30_win_prob.json")
     monkeypatch.setattr(WinProbability, "NORM_PROBS_ADDED", 25)
     monkeypatch.setattr(WinProbability, "NORM_LEV_IDX", 2.5)
     monkeypatch.setattr(WinProbability, "NORM_DRAMA_IDX", 150)
@@ -182,17 +181,16 @@ def test_scoring_play_envokes_post(monkeypatch):
 
     # If it's a big play but not above the threshold, it has to be a scoring play
     # This play was a 3 run homer (27-3 -> 30-3), a major blowout. The play was not impactful, but it was a scoring play
-    assert winProb.is_a_big_play(96, winProbPath) == True
-    assert winProb.is_above_threshold(96, winProbPath) == False
+    assert winProb.is_a_big_play(96) == True
+    assert winProb.is_above_threshold(96) == False
 
 
 def test_big_play_envokes_post(monkeypatch):
     # choose a non scoring play that is above the threshold - check for both and then confirm its still worthy
     # atBatIndex = 29. ground out.
     game = Game()
-    winProbPath = "tests/pitch_painter/data/ws_game_7_win_prob.json"
     game.get_game_by_file_path("tests/pitch_painter/data/ws_game_7_game.json")
-    winProb = WinProbability(_filepath=winProbPath)
+    winProb = WinProbability(_filepath="tests/pitch_painter/data/ws_game_7_win_prob.json")
     monkeypatch.setattr(WinProbability, "NORM_PROBS_ADDED", 25)
     monkeypatch.setattr(WinProbability, "NORM_LEV_IDX", 2.5)
     monkeypatch.setattr(WinProbability, "NORM_DRAMA_IDX", 150)
@@ -203,14 +201,13 @@ def test_big_play_envokes_post(monkeypatch):
 
     # This play was a ground out with second and third in a one run game of the world series
     # It was not a scoring play, but it was above the threshold so it was a big play
-    assert winProb.is_a_big_play(29, winProbPath) == True
-    assert winProb.is_above_threshold(29, winProbPath) == True
+    assert winProb.is_a_big_play(29) == True
+    assert winProb.is_above_threshold(29) == True
 
 
 def test_all_scoring_and_big_plays_from_game_envokes_post(monkeypatch):
     # check all plays from a game and compare that all of the post plays are expected given threshold weights
-    win_prob_path = "tests/pitch_painter/data/meadows_win_prob.json"
-    win_prob = WinProbability(_filepath=win_prob_path)
+    win_prob = WinProbability(_filepath="tests/pitch_painter/data/meadows_win_prob.json")
     monkeypatch.setattr(WinProbability, "NORM_PROBS_ADDED", 25)
     monkeypatch.setattr(WinProbability, "NORM_LEV_IDX", 2.5)
     monkeypatch.setattr(WinProbability, "NORM_DRAMA_IDX", 150)
@@ -222,16 +219,27 @@ def test_all_scoring_and_big_plays_from_game_envokes_post(monkeypatch):
     assert len(win_prob.win_probabilities) == 71
     found_threshold_0_375_big_plays = []
     correct_threshold_0_375_big_plays = [6, True, 7, True, 13, True, 49, True, 61, True, 62, True, 63, True, 64, True, 65, True, 67, True, 68, True, 70, True]
-    for i in range(72):
-        if win_prob.is_a_big_play(i, win_prob_path):
-            found_threshold_0_375_big_plays += (i, win_prob.is_above_threshold(i, win_prob_path))
+    for i in range(71):
+        if win_prob.is_a_big_play(i):
+            found_threshold_0_375_big_plays += (i, win_prob.is_above_threshold(i))
     assert found_threshold_0_375_big_plays == correct_threshold_0_375_big_plays
 
     monkeypatch.setattr(WinProbability, "THRESHOLD", 0.5)
     assert len(win_prob.win_probabilities) == 71
     found_threshold_0_5_big_plays = []
     correct_threshold_0_5_big_plays = [7, False, 13, False, 64, True, 65, True, 67, True, 70, True]
-    for i in range(72):
-        if win_prob.is_a_big_play(i, win_prob_path):
-            found_threshold_0_5_big_plays += (i, win_prob.is_above_threshold(i, win_prob_path))
+    for i in range(71):
+        if win_prob.is_a_big_play(i):
+            found_threshold_0_5_big_plays += (i, win_prob.is_above_threshold(i))
     assert found_threshold_0_5_big_plays == correct_threshold_0_5_big_plays
+
+
+def test_index_out_of_range(monkeypatch):
+    win_prob = WinProbability(_filepath="tests/pitch_painter/data/meadows_win_prob.json")
+    monkeypatch.setattr(WinProbability, "THRESHOLD", 0.0)
+    assert win_prob.is_a_big_play(-1) == False
+    assert win_prob.is_a_big_play(0) == True
+    assert win_prob.is_a_big_play(70) == True
+    assert win_prob.is_a_big_play(71) == False
+    assert win_prob.is_a_big_play(-100) == False
+    assert win_prob.is_a_big_play(100) == False

@@ -26,7 +26,6 @@ def start():
     stop_event.clear()
 
 
-# TODO: find a better way to read from file vs server instead of passing _filepath for every function
 class WinProbability():
     """Get win probabilities of an at bat and determine if it is a big play."""
 
@@ -42,7 +41,8 @@ class WinProbability():
     def __init__(self, game_pk=None, _filepath=None):
         """Initialize this object with win probabilities."""
         self.game_pk = -1 if game_pk is None else game_pk
-        self.win_probabilities: list[WinProbabilityInfo] = self.set_win_probabilities(_filepath)
+        self.filepath = _filepath
+        self.win_probabilities: list[WinProbabilityInfo] = self.set_win_probabilities()
         # Top ten: List of tuples (x, y) where x is the metric and y is the at bat index
         self.top_ten_probs_added = []
         self.top_ten_lev_idx = []
@@ -50,16 +50,16 @@ class WinProbability():
         self.scores = []
         self.top_ten_scores = []
 
-    def get_game_win_probabilities(self, _filepath=None):
-        """Set all at bats win probabilites from _filepath if provided; from the server by gamePk if not."""
+    def get_game_win_probabilities(self):
+        """Set all at bats win probabilites from filepath if found; from the server by gamePk if not."""
         if stop_event.is_set():
             return []
 
         win_probability_list = []
 
         # path to a win probability local file is provided. Use first, but check server if this fails
-        if _filepath:
-            with open(_filepath, "r", encoding="utf-8") as f:
+        if self.filepath:
+            with open(self.filepath, "r", encoding="utf-8") as f:
                 win_probability_list = json.load(f)
                 if win_probability_list:
                     return win_probability_list
@@ -86,14 +86,28 @@ class WinProbability():
                     win_probability_list.clear()
         return []
 
-    # TODO: optimize this! test_all_scoring_and_big_plays_from_game_envokes_post takes ~12 seconds to run...
-    def get_finished_at_bat(self, at_bat_index, _filepath=None):
+    def at_bat_finished(self, at_bat_index: int):
         """Get the win probability weights from the end of this at bat.
 
         Wait for the at bat to end by checking if there is a new at bat after this, or the game is over.
+        Note that checking game over here is checking of one team's win probability is 100%.
         """
-        # wait for at bat at given atBatIndex to be complete with win probability numbers
-        # just check if the next atBatIndex is present
+        if not self.win_probabilities:
+            self.set_win_probabilities()
+            if not self.win_probabilities:
+                dprint("Failed to find win probabilities!")
+                return False
+        # return of there is already a new at bat or the game is over
+        latest_at_bat_index = self.win_probabilities[-1].at_bat_index
+        if (
+            latest_at_bat_index > at_bat_index
+            or (self.win_probabilities[-1].home_team_win_probability >= 100
+                or self.win_probabilities[-1].away_team_win_probability >= 100)
+        ):
+            return True
+
+        # we need to wait for at bat to complete to get finalized at bat win probability numbers
+        # check if the next at_bat_index is present
         # if not, check if a win probability is 100% (indicates game over)
         win_probability_list = []
         # TODO: don't make this an "infinite" loop. Check for a max of 5(ish) minutes?
@@ -101,35 +115,29 @@ class WinProbability():
         # TODO: Additional check - see if any values are different (win prob, drama, lev) - different indicates
         # they're updated, but they could be updated to the same...
         while not stop_event.is_set():
-            win_probability_list = self.get_game_win_probabilities(_filepath)
+            win_probability_list = self.get_game_win_probabilities()
             if not win_probability_list:
                 # win probabilities list is empty!
                 if stop_event.wait(5):
-                    return None
+                    break
                 continue
             latest_at_bat = win_probability_list[-1]
             latest_at_bat_index = latest_at_bat.get("atBatIndex", -1)
-            if latest_at_bat_index > at_bat_index:
-                # there is a new at bat, this at bat is complete
-                break
+            # return if there is a new at bat or the game is over
+            if (
+                latest_at_bat_index > at_bat_index
+                or (latest_at_bat.get("homeTeamWinProbability", -1) >= 100
+                    or latest_at_bat.get("awayTeamWinProbability", -1) >= 100)
+            ):
+                return True
             if latest_at_bat_index < at_bat_index:
                 # error check: this at bat has not even happened yet
                 dprint(f"Win probability at bat has not happened yet! {at_bat_index} < {latest_at_bat_index}")
-                break
-            if (
-                latest_at_bat.get("homeTeamWinProbability", -1) >= 100
-                or latest_at_bat.get("awayTeamWinProbability", -1) >= 100
-            ):
-                # no new at bat because the game is over, this at bat is complete
-                break
+                return False
             # at bat is not yet complete
             if stop_event.wait(5):
-                return None
-
-        for at_bat in win_probability_list:
-            if at_bat.get("atBatIndex", -1) == at_bat_index:
-                return at_bat
-        return None
+                break
+        return False
 
     def get_win_probability_info(self, at_bat):
         """Convert at bat's win probability weights to a WinProbabilityInfo object."""
@@ -139,9 +147,18 @@ class WinProbability():
         lev_idx = at_bat.get("leverageIndex", 0.0)
         drama_idx = at_bat.get("dramaIndex", 0.0)
         at_bat_idx = at_bat.get("atBatIndex", 0.0)
-        return WinProbabilityInfo(home_prob, away_prob, home_prob_added, lev_idx, drama_idx, at_bat_idx)
+        is_scoring_play = at_bat.get("about", {}).get("isScoringPlay", False)
+        is_complete = at_bat.get("about", {}).get("isComplete", False)
+        return WinProbabilityInfo(home_prob,
+                                  away_prob,
+                                  home_prob_added,
+                                  lev_idx,
+                                  drama_idx,
+                                  at_bat_idx,
+                                  is_scoring_play,
+                                  is_complete)
 
-    def is_above_threshold(self, at_bat_index, _filepath=None):
+    def is_above_threshold(self, at_bat_index: int):
         """Check if this at bat's score is above the threshold to trigger a big play.
 
         Use the atBatIndex to get the at bat,
@@ -149,11 +166,17 @@ class WinProbability():
         calculate the score using the weights,
         and return True if the score is above the THRESHOLD, False otherwise.
         """
-        at_bat = self.get_finished_at_bat(at_bat_index, _filepath)
-        if at_bat is None:
+        if at_bat_index < 0:
             return False
 
-        win_prob = self.get_win_probability_info(at_bat)
+        if not self.at_bat_finished(at_bat_index):
+            return False
+
+        # return False if at_bat_index is out of range on possible at bats in win_probabilities
+        if at_bat_index >= len(self.win_probabilities) or at_bat_index < 0:
+            return False
+
+        win_prob = self.win_probabilities[at_bat_index]
         probs_added_val = abs(win_prob.home_team_win_probability_added)
         lev_idx_val = win_prob.leverage_index
         drama_idx_val = win_prob.drama_index
@@ -166,27 +189,34 @@ class WinProbability():
         dprint(f"probsAddedVal: {probs_added_val}")
         dprint(f"levIdxVal: {lev_idx_val}")
         dprint(f"dramaIdxVal: {drama_idx_val}")
-        dprint(f"win prob complete? {at_bat.get("about", {}).get("isComplete", False)}")
-        dprint(f"win prob atBatIndex: {at_bat.get("atBatIndex", -1)}")
+        dprint(f"win prob complete? {win_prob.is_complete}")
+        dprint(f"win prob atBatIndex: {win_prob.at_bat_index}")
         return score > self.THRESHOLD
 
-    def is_a_big_play(self, at_bat_index, _filepath=None):
+    def is_a_big_play(self, at_bat_index: int):
         """Return True if this at bat is above the THRESHOLD or is a scoring play. False otherise."""
         if stop_event.is_set():
             return False
 
         # TODO: make this smarter. we want to wait for at bat to be done before checking isScoringPlay and
         # isAboveThreshold, but this currently checks at bat finish twice (here + isAboveThreshold())
-        at_bat = self.get_finished_at_bat(at_bat_index, _filepath)
-        if at_bat is None:
+        if at_bat_index < 0:
             return False
-        scoring_play = at_bat.get("about", {}).get("isScoringPlay", False)
-        return self.is_above_threshold(at_bat_index, _filepath) or scoring_play
 
-    def set_win_probabilities(self, _filepath=None):
+        if not self.at_bat_finished(at_bat_index):
+            return False
+
+        # return False if at_bat_index is out of range on possible at bats in win_probabilities
+        if at_bat_index >= len(self.win_probabilities) or at_bat_index < 0:
+            return False
+
+        scoring_play = self.win_probabilities[at_bat_index].is_scoring_play
+        return self.is_above_threshold(at_bat_index) or scoring_play
+
+    def set_win_probabilities(self):
         """Configure each finished at bat's win probabilities as a WinProbabilityInfo object."""
-        print(_filepath)
-        win_probability_list = self.get_game_win_probabilities(_filepath)
+        dprint(self.filepath)
+        win_probability_list = self.get_game_win_probabilities()
         win_probabilities = []
         for at_bat in win_probability_list:
             win_probabilities.append(self.get_win_probability_info(at_bat))
@@ -274,6 +304,8 @@ class WinProbability():
         print(f"Plays above the {self.THRESHOLD} threshold: {len(in_range)}")
 
 
+# pylint: disable=too-many-instance-attributes
+# one too many attributes is fine. is_complete is only used for debug prints but it is still helpful
 @dataclass
 class WinProbabilityInfo:
     """Save win probability weights and at bat index. Weights 0.0 and index -1 if not present."""
@@ -284,6 +316,8 @@ class WinProbabilityInfo:
     leverage_index: float = 0.0
     drama_index: float = 0.0
     at_bat_index: int = -1
+    is_scoring_play: bool = False
+    is_complete: bool = False
 
 
 # TODO: Remove this?

@@ -13,6 +13,7 @@ Abs challenge ending the inning and then getting overturned
 Test this game: rangers orioles 30-3, Aug 22, 2007
 
 Additional features:
+Convert test internet/api calls to mock api calls/responses for offline testing support
 Replay debugger - HELPFUL FOR THE OFFSEASON WHEN THE API IS NOT GETTING UPDATED BY MLB
     1. GET https://statsapi.mlb.com/api/v1.1/game/745369/feed/live/timestamps to get the timestamps of a finished game
     2. GET https://statsapi.mlb.com/api/v1.1/game/745369/feed/live?timecode=TIMESTAMP to get the live feed from a timestamp

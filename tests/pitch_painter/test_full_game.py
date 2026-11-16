@@ -1,4 +1,4 @@
-from pitchpainter.live_game import print_all_pitches_from_game, LiveGameWorker
+from pitchpainter import game_processor
 
 outputs = []
 
@@ -13,13 +13,14 @@ def outputAll(text):
 
 def test_full_game():
     """Check every pitch from the September 5th, 2024 game between the Detroit Tigers and San Diego Padres"""
-    gamePk = 745369
-    testThread = LiveGameWorker(gamePk)
-    testThread.output.connect(drawPitchOutput)
-    print_all_pitches_from_game(gamePk,
-                            testThread.output,
-                            testThread.stop_event,
-                            filepath="tests/pitch_painter/data/meadows.json")
+    game_pk = 745369
+    test_thread = game_processor.GameProcessorWorker(game_pk)
+    test_thread.output.connect(drawPitchOutput)
+    processor = game_processor.GameProcessor(stop_event=test_thread.stop_event,
+                                             output=test_thread.output,
+                                             game_pk=game_pk,
+                                             filepath="tests/pitch_painter/data/meadows.json")
+    processor.print_all_pitches_from_game()
     file_outputs = []
     with open("tests/pitch_painter/data/meadows_correct_pitches.txt", "r") as f:
         file_outputs = f.readlines()

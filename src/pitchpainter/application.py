@@ -6,7 +6,7 @@ import sys
 from PySide6 import QtCore, QtWidgets, QtGui
 from shiboken6 import isValid
 from pitchpainter import cli, schedule
-from pitchpainter.live_game import LiveGameWorker
+from pitchpainter.game_processor import GameProcessorWorker
 from pitchpainter.print_util import vprint, dprint
 
 
@@ -16,7 +16,7 @@ class ApplicationWidget(QtWidgets.QWidget):
     # pylint: disable=too-many-instance-attributes
     # This class acts as the driver for the application and other threads. 10 attributes is okay here.
     def __init__(self):
-        """Initialize the PyQt widget with schedule and live game threads, setting date to current date."""
+        """Initialize the PyQt widget with schedule and game threads, setting date to current date."""
         super().__init__()
 
         self.showing_game = False
@@ -30,8 +30,8 @@ class ApplicationWidget(QtWidgets.QWidget):
         self.text_widget.setLineWrapMode(QtWidgets.QTextEdit.NoWrap)
         self.text_widget.hide()
 
-        self.live_game_thread = None
-        self.live_game_worker = None
+        self.game_processor_thread = None
+        self.game_processor_worker = None
         self.schedule_thread = None
         self.schedule_worker = None
         self.start_schedule_thread()
@@ -52,8 +52,8 @@ class ApplicationWidget(QtWidgets.QWidget):
         """Show/hide game button toggle."""
         if self.showing_game:
             self.hide_game()
-            if self.live_game_thread is not None and isValid(self.live_game_thread):
-                if self.live_game_thread.isRunning():
+            if self.game_processor_thread is not None and isValid(self.game_processor_thread):
+                if self.game_processor_thread.isRunning():
                     self.show_game_btn.setEnabled(False)
         else:
             self.show_game()
@@ -84,16 +84,16 @@ class ApplicationWidget(QtWidgets.QWidget):
         # game = statsapi.get('game', {'game_pk': game_pk})
         # return pitchbypitch.listAllPitchesFromGame(game)
 
-        # ================================================
-        # Print pitches for live game (threading required)
-        # ================================================
-        self.start_live_game_thread(game_pk)
+        # ===========================================
+        # Print pitches for game (threading required)
+        # ===========================================
+        self.start_game_processor_thread(game_pk)
 
         self.show_game_btn.setText("Return")
 
     def hide_game(self):
         """Hide output from a game and return to calendar/game choose screen."""
-        self.stop_live_game_thread()
+        self.stop_game_processor_thread()
         self.showing_game = False
         self.calendar.show()
         self.text_widget.hide()
@@ -109,21 +109,21 @@ class ApplicationWidget(QtWidgets.QWidget):
         else:
             self.show_game_btn.setText("Select desired game...")
 
-    def start_live_game_thread(self, game_pk):
-        """Start reading from a live game."""
-        if self.live_game_thread is not None and isValid(self.live_game_thread):
-            if self.live_game_thread.isRunning():
-                self.stop_live_game_thread()
-        self.live_game_thread = QtCore.QThread()
-        self.live_game_worker = LiveGameWorker(game_pk)
-        self.live_game_worker.moveToThread(self.live_game_thread)
-        self.live_game_thread.started.connect(self.live_game_worker.run)
-        self.live_game_worker.output.connect(self.update_game_output)
-        self.live_game_worker.finished.connect(self.live_game_thread.quit)
-        self.live_game_worker.finished.connect(self.live_game_worker.deleteLater)
-        self.live_game_thread.finished.connect(self.live_game_thread.deleteLater)
-        self.live_game_thread.finished.connect(self.live_game_thread_finished)
-        self.live_game_thread.start()
+    def start_game_processor_thread(self, game_pk):
+        """Start reading from a game."""
+        if self.game_processor_thread is not None and isValid(self.game_processor_thread):
+            if self.game_processor_thread.isRunning():
+                self.stop_game_processor_thread()
+        self.game_processor_thread = QtCore.QThread()
+        self.game_processor_worker = GameProcessorWorker(game_pk)
+        self.game_processor_worker.moveToThread(self.game_processor_thread)
+        self.game_processor_thread.started.connect(self.game_processor_worker.run)
+        self.game_processor_worker.output.connect(self.update_game_output)
+        self.game_processor_worker.finished.connect(self.game_processor_thread.quit)
+        self.game_processor_worker.finished.connect(self.game_processor_worker.deleteLater)
+        self.game_processor_thread.finished.connect(self.game_processor_thread.deleteLater)
+        self.game_processor_thread.finished.connect(self.game_processor_thread_finished)
+        self.game_processor_thread.start()
 
     def start_schedule_thread(self):
         """Start reading from the MLB's schedule as a separate thread."""
@@ -150,7 +150,7 @@ class ApplicationWidget(QtWidgets.QWidget):
         vprint(text)
 
     def update_schedule_output(self):
-        """Show all games for a given date with teams, score, and status (inning if live)."""
+        """Show all games for a given date with teams, score, and status (inning if live game)."""
         if not self.showing_game:
             self.text_widget.setPlainText(self.schedule_worker.schedule_str)
             self.text_widget.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
@@ -168,27 +168,27 @@ class ApplicationWidget(QtWidgets.QWidget):
         self.games_widget.setItemWidget(header, label)
 
     def stop_all_threads(self):
-        """Stop the live game and schedule threads."""
-        self.stop_live_game_thread()
+        """Stop the game processor and schedule threads."""
+        self.stop_game_processor_thread()
         self.stop_schedule_thread()
         dprint("All threads stopped")
 
-    def stop_live_game_thread(self):
-        """Stop the live game thread worker and child threads."""
-        if self.live_game_thread is not None:
-            dprint("Stopping live game worker and child threads")
-            self.live_game_worker.stop()
-            dprint("Live game thread and child threads stopped")
+    def stop_game_processor_thread(self):
+        """Stop the game processor thread worker and child threads."""
+        if self.game_processor_thread is not None:
+            dprint("Stopping game processor worker and child threads")
+            self.game_processor_worker.stop()
+            dprint("Game processor thread and child threads stopped")
 
-        if self.live_game_thread is not None and isValid(self.live_game_thread):
-            if self.live_game_thread.isRunning():
-                dprint("Quitting live game thread")
-                self.live_game_thread.quit()
-                dprint("Waiting for live game thread")
-                self.live_game_thread.wait()
-                dprint("Live game thread stopped")
+        if self.game_processor_thread is not None and isValid(self.game_processor_thread):
+            if self.game_processor_thread.isRunning():
+                dprint("Quitting game processor thread")
+                self.game_processor_thread.quit()
+                dprint("Waiting for game processor thread")
+                self.game_processor_thread.wait()
+                dprint("Game processor thread stopped")
             else:
-                dprint("Live game thread was not running")
+                dprint("Game processor thread was not running")
 
     def stop_schedule_thread(self):
         """Stop the schedule worker thread."""
@@ -202,9 +202,9 @@ class ApplicationWidget(QtWidgets.QWidget):
                 self.schedule_thread.wait()
                 dprint("Schedule thread stopped")
 
-    def live_game_thread_finished(self):
-        """Enable the bottom show game button when the live game thread is finished."""
-        dprint("Live game output finished")
+    def game_processor_thread_finished(self):
+        """Enable the bottom show game button when the game processor thread is finished."""
+        dprint("Game processor output finished")
         self.show_game_btn.setEnabled(True)
 
     def schedule_thread_finished(self):

@@ -1,5 +1,5 @@
 from pitchpainter.game import Game
-from pitchpainter.live_game import process_play_event
+from pitchpainter.game_processor import GameProcessor
 
 
 def test_inning_ending_k_to_bb():
@@ -12,20 +12,19 @@ def test_inning_ending_k_to_bb():
     assert game.situation.outs == 2
 
 def test_pitch_clock_violation():
-    game = Game()
-    game.get_game_by_file_path("tests/pitch_painter/data/pitch_clock_violation.json")
     # first pitch normal ball (1-0)
-    process_play_event(game.at_bats[-1].get("playEvents", [])[0], game.situation, game.at_bats[-1], game, None)
-    assert game.situation.balls == 1
-    assert game.situation.strikes == 0
-    assert game.situation.pitch_count == 1
+    processor = GameProcessor(filepath="tests/pitch_painter/data/pitch_clock_violation.json")
+    processor.process_play_event(processor.game.at_bats[-1].get("playEvents", [])[0], processor.game.at_bats[-1])
+    assert processor.game.situation.balls == 1
+    assert processor.game.situation.strikes == 0
+    assert processor.game.situation.pitch_count == 1
     # pitcher violation (2-0), pitch count does not increment
-    process_play_event(game.at_bats[-1].get("playEvents", [])[1], game.situation, game.at_bats[-1], game, None)
-    assert game.situation.balls == 2
-    assert game.situation.strikes == 0
-    assert game.situation.pitch_count == 1
+    processor.process_play_event(processor.game.at_bats[-1].get("playEvents", [])[1], processor.game.at_bats[-1])
+    assert processor.game.situation.balls == 2
+    assert processor.game.situation.strikes == 0
+    assert processor.game.situation.pitch_count == 1
     # third pitch normal ball (3-0), but pitch count is still at 2
-    process_play_event(game.at_bats[-1].get("playEvents", [])[2], game.situation, game.at_bats[-1], game, None)
-    assert game.situation.balls == 3
-    assert game.situation.strikes == 0
-    assert game.situation.pitch_count == 2
+    processor.process_play_event(processor.game.at_bats[-1].get("playEvents", [])[2], processor.game.at_bats[-1])
+    assert processor.game.situation.balls == 3
+    assert processor.game.situation.strikes == 0
+    assert processor.game.situation.pitch_count == 2

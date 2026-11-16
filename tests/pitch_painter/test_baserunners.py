@@ -1,5 +1,6 @@
 from pitchpainter.game import Game
-from pitchpainter.live_game import process_play_event, process_at_bat
+#from pitchpainter.live_game import process_play_event, process_at_bat
+from pitchpainter.game_processor import GameProcessor
 
 
 def test_ghost_runner():
@@ -29,96 +30,66 @@ def test_ghost_runner_live():
     assert game.situation.baserunners[3] == False
 
 def test_wild_pitch():
-    game = Game()
-    game.get_game_by_file_path("tests/pitch_painter/data/wild_pitch.json")
-    game.process_at_bat_finished(game.at_bats[52])  # set situation to the wild pitch at bat
-    process_play_event(game.at_bats[53].get("playEvents", [])[3],
-                     game.situation,
-                     game.at_bats[53],
-                     game,
-                     None)  # runners on second and third before the wild pitch
-    assert game.situation.baserunners[1] == False
-    assert game.situation.baserunners[2] == True
-    assert game.situation.baserunners[3] == True
-    assert game.situation.away_score == 6
-    process_play_event(game.at_bats[53].get("playEvents", [])[4],
-                     game.situation,
-                     game.at_bats[53],
-                     game,
-                     None)  # wild pitch leads to runner on third + score
-    assert game.situation.baserunners[1] == False
-    assert game.situation.baserunners[2] == False
-    assert game.situation.baserunners[3] == True
-    assert game.situation.away_score == 7
+    processor = GameProcessor(filepath="tests/pitch_painter/data/wild_pitch.json")
+    processor.game.process_at_bat_finished(processor.game.at_bats[52])
+    processor.process_play_event(processor.game.at_bats[53].get("playEvents", [])[3],
+                                 processor.game.at_bats[53])  # runners on second and third before the wild pitch
+    assert processor.game.situation.baserunners[1] == False
+    assert processor.game.situation.baserunners[2] == True
+    assert processor.game.situation.baserunners[3] == True
+    assert processor.game.situation.away_score == 6
+    processor.process_play_event(processor.game.at_bats[53].get("playEvents", [])[4],
+                                 processor.game.at_bats[53])  # wild pitch leads to runner on third + score
+    assert processor.game.situation.baserunners[1] == False
+    assert processor.game.situation.baserunners[2] == False
+    assert processor.game.situation.baserunners[3] == True
+    assert processor.game.situation.away_score == 7
 
-    liveGame = Game()
-    liveGame.get_game_by_file_path("tests/pitch_painter/data/live_wild_pitch.json")
-    liveGame.process_at_bat_finished(liveGame.at_bats[7])
-    process_play_event(liveGame.at_bats[-1].get("playEvents", [])[-2],
-                     liveGame.situation,
-                     liveGame.at_bats[-1],
-                     liveGame,
-                     None)  # live game runners on first and third before the wild pitch
-    assert liveGame.situation.baserunners[1] == True
-    assert liveGame.situation.baserunners[2] == True
-    assert liveGame.situation.baserunners[3] == False
-    process_play_event(liveGame.at_bats[-1].get("playEvents", [])[-1],
-                     liveGame.situation,
-                     liveGame.at_bats[-1],
-                     liveGame,
-                     None)  # live game's last pitch wild moved second to third, first stays
-    assert liveGame.situation.baserunners[1] == True
-    assert liveGame.situation.baserunners[2] == False
-    assert liveGame.situation.baserunners[3] == True
+    liveGame = GameProcessor(filepath="tests/pitch_painter/data/live_wild_pitch.json")
+    liveGame.game.process_at_bat_finished(liveGame.game.at_bats[7])
+    liveGame.process_play_event(liveGame.game.at_bats[-1].get("playEvents", [])[-2],
+                                liveGame.game.at_bats[-1])  # live game runners on first and third before the wild pitch
+    assert liveGame.game.situation.baserunners[1] == True
+    assert liveGame.game.situation.baserunners[2] == True
+    assert liveGame.game.situation.baserunners[3] == False
+    liveGame.process_play_event(liveGame.game.at_bats[-1].get("playEvents", [])[-1],
+                                liveGame.game.at_bats[-1])  # live game's last pitch wild moved second to third, first stays
+    assert liveGame.game.situation.baserunners[1] == True
+    assert liveGame.game.situation.baserunners[2] == False
+    assert liveGame.game.situation.baserunners[3] == True
 
     # TODO: write test for live_wild_pitch_double_steal as well
 
 def test_stolen_every_base_same_at_bat():
-    game = Game()
-    game.get_game_by_file_path("tests/pitch_painter/data/steal_second_third_and_home.json")
-    process_at_bat(game, 58, None, None, None)
-    assert game.situation.baserunners[1] == True
-    assert game.situation.baserunners[2] == False
-    assert game.situation.baserunners[3] == False
-    process_play_event(game.at_bats[59].get("playEvents", [])[1],
-                     game.situation,
-                     game.at_bats[59],
-                     game,
-                     None)  # normal ball
-    assert game.situation.baserunners[1] == True
-    assert game.situation.baserunners[2] == False
-    assert game.situation.baserunners[3] == False
-    process_play_event(game.at_bats[59].get("playEvents", [])[2],
-                     game.situation,
-                     game.at_bats[59],
-                     game,
-                     None)  # Elly steals second
-    assert game.situation.baserunners[1] == False
-    assert game.situation.baserunners[2] == True
-    assert game.situation.baserunners[3] == False
-    process_play_event(game.at_bats[59].get("playEvents", [])[5],
-                     game.situation,
-                     game.at_bats[59],
-                     game,
-                     None)  # Elly steals third
-    assert game.situation.baserunners[1] == False
-    assert game.situation.baserunners[2] == False
-    assert game.situation.baserunners[3] == True
-    process_play_event(game.at_bats[59].get("playEvents", [])[6],
-                     game.situation,
-                     game.at_bats[59],
-                     game,
-                     None)  # no_pitch
-    assert game.situation.baserunners[1] == False
-    assert game.situation.baserunners[2] == False
-    assert game.situation.baserunners[3] == True
-    assert game.situation.away_score == 6
-    process_play_event(game.at_bats[59].get("playEvents", [])[7],
-                     game.situation,
-                     game.at_bats[59],
-                     game,
-                     None)  # Elly steals home (same pitch as stealing third)
-    assert game.situation.baserunners[1] == False
-    assert game.situation.baserunners[2] == False
-    assert game.situation.baserunners[3] == False
-    assert game.situation.away_score == 7
+    processor = GameProcessor(filepath="tests/pitch_painter/data/steal_second_third_and_home.json")
+    processor.process_at_bat(58)
+    assert processor.game.situation.baserunners[1] == True
+    assert processor.game.situation.baserunners[2] == False
+    assert processor.game.situation.baserunners[3] == False
+    processor.process_play_event(processor.game.at_bats[59].get("playEvents", [])[1],
+                                 processor.game.at_bats[59])  # normal ball
+    assert processor.game.situation.baserunners[1] == True
+    assert processor.game.situation.baserunners[2] == False
+    assert processor.game.situation.baserunners[3] == False
+    processor.process_play_event(processor.game.at_bats[59].get("playEvents", [])[2],
+                                 processor.game.at_bats[59])  # Elly steals second
+    assert processor.game.situation.baserunners[1] == False
+    assert processor.game.situation.baserunners[2] == True
+    assert processor.game.situation.baserunners[3] == False
+    processor.process_play_event(processor.game.at_bats[59].get("playEvents", [])[5],
+                                 processor.game.at_bats[59])  # Elly steals third
+    assert processor.game.situation.baserunners[1] == False
+    assert processor.game.situation.baserunners[2] == False
+    assert processor.game.situation.baserunners[3] == True
+    processor.process_play_event(processor.game.at_bats[59].get("playEvents", [])[6],
+                                 processor.game.at_bats[59])  # no_pitch
+    assert processor.game.situation.baserunners[1] == False
+    assert processor.game.situation.baserunners[2] == False
+    assert processor.game.situation.baserunners[3] == True
+    assert processor.game.situation.away_score == 6
+    processor.process_play_event(processor.game.at_bats[59].get("playEvents", [])[7],
+                                 processor.game.at_bats[59]) # Elly steals home (same pitch as stealing third)
+    assert processor.game.situation.baserunners[1] == False
+    assert processor.game.situation.baserunners[2] == False
+    assert processor.game.situation.baserunners[3] == False
+    assert processor.game.situation.away_score == 7

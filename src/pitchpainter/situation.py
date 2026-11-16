@@ -234,6 +234,109 @@ class Situation():
                 bases_occupied[3] = True
         self.baserunners = bases_occupied
 
+    # pylint: disable=too-many-locals
+    # It's okay that this function has many local variables. They are all small and useful.
+    def draw_pitch(self, alt_text=False):
+        """Draw a pitch given the situation with spacing used for stdout and image uploading for Threads posts.
+
+        Use alt text spacing if specified for a Threads post's alt text section.<br>
+        Returns the output as a string.<br><br>
+        Symbols table:<br>
+        \u25C6=Filled diamond (base is occupied)<br>
+        \u25C7=Emtpy diamond (base is empty)<br>
+        \u25B2=Triangle up (top of the inning)<br>
+        \u25BC=Triangle down (bottom of the inning)<br>
+        \u25CF=Filled circle (out)<br>
+        \u25CB=Empty circle (no out)
+        """
+        # Shared data preparation and padding
+        away_team = self.away_team[:3].ljust(3)
+        away_score = str(self.away_score)[:9].ljust(9)
+        home_team = self.home_team[:3].ljust(3)
+        home_score = str(self.home_score)[:8].ljust(8)
+        inning = str(self.inning)[:5].ljust(5)
+        balls = str(self.balls)[:1]
+        strikes = str(self.strikes)[:1].ljust(4)
+        pitcher = self.pitcher
+        if len(pitcher) > 19:
+            pitcher = pitcher.split(" ")[1][:18]  # TODO: test this
+        pitcher = pitcher.ljust(18)
+        pitch_count = str(self.pitch_count)[:4].ljust(4)
+
+        if not alt_text:
+            # pretty print stdout/image text layout
+            second_base = '\u25C6    ' if self.baserunners[2] else '\u25C7    '
+            third_base = '\u25C6' if self.baserunners[3] else '\u25C7'
+            first_base = '\u25C6   ' if self.baserunners[1] else '\u25C7   '
+            inning_half = '\u25B2    ' if self.top else '\u25BC    '
+            away_row = f"|{away_team} {away_score} {second_base} {inning_half if self.top else inning}|"
+            home_row = f"|{home_team} {home_score} {third_base} {first_base} {inning if self.top else inning_half}|"
+            one_out = f'            {"\u25CF" if self.outs >= 1 else "\u25CB"}'
+            two_outs = '\u25CF' if self.outs >= 2 else '\u25CB'
+            three_outs = '\u25CF ' if self.outs >= 3 else '\u25CB '
+            count_row = f"|{one_out} {two_outs} {three_outs} {balls}-{strikes}|"
+            pitcher_row = f"|{pitcher} P:{pitch_count}|"
+            border = "+─────────────────────────+"
+            divider = "|─────────────────────────|"
+        else:
+            # Threads alt text/direct post as text instead of image layout
+            second_base = '\u25C6    ' if self.baserunners[2] else '\u25C7    '
+            third_base = '\u25C6' if self.baserunners[3] else '\u25C7'
+            first_base = '\u25C6   ' if self.baserunners[1] else '\u25C7   '
+            inning_half = '\u25B2    ' if self.top else '\u25BC    '
+            away_row = (
+                f"| {away_team} {away_score}       {second_base}       "
+                f"{inning_half if self.top else inning}        |"
+            )
+            home_row = (
+                f"| {home_team}  {home_score}     {third_base}   {first_base}    "
+                f"{inning if self.top else inning_half}        |"
+            )
+            one_out = f'            {"\u25CF" if self.outs >= 1 else "\u25CB"}'
+            two_outs = '\u25CF' if self.outs >= 2 else '\u25CB'
+            three_outs = '\u25CF ' if self.outs >= 3 else '\u25CB '
+            count_row = f"|            {one_out} {two_outs} {three_outs}   {balls}-{strikes}      |"
+            pitcher_row = f"| {pitcher}        P: {pitch_count}       |"
+            border = "+─────────────+"
+            divider = "|─────────────|"
+
+        # Pretty print all rows into a nice grid
+        output = (
+            f"{border}\n"
+            f"{away_row}\n"
+            f"{home_row}\n"
+            f"{count_row}\n"
+            f"{divider}\n"
+            f"{pitcher_row}\n"
+            f"{border}"
+        )
+        return output
+
+    def draw_pitch_with_score(self, _away_score, _home_score, alt_text=False):
+        """Draw a pitch with a score update added on run(s) scored. Use alt text spacing if specified."""
+        score_spacing = 12 if alt_text else 8
+        border = "+──────+" if alt_text else "+────────────+"
+        away_team = self.away_team[:3].ljust(3)
+        away_score = str(_away_score)[:9].ljust(score_spacing)
+        home_team = self.home_team[:3].ljust(3)
+        home_score = str(_home_score)[:8].ljust(score_spacing)
+        away_row = f"|{away_team} {away_score}|"
+        home_row = f"|{home_team} {home_score}|"
+        if alt_text:
+            away_row = f"| {away_team}  {away_score}|"
+            home_row = f"| {home_team}  {home_score}|"
+
+        # Pretty print all rows into a nice grid
+        output = (
+            f"{border}\n"
+            "|Score update|\n"
+            f"{away_row}\n"
+            f"{home_row}\n"
+            f"{border}"
+        )
+        pitch_text = self.draw_pitch(alt_text)
+        return pitch_text + "\n" + output
+
     def __str__(self):
         """Pretty print return the current situation."""
         return (

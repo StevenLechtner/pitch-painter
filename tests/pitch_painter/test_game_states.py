@@ -1,5 +1,6 @@
 from pitchpainter.game import Game, Status
-from pitchpainter.live_game import process_play_event, process_at_bat
+# from pitchpainter.live_game import process_play_event, process_at_bat
+from pitchpainter.game_processor import GameProcessor
 
 
 def test_delayed_start():
@@ -42,91 +43,65 @@ def test_no_extra_inning_final():
     # TODO: home team wins with no walk off, no extras
 
 def test_pitching_change_mid_at_bat():
-    game = Game()
-    game.get_game_by_file_path("tests/pitch_painter/data/pitching_change_mid_at_bat.json")
+    processor = GameProcessor(filepath="tests/pitch_painter/data/pitching_change_mid_at_bat.json")
     # Anthony Banda replaces Shohei Ohtani
     # at bat 30, 0=ball, 1=ball, 2=injury, 3=pitch_change, 4=defensive_switch, 5=ball
-    process_at_bat(game, 29, None, None, None)
-    assert game.situation.pitcher == "Shohei Ohtani"
-    process_play_event(game.at_bats[30].get("playEvents", [])[0],
-                     game.situation,
-                     game.at_bats[30],
-                     game,
-                     None)  # ball
-    assert game.situation.pitcher == "Shohei Ohtani"
-    assert game.situation.pitch_count == 5
-    assert game.situation.balls == 1
-    assert game.situation.strikes == 0
-    process_play_event(game.at_bats[30].get("playEvents", [])[1],
-                     game.situation,
-                     game.at_bats[30],
-                     game,
-                     None)  # ball
-    assert game.situation.pitcher == "Shohei Ohtani"
-    assert game.situation.pitch_count == 6
-    assert game.situation.balls == 2
-    assert game.situation.strikes == 0
-    process_play_event(game.at_bats[30].get("playEvents", [])[2],
-                     game.situation,
-                     game.at_bats[30],
-                     game,
-                     None)  # injury
-    assert game.situation.pitcher == "Shohei Ohtani"
-    assert game.situation.pitch_count == 6
-    assert game.situation.balls == 2
-    assert game.situation.strikes == 0
-    process_play_event(game.at_bats[30].get("playEvents", [])[3],
-                     game.situation,
-                     game.at_bats[30],
-                     game,
-                     None)  # pitching change
-    assert game.situation.pitcher == "Anthony Banda"
-    assert game.situation.pitch_count == 0
-    assert game.situation.balls == 2
-    assert game.situation.strikes == 0
-    process_play_event(game.at_bats[30].get("playEvents", [])[4],
-                     game.situation,
-                     game.at_bats[30],
-                     game,
-                     None)  # defensive substitution
-    assert game.situation.pitcher == "Anthony Banda"
-    assert game.situation.pitch_count == 0
-    assert game.situation.balls == 2
-    assert game.situation.strikes == 0
-    process_play_event(game.at_bats[30].get("playEvents", [])[5],
-                     game.situation,
-                     game.at_bats[30],
-                     game,
-                     None)  # ball
-    assert game.situation.pitcher == "Anthony Banda"
-    assert game.situation.pitch_count == 1
-    assert game.situation.balls == 3
-    assert game.situation.strikes == 0
+    processor.process_at_bat(29)
+    assert processor.game.situation.pitcher == "Shohei Ohtani"
+    processor.process_play_event(processor.game.at_bats[30].get("playEvents", [])[0],
+                                 processor.game.at_bats[30])  # ball
+    assert processor.game.situation.pitcher == "Shohei Ohtani"
+    assert processor.game.situation.pitch_count == 5
+    assert processor.game.situation.balls == 1
+    assert processor.game.situation.strikes == 0
+    processor.process_play_event(processor.game.at_bats[30].get("playEvents", [])[1],
+                                 processor.game.at_bats[30])  # ball
+    assert processor.game.situation.pitcher == "Shohei Ohtani"
+    assert processor.game.situation.pitch_count == 6
+    assert processor.game.situation.balls == 2
+    assert processor.game.situation.strikes == 0
+    processor.process_play_event(processor.game.at_bats[30].get("playEvents", [])[2],
+                                 processor.game.at_bats[30])  # injury
+    assert processor.game.situation.pitcher == "Shohei Ohtani"
+    assert processor.game.situation.pitch_count == 6
+    assert processor.game.situation.balls == 2
+    assert processor.game.situation.strikes == 0
+    processor.process_play_event(processor.game.at_bats[30].get("playEvents", [])[3],
+                                 processor.game.at_bats[30])  # pitching change
+    assert processor.game.situation.pitcher == "Anthony Banda"
+    assert processor.game.situation.pitch_count == 0
+    assert processor.game.situation.balls == 2
+    assert processor.game.situation.strikes == 0
+    processor.process_play_event(processor.game.at_bats[30].get("playEvents", [])[4],
+                                 processor.game.at_bats[30])  # defensive substitution
+    assert processor.game.situation.pitcher == "Anthony Banda"
+    assert processor.game.situation.pitch_count == 0
+    assert processor.game.situation.balls == 2
+    assert processor.game.situation.strikes == 0
+    processor.process_play_event(processor.game.at_bats[30].get("playEvents", [])[5],
+                                 processor.game.at_bats[30])  # ball
+    assert processor.game.situation.pitcher == "Anthony Banda"
+    assert processor.game.situation.pitch_count == 1
+    assert processor.game.situation.balls == 3
+    assert processor.game.situation.strikes == 0
 
 def test_live_pitching_change():
-    game = Game()
-    game.get_game_by_file_path("tests/pitch_painter/data/live_pitching_change_mid_inning.json")
+    processor = GameProcessor(filepath="tests/pitch_painter/data/live_pitching_change_mid_inning.json")
     # 0=mound_visit, 1=pitching_change
-    process_at_bat(game, 64, None, None, None)
+    processor.process_at_bat(64)
     # init pitcher manually for testing
-    game.situation.set_pitcher("Ben Joyce")
-    game.pitcher_info.cur_home_pitcher = "Ben Joyce"
-    assert game.situation.pitcher == "Ben Joyce"
-    assert game.situation.outs == 2
-    process_play_event(game.at_bats[-1].get("playEvents", [])[0],
-                     game.situation,
-                     game.at_bats[-1],
-                     game,
-                     None)  # mound visit
-    assert game.situation.pitcher == "Ben Joyce"
-    assert game.situation.outs == 2
-    process_play_event(game.at_bats[-1].get("playEvents", [])[1],
-                     game.situation,
-                     game.at_bats[-1],
-                     game,
-                     None)  # pitching change
-    assert game.situation.pitcher == "Sammy Peralta"
-    assert game.situation.pitch_count == 0
-    assert game.situation.balls == 0
-    assert game.situation.strikes == 0
-    assert game.situation.outs == 2
+    processor.game.situation.set_pitcher("Ben Joyce")
+    processor.game.pitcher_info.cur_home_pitcher = "Ben Joyce"
+    assert processor.game.situation.pitcher == "Ben Joyce"
+    assert processor.game.situation.outs == 2
+    processor.process_play_event(processor.game.at_bats[-1].get("playEvents", [])[0],
+                                 processor.game.at_bats[-1])  # mound visit
+    assert processor.game.situation.pitcher == "Ben Joyce"
+    assert processor.game.situation.outs == 2
+    processor.process_play_event(processor.game.at_bats[-1].get("playEvents", [])[1],
+                                 processor.game.at_bats[-1])  # pitching change
+    assert processor.game.situation.pitcher == "Sammy Peralta"
+    assert processor.game.situation.pitch_count == 0
+    assert processor.game.situation.balls == 0
+    assert processor.game.situation.strikes == 0
+    assert processor.game.situation.outs == 2

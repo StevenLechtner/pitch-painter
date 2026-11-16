@@ -7,7 +7,7 @@ import datetime
 import threading
 from dataclasses import dataclass
 from PySide6.QtCore import QRunnable, QThreadPool
-from pitchpainter import pitchbypitch, thread_poster, win_probability
+from pitchpainter import thread_poster, win_probability
 from pitchpainter.print_util import dprint
 from pitchpainter.situation import Situation
 
@@ -62,21 +62,11 @@ def post_to_threads(context: PitchContainer):
     cur_time = f"{now.strftime('%Y-%m-%d_%H-%M-%S')}.{now.microsecond // 1000:03d}"
     filepath = f"images/{context.game_pk}/play_id_{context.pitch_to_post.play_event_id}_created_{cur_time}.png"
     if context.scoring_play and context.away_score > -1 and context.home_score > -1:
-        text = pitchbypitch.draw_pitch_with_score(
-            context.away_score,
-            context.home_score,
-            context.pitch_to_post,
-            False
-        )
-        alt_text = pitchbypitch.draw_pitch_with_score(
-            context.away_score,
-            context.home_score,
-            context.pitch_to_post,
-            True
-        )
+        text = context.pitch_to_post.draw_pitch_with_score(context.away_score, context.home_score)
+        alt_text = context.pitch_to_post.draw_pitch_with_score(context.away_score, context.home_score, alt_text=True)
     else:
-        text = pitchbypitch.draw_pitch(context.pitch_to_post)
-        alt_text = pitchbypitch.draw_pitch(context.pitch_to_post, alt_text=True)
+        text = context.pitch_to_post.draw_pitch()
+        alt_text = context.pitch_to_post.draw_pitch(alt_text=True)
     thread_poster.post_thread_text_as_image(
         text,
         description_text=context.description,

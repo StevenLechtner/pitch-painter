@@ -80,7 +80,7 @@ class ScheduleWorker(QtCore.QObject):
         """Get the gamePk of the game listed in index from gamePks. -1 if index not present."""
         if not self.game_pks:
             return -1
-        if index == 0:
+        if index <= 0:
             index = 1
         index = min(index, len(self.game_pks))
         return self.game_pks[index-1]

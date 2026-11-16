@@ -1,5 +1,4 @@
 from pitchpainter.game import Game, Status
-# from pitchpainter.live_game import process_play_event, process_at_bat
 from pitchpainter.game_processor import GameProcessor
 
 

@@ -1,5 +1,4 @@
 import copy
-from pitchpainter import pitchbypitch
 from pitchpainter.situation import Situation
 
 

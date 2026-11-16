@@ -10,6 +10,9 @@ from pitchpainter.game import Game, Status
 from pitchpainter.print_util import vprint, dprint
 
 
+outputs = []  # used to list all pitches from a game
+
+
 class GameProcessorWorker(QtCore.QObject):
     """Thread to print all pitches from game and process each at bat to post to Threads."""
 
@@ -280,37 +283,58 @@ class GameProcessor():
         """Print every siutatuion from a baseball game. The main driver for this entire project."""
         while not self.stop_event.is_set():
             # 1) initialize game if empty, or at least one of game_pk or filepath to read from is passed
-            if self.game is None and game_pk == -1 and filepath is None:
-                vprint(
-                    "Game not set and no 'game_pk' or 'filepath' presented here, "
-                    "trying to create a game from the GameProcessor object's 'game_pk' or 'filepath'"
-                )
-                self.create_game(self.game_pk, self.filepath)
-            if game_pk != -1 or filepath:
-                self.create_game(game_pk, filepath)
-            self.game.set_status()
+            self.initialize_game_object(game_pk, filepath)
 
-            # 2) return if game is invalid or game status is preview (game has not started yet)
-            if not self.game.is_valid() or self.game.game_status == Status.PREVIEW:
-                if self.output:
-                    self.output.emit(self.game.game_info)
+            # 2) make sure that the game object is valid and has a LIVE or FINAL status
+            if not self.game_had_started():
                 return
 
             # 3) process the entire game
             self.process_all_at_bats_from_game()
 
             # 4) output the final score
-            border = ""
-            recap = self.game.get_recap()
-            while len(border) < len(recap):
-                border += "─"
-            border = "+" + border[1:-1] + "+"
+            self.output_final_score()
+            return
+
+    def initialize_game_object(self, game_pk=-1, filepath=None):
+        """Initialize Game if empty or at least one of game_pk or filepath to read from is passed.
+
+        Set the Game's most up to date status once initialized.
+        If Game is not empty and no game_pk or filepath were given here, leave Game as is (still set status).
+        """
+        if self.game is None and game_pk == -1 and filepath is None:
+            vprint(
+                "Game not set and no 'game_pk' or 'filepath' presented here, "
+                "trying to create a game from the GameProcessor object's 'game_pk' or 'filepath'"
+            )
+            self.create_game(self.game_pk, self.filepath)
+        if game_pk != -1 or filepath:
+            self.create_game(game_pk, filepath)
+        self.game.set_status()
+
+    def game_had_started(self):
+        """Return True if game is a valid Game object and game's status is either LIVE or FINAL. False otherwise."""
+        if not self.game.is_valid() or self.game.game_status == Status.PREVIEW:
             if self.output:
-                self.output.emit("")
-                self.output.emit(border)
-                self.output.emit(recap)
-                self.output.emit(border)
-            break
+                self.output.emit(self.game.game_info)
+            return False
+        return self.game.is_valid() and self.game.game_status in (Status.LIVE, Status.FINAL)
+
+    def output_final_score(self):
+        """Pretty print output the final score recap of the game object."""
+        if not self.game.game_over:
+            vprint("[GameProcessor] error: trying to display the final score before the game is over!")
+            return
+        border = ""
+        recap = self.game.get_recap()
+        while len(border) < len(recap):
+            border += "─"
+        border = "+" + border[1:-1] + "+"
+        if self.output:
+            self.output.emit("")
+            self.output.emit(border)
+            self.output.emit(recap)
+            self.output.emit(border)
 
 
 # TODO: remove if main removed.
@@ -319,15 +343,26 @@ def output_verbose_printing(text):
     vprint(text)
 
 
+def draw_pitch_output(text):
+    """Append situation output from print_all_pitches_from_game to a list of outputs."""
+    if '+─────────────────────────+\n' in text:
+        outputs.append(text)
+
+
 # TODO: remove?
 def main():
     """Test this file."""
     cli.get_options(sys.argv[1:])
     game_pk = 822765
     test_thread = GameProcessorWorker(game_pk)
-    test_thread.output.connect(output_verbose_printing)
-    processor = GameProcessor(test_thread.stop_event, test_thread.output)
-    processor.print_all_pitches_from_game(game_pk, filepath="tests/pitch_painter/data/live_in_play_runs.json")
+    test_thread.output.connect(draw_pitch_output)
+    processor = GameProcessor(test_thread.stop_event,
+                              test_thread.output,
+                              game_pk=game_pk,
+                              filepath="tests/pitch_painter/data/live_in_play_runs.json")
+    processor.print_all_pitches_from_game()
+    for output in outputs:
+        print(output)
     return 0
 
 

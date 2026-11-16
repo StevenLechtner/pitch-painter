@@ -68,9 +68,7 @@ class Situation():
         self.play_event_id = play_event_id
 
     def set_inning(self, inning: int):
-        """Set inning. Clear baserunners if it is a new inning."""
-        if inning != self.inning:
-            self.baserunners = {1: False, 2: False, 3: False}
+        """Set inning attribute."""
         self.inning = inning
 
     def set_top(self, top: bool):

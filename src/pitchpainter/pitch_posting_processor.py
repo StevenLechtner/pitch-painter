@@ -62,19 +62,21 @@ def post_to_threads(context: PitchContainer):
     cur_time = f"{now.strftime('%Y-%m-%d_%H-%M-%S')}.{now.microsecond // 1000:03d}"
     filepath = f"images/{context.game_pk}/play_id_{context.pitch_to_post.play_event_id}_created_{cur_time}.png"
     if context.scoring_play and context.away_score > -1 and context.home_score > -1:
-        text = pitchbypitch.draw_pitch_with_score_update(
+        text = pitchbypitch.draw_pitch_with_score(
             context.away_score,
             context.home_score,
-            context.pitch_to_post
+            context.pitch_to_post,
+            False
         )
-        alt_text = pitchbypitch.draw_pitch_with_score_alt_text(
+        alt_text = pitchbypitch.draw_pitch_with_score(
             context.away_score,
             context.home_score,
-            context.pitch_to_post
+            context.pitch_to_post,
+            True
         )
     else:
         text = pitchbypitch.draw_pitch(context.pitch_to_post)
-        alt_text = pitchbypitch.draw_pitch_for_tweeting(context.pitch_to_post)
+        alt_text = pitchbypitch.draw_pitch(context.pitch_to_post, alt_text=True)
     thread_poster.post_thread_text_as_image(
         text,
         description_text=context.description,

@@ -9,197 +9,107 @@ from pitchpainter.situation import Situation
 from pitchpainter.thread_poster import post_thread_text_as_image
 
 
-def draw_pitch_for_tweeting(situation: Situation):
-    """Draw a pitch given the situation with spacing to best match altText in Threads."""
-    # Away team row logic
-    away_team = situation.away_team[:3]
-    while len(away_team) < 3:
-        away_team += " "
-    away_score = str(situation.away_score)[:9]
-    while len(away_score) < 9:
-        away_score += " "
-    second_base = '\u25C6    ' if situation.baserunners[2] else '\u25C7    '  # Diamond
-    inning_half = '\u25B2    ' if situation.top else '\u25BC    '  # Triangle
-    inning = str(situation.inning)[:5]
-    while len(inning) < 5:
-        inning += " "
-    if situation.top:
-        away_row = f"| {away_team} {away_score}       {second_base}      {inning_half}        |"
-    else:
-        away_row = f"| {away_team} {away_score}       {second_base}       {inning}        |"
-
-    # Home team row logic
-    home_team = situation.home_team[:3]
-    while len(home_team) < 3:
-        home_team += " "
-    home_score = str(situation.home_score)[:8]
-    while len(home_score) < 8:
-        home_score += " "
-    third_base = '\u25C6' if situation.baserunners[3] else '\u25C7'  # Diamond
-    first_base = '\u25C6   ' if situation.baserunners[1] else '\u25C7   '  # Diamond
-    if situation.top:
-        home_row = f"| {home_team}  {home_score}     {third_base}   {first_base}    {inning}        |"
-    else:
-        home_row = f"| {home_team}  {home_score}     {third_base}   {first_base}    {inning_half}        |"
-
-    # Count row logic
-    one_out = '            \u25CF' if situation.outs >= 1 else '            \u25CB'  # Circle
-    two_outs = '\u25CF' if situation.outs >= 2 else '\u25CB'  # Circle
-    three_outs = '\u25CF ' if situation.outs >= 3 else '\u25CB '  # Circle
-    balls = str(situation.balls)[:1]
-    strikes = str(situation.strikes)[:1]
-    while len(strikes) < 4:
-        strikes += " "
-    count_row = f"|            {one_out} {two_outs} {three_outs}   {balls}-{strikes}      |"
-
-    # Pitcher row logic
-    pitcher = situation.pitcher
-    if len(pitcher) > 19:
-        pitcher = pitcher.split(" ")[1][:18]
-    while len(pitcher) < 18:
-        pitcher += " "
-    pitch_count = str(situation.pitch_count)[:4]
-    while len(pitch_count) < 4:
-        pitch_count += " "
-    pitcher_row = f"| {pitcher}        P: {pitch_count}       |"
-
-    # Pretty print all rows into a nice grid of 27 chars per row
-    output = (
-        "+─────────────+\n"
-        f"{away_row}\n"
-        f"{home_row}\n"
-        f"{count_row}\n"
-        "|─────────────|\n"
-        f"{pitcher_row}\n"
-        "+─────────────+"
-    )
-    return output
-
-
-def draw_pitch_with_score_alt_text(_away_score, _home_score, situation: Situation):
-    """Draw a score update to add to a scoreboard post on run(s) scored."""
-    away_team = situation.away_team[:3]
-    while len(away_team) < 3:
-        away_team += " "
-    away_score = str(_away_score)[:9]
-    while len(away_score) < 12:
-        away_score += " "
-    home_team = situation.home_team[:3]
-    while len(home_team) < 3:
-        home_team += " "
-    home_score = str(_home_score)[:8]
-    while len(home_score) < 12:
-        home_score += " "
-
-    away_row = f"| {away_team}  {away_score}|"
-    home_row = f"| {home_team}  {home_score}|"
-
-    # Pretty print all rows into a nice grid of 14 chars per row
-    output = (
-        "+──────+\n"
-        "|Score update|\n"
-        f"{away_row}\n"
-        f"{home_row}\n"
-        "+──────+"
-    )
-    return draw_pitch_for_tweeting(situation) + "\n" + output
-
-
-# FIXME: extra innings look off centered
-def draw_pitch(situation: Situation):
-    """Draw a pitch given the situation with spacing used for image uploading - the actual Threads image contents."""
-    # Away team row logic
-    away_team = situation.away_team[:3]
-    while len(away_team) < 3:
-        away_team += " "
-    away_score = str(situation.away_score)[:9]
-    while len(away_score) < 9:
-        away_score += " "
-    second_base = '\u25C6    ' if situation.baserunners[2] else '\u25C7    '  # Diamond
-    inning_half = '\u25B2    ' if situation.top else '\u25BC    '  # Triangle
-    inning = str(situation.inning)[:5]
-    while len(inning) < 5:
-        inning += " "
-    if situation.top:
-        away_row = f"|{away_team} {away_score} {second_base} {inning_half}|"
-    else:
-        away_row = f"|{away_team} {away_score} {second_base} {inning}|"
-
-    # Home team row logic
-    home_team = situation.home_team[:3]
-    while len(home_team) < 3:
-        home_team += " "
-    home_score = str(situation.home_score)[:8]
-    while len(home_score) < 8:
-        home_score += " "
-    third_base = '\u25C6' if situation.baserunners[3] else '\u25C7'  # Diamond
-    first_base = '\u25C6   ' if situation.baserunners[1] else '\u25C7   '  # Diamond
-    if situation.top:
-        home_row = f"|{home_team} {home_score} {third_base} {first_base} {inning}|"
-    else:
-        home_row = f"|{home_team} {home_score} {third_base} {first_base} {inning_half}|"
-
-    # Count row logic
-    one_out = '            \u25CF' if situation.outs >= 1 else '            \u25CB'  # Circle
-    two_outs = '\u25CF' if situation.outs >= 2 else '\u25CB'  # Circle
-    three_outs = '\u25CF ' if situation.outs >= 3 else '\u25CB '  # Circle
-    balls = str(situation.balls)[:1]
-    strikes = str(situation.strikes)[:1]
-    while len(strikes) < 4:
-        strikes += " "
-    count_row = f"|{one_out} {two_outs} {three_outs} {balls}-{strikes}|"
-
-    # Pitcher row logic
-    pitcher = situation.pitcher
-    if len(pitcher) > 19:
-        pitcher = pitcher.split(" ")[1][:18]
-    while len(pitcher) < 18:
-        pitcher += " "
-    pitch_count = str(situation.pitch_count)[:4]
-    while len(pitch_count) < 4:
-        pitch_count += " "
-    pitcher_row = f"|{pitcher} P:{pitch_count}|"
-
-    # Pretty print all rows into a nice grid of 27 chars per row
-    output = (
-        "+─────────────────────────+\n"
-        f"{away_row}\n"
-        f"{home_row}\n"
-        f"{count_row}\n"
-        "|─────────────────────────|\n"
-        f"{pitcher_row}\n"
-        "+─────────────────────────+"
-    )
-    return output
-
-
-def draw_pitch_with_score_update(_away_score, _home_score, situation: Situation):
-    """Draw a pitch with a score update added on run(s) scored."""
-    away_team = situation.away_team[:3]
-    while len(away_team) < 3:
-        away_team += " "
-    away_score = str(_away_score)[:9]
-    while len(away_score) < 8:
-        away_score += " "
-    home_team = situation.home_team[:3]
-    while len(home_team) < 3:
-        home_team += " "
-    home_score = str(_home_score)[:8]
-    while len(home_score) < 8:
-        home_score += " "
-
+def draw_pitch_with_score(_away_score, _home_score, situation: Situation, alt_text=False):
+    """Draw a pitch with a score update added on run(s) scored. Use alt text spacing if specified."""
+    score_spacing = 12 if alt_text else 8
+    border = "+──────+" if alt_text else "+────────────+"
+    away_team = situation.away_team[:3].ljust(3)
+    away_score = str(_away_score)[:9].ljust(score_spacing)
+    home_team = situation.home_team[:3].ljust(3)
+    home_score = str(_home_score)[:8].ljust(score_spacing)
     away_row = f"|{away_team} {away_score}|"
     home_row = f"|{home_team} {home_score}|"
+    if alt_text:
+        away_row = f"| {away_team}  {away_score}|"
+        home_row = f"| {home_team}  {home_score}|"
 
-    # Pretty print all rows into a nice grid of 14 chars per row
+    # Pretty print all rows into a nice grid
     output = (
-        "+────────────+\n"
+        f"{border}\n"
         "|Score update|\n"
         f"{away_row}\n"
         f"{home_row}\n"
-        "+────────────+"
+        f"{border}"
     )
-    return draw_pitch(situation) + "\n" + output
+    pitch_text = draw_pitch(situation, alt_text)
+    return pitch_text + "\n" + output
+
+
+def draw_pitch(situation: Situation, alt_text=False):
+    """Draw a pitch given the situation with spacing used for stdout and image uploading for Threads posts. 
+    
+    Use alt text spacing if specified for a Threads post's alt text section.<br><br>
+    Symbols table:<br>
+    \u25C6=Filled diamond (base is occupied)<br>
+    \u25C7=Emtpy diamond (base is empty)<br>
+    \u25B2=Triangle up (top of the inning)<br>
+    \u25BC=Triangle down (bottom of the inning)<br>
+    \u25CF=Filled circle (out)<br>
+    \u25CB=Empty circle (no out)
+    """
+    
+    # Shared data preparation and padding
+    away_team = situation.away_team[:3].ljust(3)
+    away_score = str(situation.away_score)[:9].ljust(9)
+    home_team = situation.home_team[:3].ljust(3)
+    home_score = str(situation.home_score)[:8].ljust(8)
+    inning = str(situation.inning)[:5].ljust(5)
+    balls = str(situation.balls)[:1]
+    strikes = str(situation.strikes)[:1].ljust(4)
+    pitcher = situation.pitcher
+    if len(pitcher) > 19:
+        pitcher = pitcher.split(" ")[1][:18]  # TODO: test this
+    pitcher = pitcher.ljust(18)
+    pitch_count = str(situation.pitch_count)[:4].ljust(4)
+
+    if not alt_text:
+        # pretty print stdout/image text layout
+        second_base = '\u25C6    ' if situation.baserunners[2] else '\u25C7    '
+        third_base = '\u25C6' if situation.baserunners[3] else '\u25C7'
+        first_base = '\u25C6   ' if situation.baserunners[1] else '\u25C7   '
+        inning_half = '\u25B2    ' if situation.top else '\u25BC    '
+        away_row = f"|{away_team} {away_score} {second_base} {inning_half if situation.top else inning}|"
+        home_row = f"|{home_team} {home_score} {third_base} {first_base} {inning if situation.top else inning_half}|"
+        one_out = f'            {"\u25CF" if situation.outs >= 1 else "\u25CB"}'
+        two_outs = '\u25CF' if situation.outs >= 2 else '\u25CB'
+        three_outs = '\u25CF ' if situation.outs >= 3 else '\u25CB '
+        count_row = f"|{one_out} {two_outs} {three_outs} {balls}-{strikes}|"
+        pitcher_row = f"|{pitcher} P:{pitch_count}|"
+        border = "+─────────────────────────+"
+        divider = "|─────────────────────────|"
+    else:
+        # Threads alt text/direct post as text instead of image layout
+        second_base = '\u25C6    ' if situation.baserunners[2] else '\u25C7    '
+        third_base = '\u25C6' if situation.baserunners[3] else '\u25C7'
+        first_base = '\u25C6   ' if situation.baserunners[1] else '\u25C7   '
+        inning_half = '\u25B2    ' if situation.top else '\u25BC    '
+        away_row = (
+            f"| {away_team} {away_score}       {second_base}       "
+            f"{inning_half if situation.top else inning}        |"
+        )
+        home_row = (
+            f"| {home_team}  {home_score}     {third_base}   {first_base}    "
+            f"{inning if situation.top else inning_half}        |"
+        )
+        one_out = f'            {"\u25CF" if situation.outs >= 1 else "\u25CB"}'
+        two_outs = '\u25CF' if situation.outs >= 2 else '\u25CB'
+        three_outs = '\u25CF ' if situation.outs >= 3 else '\u25CB '
+        count_row = f"|            {one_out} {two_outs} {three_outs}   {balls}-{strikes}      |"
+        pitcher_row = f"| {pitcher}        P: {pitch_count}       |"
+        border = "+─────────────+"
+        divider = "|─────────────|"
+
+    # Pretty print all rows into a nice grid
+    output = (
+        f"{border}\n"
+        f"{away_row}\n"
+        f"{home_row}\n"
+        f"{count_row}\n"
+        f"{divider}\n"
+        f"{pitcher_row}\n"
+        f"{border}"
+    )
+    return output
 
 
 def post_pitch_to_threads(situation: Situation,
@@ -210,11 +120,11 @@ def post_pitch_to_threads(situation: Situation,
                           scoring_play=False):
     """Convert a situation to its desired output and call a post to Threads."""
     if scoring_play and away_score > -1 and home_score > -1:
-        text = draw_pitch_with_score_update(away_score, home_score, situation)
-        alt_text = draw_pitch_with_score_alt_text(away_score, home_score, situation)
+        text = draw_pitch_with_score(away_score, home_score, situation, alt_text=False)
+        alt_text = draw_pitch_with_score(away_score, home_score, situation, alt_text=True)
     else:
-        text = draw_pitch(situation)
-        alt_text = draw_pitch_for_tweeting(situation)
+        text = draw_pitch(situation, alt_text=False)
+        alt_text = draw_pitch(situation, alt_text=True)
     post_thread_text_as_image(text, description_text=description, alt_text=alt_text, filepath=filepath)
 
 

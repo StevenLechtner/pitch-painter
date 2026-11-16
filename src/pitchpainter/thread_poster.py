@@ -1,6 +1,7 @@
 """Module to automatically post contents to Meta Threads."""
 
 
+# pylint: disable=duplicate-code
 import os
 import sys
 import threading

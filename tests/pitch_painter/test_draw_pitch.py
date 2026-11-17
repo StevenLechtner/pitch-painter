@@ -1,3 +1,6 @@
+"""Test the output of pitches being drawn - the contents of a Threads post (also with alt text)."""
+
+
 import copy
 from pitchpainter.situation import Situation
 
@@ -18,7 +21,7 @@ meadows_situation.set_pitch_count(25)
 
 
 def test_draw_pitch():
-    """Test that textToPNG successfully generates a png from text."""
+    """Test that a pitch is drawn correctly."""
     situation = copy.deepcopy(meadows_situation)
     correct_out = (
         "+─────────────────────────+\n"
@@ -34,6 +37,7 @@ def test_draw_pitch():
 
 
 def test_draw_pitch_with_score():
+    """Test that a pitch is drawn correctly with a score update."""
     situation = copy.deepcopy(meadows_situation)
     correct_out = (
         "+─────────────────────────+\n"
@@ -54,6 +58,7 @@ def test_draw_pitch_with_score():
 
 
 def test_draw_pitch_alt_text():
+    """Test that a pitch is drawn correctly for alt text."""
     situation = copy.deepcopy(meadows_situation)
     correct_out = (
         "+─────────────+\n"
@@ -69,6 +74,7 @@ def test_draw_pitch_alt_text():
 
 
 def test_draw_pitch_with_score_alt_text():
+    """Test that a pitch is drawn correctly with a score update for alt text."""
     situation = copy.deepcopy(meadows_situation)
     correct_out = (
         "+─────────────+\n"
@@ -88,7 +94,10 @@ def test_draw_pitch_with_score_alt_text():
     assert out == correct_out
 
 
+# pylint: disable=too-many-statements
+# we have a bunch of statements because we are testing every scenario here
 def test_draw_all_types_of_pitches():
+    """Test that a pitch is drawn correctly for every possible situation data output with both regular and alt text."""
     situation = copy.deepcopy(meadows_situation)
     assert (
         "+─────────────────────────+\n"

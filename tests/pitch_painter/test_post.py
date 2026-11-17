@@ -1,41 +1,7 @@
-# # what we want to test:
-#     # creating a "correct" image
-#     # posting to threads (post and then delete)
-#     # correct alt text
-#     # post all scoring plays (don't actually post, but test that all scoring plays would be a post)
-#     # post all big plays (again, don't actually post, but test that all big plays would be a post)
+"""Test posting to Threads works as intended:
 
-# from pitchpainter.pitch_posting_processor import enqueueAtBatForProcessing, enqueuePitchForProcessing
-# from pitchpainter.situation import Situation
-
-# def test_scoring_post_to_threads():
-#     """Post a situation to threads, verify contents, and then delete the post from Threads and image from Dropbox."""
-#     situation = (
-#         "+─────────────────────────+\n"
-#         "|DET 0         ◆     ▲    |\n"
-#         "|SD  3        ◆ ◆    9    |\n"
-#         "|            ● ● ○  3-2   |\n"
-#         "|─────────────────────────|\n"
-#         "|Robert Suarez      P:25  |\n"
-#         "+─────────────────────────+"
-#     )
-#     description = (
-#         "Parker Meadows hits a grand slam (6) to left field. "
-#         "Justyn-Henry Malloy scores. Jace Jung scores. Colt Keith scores."
-#     )
-#     lastPitch = Situation()
-#     enqueuePitchForProcessing(745369, situation, description, True, 4, 3)
-
-# def test_big_play_no_score_post_to_threads():
-#     pass
-
-
-
-
-
-
-
-
+drawing the pitch, coverting text to png with Dropbox, uploading to Threads.
+"""
 
 
 import os
@@ -47,7 +13,7 @@ from pitchpainter.win_probability import WinProbability
 
 
 def test_text_to_png(tmp_path):
-    """Test that textToPNG successfully generates a png from text."""
+    """Test that we successfully generate a png from text."""
     test_filepath = tmp_path / "images" / "test_output.png"
     situation = (
         "+─────────────────────────+\n"
@@ -77,12 +43,12 @@ def test_upload_image_to_dropbox_success(mock_dbx, tmp_path):
     # Create a temporary local file to upload
     test_image = tmp_path / "test_image_upload.png"
     test_image.write_bytes(b"fake image bytes")
-    
+
     # Mock Dropbox responses
     mock_upload_resp = MagicMock()
     mock_upload_resp.path_lower = "/images/test_image_upload.png"
     mock_dbx.files_upload.return_value = mock_upload_resp
-    
+
     mock_link_meta = MagicMock()
     mock_link_meta.url = "https://www.dropbox.com/s/abcdef/test_image_upload.png?dl=0"
     mock_dbx.sharing_create_shared_link_with_settings.return_value = mock_link_meta
@@ -98,15 +64,22 @@ def test_upload_image_to_dropbox_success(mock_dbx, tmp_path):
     assert url == "https://dl.dropboxusercontent.com/s/abcdef/test_image_upload.png?raw=1"
 
 
+# pylint: disable=too-many-arguments, too-many-positional-arguments
+# we need to mock all API calls so too many arguments is okay here
 @patch("pitchpainter.thread_poster.dbx")
 @patch("pitchpainter.thread_poster.requests.post")
 @patch("pitchpainter.thread_poster.create_thread_to_post")
 @patch("pitchpainter.thread_poster.upload_image_to_dropbox")
 @patch("pitchpainter.thread_poster.text_to_png")
 @patch("pitchpainter.thread_poster.cli")
-def test_post_thread_text_as_image(mock_cli, mock_text_to_png, mock_upload, mock_create_thread, mock_requests_post, mock_dbx):
-    """Test the end-to-end flow of posting a thread.
-    
+def test_post_thread_text_as_image(mock_cli,
+                                   mock_text_to_png,
+                                   mock_upload,
+                                   mock_create_thread,
+                                   mock_requests_post,
+                                   mock_dbx):
+    """Test the posting a thread from start to finish.
+
     Does not physically upload to Dropbox or post to Threads.
     Confirms that the workflow is correct and a post would upload with the following:
         <br>1) Network Connection.
@@ -167,7 +140,7 @@ def test_post_thread_text_as_image(mock_cli, mock_text_to_png, mock_upload, mock
         "access_token": thread_poster.THREADS_ACCESS_TOKEN
     }
     mock_requests_post.assert_called_once_with(
-        f"{thread_poster.BASE_URL}/threads_publish", 
+        f"{thread_poster.BASE_URL}/threads_publish",
         json=expected_publish_payload,
         timeout=25
     )
@@ -175,10 +148,11 @@ def test_post_thread_text_as_image(mock_cli, mock_text_to_png, mock_upload, mock
 
 
 def test_scoring_play_envokes_post(monkeypatch):
+    """Test that a play resulting in a score causes a post to Threads even when it's not above the threshold."""
     # choose a scoring play that is not above the threshold - check for both and then confirm its still worthy
     game = Game()
     game.get_game_by_file_path("tests/pitch_painter/data/rangers_30_orioles_3.json")
-    winProb = WinProbability(_filepath="tests/pitch_painter/data/rangers_30_win_prob.json")
+    win_prob = WinProbability(_filepath="tests/pitch_painter/data/rangers_30_win_prob.json")
     monkeypatch.setattr(WinProbability, "NORM_PROBS_ADDED", 25)
     monkeypatch.setattr(WinProbability, "NORM_LEV_IDX", 2.5)
     monkeypatch.setattr(WinProbability, "NORM_DRAMA_IDX", 150)
@@ -189,16 +163,17 @@ def test_scoring_play_envokes_post(monkeypatch):
 
     # If it's a big play but not above the threshold, it has to be a scoring play
     # This play was a 3 run homer (27-3 -> 30-3), a major blowout. The play was not impactful, but it was a scoring play
-    assert winProb.is_a_big_play(96) == True
-    assert winProb.is_above_threshold(96) == False
+    assert win_prob.is_a_big_play(96) is True
+    assert win_prob.is_above_threshold(96) is False
 
 
 def test_big_play_envokes_post(monkeypatch):
+    """Test that a play above the threshold causes a post to Threads even when it's not a scoring play."""
     # choose a non scoring play that is above the threshold - check for both and then confirm its still worthy
     # atBatIndex = 29. ground out.
     game = Game()
     game.get_game_by_file_path("tests/pitch_painter/data/ws_game_7_game.json")
-    winProb = WinProbability(_filepath="tests/pitch_painter/data/ws_game_7_win_prob.json")
+    win_prob = WinProbability(_filepath="tests/pitch_painter/data/ws_game_7_win_prob.json")
     monkeypatch.setattr(WinProbability, "NORM_PROBS_ADDED", 25)
     monkeypatch.setattr(WinProbability, "NORM_LEV_IDX", 2.5)
     monkeypatch.setattr(WinProbability, "NORM_DRAMA_IDX", 150)
@@ -209,11 +184,12 @@ def test_big_play_envokes_post(monkeypatch):
 
     # This play was a ground out with second and third in a one run game of the world series
     # It was not a scoring play, but it was above the threshold so it was a big play
-    assert winProb.is_a_big_play(29) == True
-    assert winProb.is_above_threshold(29) == True
+    assert win_prob.is_a_big_play(29) is True
+    assert win_prob.is_above_threshold(29) is True
 
 
 def test_all_scoring_and_big_plays_from_game_envokes_post(monkeypatch):
+    """Test all big plays from a game to post were correctly calculated."""
     # check all plays from a game and compare that all of the post plays are expected given threshold weights
     win_prob = WinProbability(_filepath="tests/pitch_painter/data/meadows_win_prob.json")
     monkeypatch.setattr(WinProbability, "NORM_PROBS_ADDED", 25)
@@ -226,7 +202,8 @@ def test_all_scoring_and_big_plays_from_game_envokes_post(monkeypatch):
 
     assert len(win_prob.win_probabilities) == 71
     found_threshold_0_375_big_plays = []
-    correct_threshold_0_375_big_plays = [6, True, 7, True, 13, True, 49, True, 61, True, 62, True, 63, True, 64, True, 65, True, 67, True, 68, True, 70, True]
+    correct_threshold_0_375_big_plays = [6, True, 7, True, 13, True, 49, True, 61, True, 62, True,
+                                         63, True, 64, True, 65, True, 67, True, 68, True, 70, True]
     for i in range(71):
         if win_prob.is_a_big_play(i):
             found_threshold_0_375_big_plays += (i, win_prob.is_above_threshold(i))
@@ -243,11 +220,12 @@ def test_all_scoring_and_big_plays_from_game_envokes_post(monkeypatch):
 
 
 def test_index_out_of_range(monkeypatch):
+    """Test is_a_big_play at_bat_index index out of range check."""
     win_prob = WinProbability(_filepath="tests/pitch_painter/data/meadows_win_prob.json")
     monkeypatch.setattr(WinProbability, "THRESHOLD", 0.0)
-    assert win_prob.is_a_big_play(-1) == False
-    assert win_prob.is_a_big_play(0) == True
-    assert win_prob.is_a_big_play(70) == True
-    assert win_prob.is_a_big_play(71) == False
-    assert win_prob.is_a_big_play(-100) == False
-    assert win_prob.is_a_big_play(100) == False
+    assert win_prob.is_a_big_play(-1) is False
+    assert win_prob.is_a_big_play(0) is True
+    assert win_prob.is_a_big_play(70) is True
+    assert win_prob.is_a_big_play(71) is False
+    assert win_prob.is_a_big_play(-100) is False
+    assert win_prob.is_a_big_play(100) is False

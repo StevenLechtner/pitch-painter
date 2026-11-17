@@ -1,47 +1,57 @@
+"""Test various game over and start scenarios."""
+
+
 from pitchpainter.game import Game, Status
 from pitchpainter.game_processor import GameProcessor
 
 
 def test_delayed_start():
+    """Test a game delay shows the game is not LIVE."""
     game = Game()
     game.get_game_by_file_path("tests/pitch_painter/data/delayed_start.json")
     game.set_status()
     assert game.game_status == Status.PREVIEW
 
+
 def test_extra_inning_final():
+    """Test both away team and home team winning in extra innings shows game over."""
     # away team wins in extras
-    awayWinGame = Game()
-    awayWinGame.get_game_by_file_path("tests/pitch_painter/data/extra_innings_away_wins.json")
-    awayWinGame.situation.set_inning(awayWinGame.at_bats[-2].get("about", {}).get("inning", -1))
-    awayWinGame.situation.set_top(awayWinGame.at_bats[-2].get("about", {}).get("isTopInning", False))
-    awayWinGame.process_at_bat_finished(awayWinGame.at_bats[-2])
-    assert awayWinGame.game_over == False
-    awayWinGame.situation.set_inning(awayWinGame.at_bats[-1].get("about", {}).get("inning", -1))
-    awayWinGame.situation.set_top(awayWinGame.at_bats[-1].get("about", {}).get("isTopInning", False))
-    awayWinGame.process_at_bat_finished(awayWinGame.at_bats[-1])
-    assert awayWinGame.game_over == True
+    away_win_game = Game()
+    away_win_game.get_game_by_file_path("tests/pitch_painter/data/extra_innings_away_wins.json")
+    away_win_game.situation.set_inning(away_win_game.at_bats[-2].get("about", {}).get("inning", -1))
+    away_win_game.situation.set_top(away_win_game.at_bats[-2].get("about", {}).get("isTopInning", False))
+    away_win_game.process_at_bat_finished(away_win_game.at_bats[-2])
+    assert away_win_game.game_over is False
+    away_win_game.situation.set_inning(away_win_game.at_bats[-1].get("about", {}).get("inning", -1))
+    away_win_game.situation.set_top(away_win_game.at_bats[-1].get("about", {}).get("isTopInning", False))
+    away_win_game.process_at_bat_finished(away_win_game.at_bats[-1])
+    assert away_win_game.game_over is True
 
     # TODO: test home team extra inning walk off
 
+
 def test_no_extra_inning_final():
+    """Test both away team and home team winning in 9 innings shows game over."""
     # TODO: test away team wins no extras
-    awayWinGame = Game()
+    # away_win_game = Game()
 
     # home team wins in a 9th inning walk off
-    walkOff = Game()
-    walkOff.get_game_by_file_path("tests/pitch_painter/data/example_game_end.json")
-    walkOff.situation.set_inning(walkOff.at_bats[-2].get("about", {}).get("inning", -1))
-    walkOff.situation.set_top(walkOff.at_bats[-2].get("about", {}).get("isTopInning", False))
-    walkOff.process_at_bat_finished(walkOff.at_bats[-2])
-    assert walkOff.game_over == False
-    walkOff.situation.set_inning(walkOff.at_bats[-1].get("about", {}).get("inning", -1))
-    walkOff.situation.set_top(walkOff.at_bats[-1].get("about", {}).get("isTopInning", False))
-    walkOff.process_at_bat_finished(walkOff.at_bats[-1])
-    assert walkOff.game_over == True
+    walk_off = Game()
+    walk_off.get_game_by_file_path("tests/pitch_painter/data/example_game_end.json")
+    walk_off.situation.set_inning(walk_off.at_bats[-2].get("about", {}).get("inning", -1))
+    walk_off.situation.set_top(walk_off.at_bats[-2].get("about", {}).get("isTopInning", False))
+    walk_off.process_at_bat_finished(walk_off.at_bats[-2])
+    assert walk_off.game_over is False
+    walk_off.situation.set_inning(walk_off.at_bats[-1].get("about", {}).get("inning", -1))
+    walk_off.situation.set_top(walk_off.at_bats[-1].get("about", {}).get("isTopInning", False))
+    walk_off.process_at_bat_finished(walk_off.at_bats[-1])
+    assert walk_off.game_over is True
 
     # TODO: home team wins with no walk off, no extras
 
+
 def test_pitching_change_mid_at_bat():
+    """Test pitcher and pitch count update on pitching change during an at bat, but no count or baserunner change."""
     processor = GameProcessor(filepath="tests/pitch_painter/data/pitching_change_mid_at_bat.json")
     # Anthony Banda replaces Shohei Ohtani
     # at bat 30, 0=ball, 1=ball, 2=injury, 3=pitch_change, 4=defensive_switch, 5=ball
@@ -84,7 +94,9 @@ def test_pitching_change_mid_at_bat():
     assert processor.game.situation.balls == 3
     assert processor.game.situation.strikes == 0
 
+
 def test_live_pitching_change():
+    """Test pitcher and pitch count update on pitching change during a live game."""
     processor = GameProcessor(filepath="tests/pitch_painter/data/live_pitching_change_mid_inning.json")
     # 0=mound_visit, 1=pitching_change
     processor.process_at_bat(64)

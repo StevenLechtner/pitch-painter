@@ -48,7 +48,6 @@ class WinProbability():
         self.top_ten_lev_idx = []
         self.top_ten_drama_idx = []
         self.scores = []
-        self.top_ten_scores = []
 
     def get_game_win_probabilities(self):
         """Set all at bats win probabilites from filepath if found; from the server by gamePk if not."""
@@ -283,20 +282,20 @@ class WinProbability():
         self.top_ten_lev_idx = heapq.nlargest(10, lev_idx, key=lambda x: x[0])
         self.top_ten_drama_idx = heapq.nlargest(10, drama_idx, key=lambda x: x[0])
         self.scores = sorted(self.scores, key=lambda x: x[0], reverse=True)
-        self.top_ten_scores = self.scores[:10]
+        top_ten_scores = self.scores[:10]
         dprint(f"scores: {self.scores}\n")
         dprint(f"topTenProbsAdded: {self.top_ten_probs_added}\n")
         dprint(f"topTenLevIdx: {self.top_ten_lev_idx}\n")
         dprint(f"topTenDramaIdx: {self.top_ten_drama_idx}\n")
-        dprint(f"topTenScores: {self.top_ten_scores}")
+        dprint(f"topTenScores: {top_ten_scores}")
         average_top_ten_score = 0
-        for score in self.top_ten_scores:
+        for score in top_ten_scores:
             average_top_ten_score += score[0]
         average_top_ten_score /= 10
         dprint()
         print(f"Average top ten score: {average_top_ten_score}")
-        print(f"Highest score: {self.top_ten_scores[0][0]}")
-        print(f"Tenth score: {self.top_ten_scores[-1][0]}")
+        print(f"Highest score: {top_ten_scores[0][0]}")
+        print(f"Tenth score: {top_ten_scores[-1][0]}")
         in_range = []
         for score in self.scores:
             if score[0] > self.THRESHOLD:

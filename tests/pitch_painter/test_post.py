@@ -98,12 +98,13 @@ def test_upload_image_to_dropbox_success(mock_dbx, tmp_path):
     assert url == "https://dl.dropboxusercontent.com/s/abcdef/test_image_upload.png?raw=1"
 
 
+@patch("pitchpainter.thread_poster.dbx")
 @patch("pitchpainter.thread_poster.requests.post")
 @patch("pitchpainter.thread_poster.create_thread_to_post")
 @patch("pitchpainter.thread_poster.upload_image_to_dropbox")
 @patch("pitchpainter.thread_poster.text_to_png")
 @patch("pitchpainter.thread_poster.cli")
-def test_post_thread_text_as_image(mock_cli, mock_text_to_png, mock_upload, mock_create_thread, mock_requests_post):
+def test_post_thread_text_as_image(mock_cli, mock_text_to_png, mock_upload, mock_create_thread, mock_requests_post, mock_dbx):
     """Test the end-to-end flow of posting a thread.
     
     Does not physically upload to Dropbox or post to Threads.
@@ -117,12 +118,17 @@ def test_post_thread_text_as_image(mock_cli, mock_text_to_png, mock_upload, mock
     mock_text_to_png.return_value = "images/test_image_upload.png"
     mock_upload.return_value = "https://dl.dropboxusercontent.com/test_image_upload.png?raw=1"
     mock_create_thread.return_value = 123456
-    
+
     # Mock Threads publish response
     mock_pub_response = MagicMock()
     mock_pub_response.status_code = 200
     mock_pub_response.json.return_value = {"id": 123456}
     mock_requests_post.return_value = mock_pub_response
+
+    # Mock dbx delete image
+    mock_delete_response = MagicMock()
+    mock_delete_response.status_code = 200
+    mock_dbx.files_delete_v2.return_value = mock_delete_response
 
     # Call post in thread_poster.py
     situation = (
@@ -146,13 +152,14 @@ def test_post_thread_text_as_image(mock_cli, mock_text_to_png, mock_upload, mock
     mock_upload.assert_not_called()
     mock_create_thread.assert_not_called()
     mock_requests_post.assert_not_called()
+    mock_dbx.files_delete_v2.assert_not_called()
 
     # Mock enable threading in CLI - should post
     mock_cli.threading = True
     thread_poster.post_thread_text_as_image(situation_text=situation, description_text=description)
     mock_text_to_png.assert_called_once_with(situation, "images/miscPk/temp.png")
     mock_upload.assert_called_once_with("images/test_image_upload.png")
-    # Verify createThreadToPost was invoked, but since it's mocked, we just verify it received the expected arguments
+    # Verify create_thread_to_post was invoked, but since it's mocked, we just verify it received the expected arguments
     mock_create_thread.assert_called_once()
     # Verify requests.post was called with the correct Meta Threads API payload structure
     expected_publish_payload = {
@@ -164,6 +171,7 @@ def test_post_thread_text_as_image(mock_cli, mock_text_to_png, mock_upload, mock
         json=expected_publish_payload,
         timeout=25
     )
+    mock_dbx.files_delete_v2.assert_called_once()
 
 
 def test_scoring_play_envokes_post(monkeypatch):
